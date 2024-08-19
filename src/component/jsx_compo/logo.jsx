@@ -1,16 +1,21 @@
 import React, {useState} from "react";
 import "../styles/css_compo/logo.css";
+import { useNavigate } from "react-router";
 
 
 export default function Logo(){
 
     const [hovering, setHovering] = useState(false);
 
+    const loginNavigate = useNavigate();
+    
+
 
     return(
         <>
             <div className="logo_with_text" onMouseEnter={() => setHovering(true)}
-                                            onMouseLeave={() => setHovering(false)}>
+                                            onMouseLeave={() => setHovering(false)}
+                                            onClick={() => {loginNavigate("/");}}>
                 <div className="logo_img">
 
                     <svg className="logo_image" version="1.0" xmlns="http://www.w3.org/2000/svg"

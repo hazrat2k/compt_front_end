@@ -1,14 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { gsap } from "gsap";
+import { useNavigate } from "react-router";
 import { useMediaQuery } from 'react-responsive';
 import "../styles/css_compo/navBar.css";
 import Logo from "./logo";
 
-export default function NavBar(){
+export default function NavBar(props){
+
+    const navNavigate = useNavigate();
 
     var tl = gsap.timeline({ defaults: { duration: 0.5, ease: 'expo.inOut' } });
     var isMobile = useMediaQuery({query: '(max-width: 600px)'});
     var height_ = isMobile ? "40vh" : "80vh";
+
+    var nav_mid_display = (
+
+        <div className="navbar_middle_items">
+            <div className="nav_mid mem_login" onClick={() => {navNavigate("/login");}}>
+                Personnel Login
+            </div>
+
+            <div className="nav_mid loan_apply">
+                Apply for Loan
+            </div>
+        </div>
+    );
+
+
+    if(props.hide !== undefined){
+        if(props.hide["nav_mid"]){
+            nav_mid_display = [];
+        }
+    }
+        
 
     const onNavOpen = () => {
 
@@ -35,16 +59,10 @@ export default function NavBar(){
             
             <div className="logo_and_navbar">
                 <div className="logo_with_nav_mid">
-                    <Logo />
-                    <div className="navbar_middle_items">
-                        <div className="nav_mid mem_login">
-                            Personnel Login
-                        </div>
 
-                        <div className="nav_mid loan_apply">
-                            Apply for Loan
-                        </div>
-                    </div>
+                    <Logo />
+                    {nav_mid_display}
+                    
                 </div>
 
 
@@ -60,31 +78,31 @@ export default function NavBar(){
                         </div>
 
                         <div className="nav_items">
-                            <div className="navbar_item nav_about">
+                            <div className="navbar_item nav_about" onClick={() => {navNavigate("/aboutus")}}>
                                 About Us
                             </div>
 
-                            <div className=" navbar_item nav_personnel">
+                            <div className=" navbar_item nav_personnel" onClick={() => {navNavigate("/administration")}}>
                                 Administration
                             </div>
 
-                            <div className="navbar_item nav_services">
+                            <div className="navbar_item nav_services" onClick={() => {navNavigate("/services")}}>
                                 Services
                             </div>
 
-                            <div className="navbar_item nav_sections">
+                            <div className="navbar_item nav_sections" onClick={() => {navNavigate("/sections")}}>
                                 Sections
                             </div>
 
-                            <div className="navbar_item nav_downloads">
+                            <div className="navbar_item nav_downloads" onClick={() => {navNavigate("/downloads")}}>
                                 Downloads
                             </div>
 
-                            <div className="navbar_item nav_notices">
+                            <div className="navbar_item nav_notices" onClick={() => {navNavigate("/notices")}}>
                                 Notices
                             </div>
 
-                            <div className="navbar_item nav_contact">
+                            <div className="navbar_item nav_contact" onClick={() => {navNavigate("/contact")}}>
                                 Contact
                             </div>
                         </div>

@@ -29,13 +29,13 @@
     
     
     .logo_text_1{
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         font-weight: bold;
         letter-spacing: 0.2rem;
     }
     
     .logo_text_2{
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
 }
 
@@ -47,9 +47,16 @@
     align-items: center;
 }
 
+.logo_with_text:hover{
+    cursor: pointer;
+}
+
 
 
 .logo_img{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 0.25rem;
 }
 

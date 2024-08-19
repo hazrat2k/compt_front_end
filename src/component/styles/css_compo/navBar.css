@@ -22,6 +22,7 @@
         width: 20px;
         height: 10px;
         top: 2%;
+        right: 5%;
     }
 
     .bars{
@@ -47,7 +48,7 @@
         width: 60%;
         border-radius: 1.5rem;
         margin-right: 2%;
-        margin-top: -3%;
+        margin-top: 0%;
     }
 
     .navbar_item{
@@ -89,6 +90,7 @@
         width: 30px;
         height: 20px;
         top: 5%;
+        right: 3%;
     }
 
     .bars{
@@ -117,7 +119,7 @@
     }
 
     .navbar_item{
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin: 10px 0;
     }
 
@@ -164,14 +166,13 @@
     border: 2px solid var(--green);
     background-color: white;
     border-radius: 2rem;
-
-    
 }
 
 .nav_mid:hover{
     color: white;
     border: 2px solid white;
     background-color: var(--green);
+    cursor: pointer;
 }
 
 .mem_login{
@@ -188,7 +189,6 @@
 .container{
 	cursor: pointer;
 	position: absolute;
-	right: 5%;
 }
 
 
@@ -226,6 +226,11 @@
 	position: relative;
 	opacity: 0;
 	pointer-events: none;
+}
+
+.navbar_item:hover{
+    cursor: pointer;
+    color: crimson;
 }
 
 .navbar_item:after{
