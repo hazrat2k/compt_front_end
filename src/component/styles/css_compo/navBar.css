@@ -1,0 +1,281 @@
+@media screen and (max-width:600px) {
+    .logo_with_nav_mid{
+        flex-direction: column;
+    }
+
+    .navbar_middle_items{
+        margin-top: 2%;
+        margin-left: 10%;
+    }
+
+    .nav_mid{
+        font-size: 0.5rem;
+        padding: 0.25rem;
+
+    }
+
+    .navbar_items{
+        margin-top: -15%;
+    }
+
+    .container{
+        width: 20px;
+        height: 10px;
+        top: 2%;
+    }
+
+    .bars{
+        width: 20px;
+        height: 3px;
+    }
+
+    .bars::before,
+    .bars::after{
+        width: 20px;
+        height: 3px;
+    }
+
+    .bars::before{
+        margin-top: 6px;
+    }
+    
+    .bars::after{
+        margin-top: 12px;
+    }
+
+    .nav_items_with_close{
+        width: 60%;
+        border-radius: 1.5rem;
+        margin-right: 2%;
+        margin-top: -3%;
+    }
+
+    .navbar_item{
+        font-size: 1.2rem;
+        margin: 5px 0;
+    }
+
+    .nav_items_with_close .close {
+        top: 8%;
+        right: 5%;
+    }
+
+    .nav_items_with_close .close div::before,
+    .nav_items_with_close .close div::after{
+        width: 20px;
+        height: 3px;
+    }
+}
+
+@media screen and (min-width:600px) {
+    .logo_with_nav_mid{
+        flex-direction: row;
+    }
+
+    .navbar_middle_items{
+        margin-left: 10%;
+    }
+
+    .nav_mid{
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+
+    .navbar_items{
+        margin-top: -5%;
+    }
+
+    .container{
+        width: 30px;
+        height: 20px;
+        top: 5%;
+    }
+
+    .bars{
+        width: 30px;
+        height: 4px;
+    }
+
+    .bars::before,
+    .bars::after{
+        width: 30px;
+        height: 4px;
+    }
+
+    .bars::before{
+        margin-top: 9px;
+    }
+    
+    .bars::after{
+        margin-top: 18px;
+    }
+
+    .nav_items_with_close{
+        width: 30%;
+        border-radius: 2rem;
+        margin-right: 2%;
+    }
+
+    .navbar_item{
+        font-size: 2rem;
+        margin: 10px 0;
+    }
+
+    .nav_items_with_close .close {
+        top: 8%;
+        right: 8%;
+    }
+
+    .nav_items_with_close .close div::before,
+    .nav_items_with_close .close div::after{
+        width: 30px;
+        height: 4px;
+    }
+}
+
+
+.logo_and_navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "PT Serif";
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: 0.5%;
+}
+
+.logo_with_nav_mid{
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+}
+
+.navbar_middle_items{
+    display: flex;
+    flex-direction: row;
+}
+
+.nav_mid{
+    font-weight: bold;
+    align-self: center;
+    text-align: center;
+    color: var(--green);
+    border: 2px solid var(--green);
+    background-color: white;
+    border-radius: 2rem;
+
+    
+}
+
+.nav_mid:hover{
+    color: white;
+    border: 2px solid white;
+    background-color: var(--green);
+}
+
+.mem_login{
+    margin-right: 10%;
+}
+
+.navbar_items{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.container{
+	cursor: pointer;
+	position: absolute;
+	right: 5%;
+}
+
+
+.bars{
+	background: var(--green);
+}
+
+.bars::before,
+.bars::after{
+	content: '';
+	position: absolute;
+	background: var(--green);
+}
+
+
+.nav_items_with_close{
+	position: absolute;
+	height: 30px;
+	background: var(--green);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	right: -200vw;
+}
+
+.nav_items{
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar_item{
+    color: #fafafa;
+	text-decoration: none;
+	font-weight: bold;
+	position: relative;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.navbar_item:after{
+	content: '';
+	width: 100%;
+	position: absolute;
+	height: 3px;
+	border-radius: 5px;
+	background: #fff;
+	bottom: -10px;
+	left: 0;
+	transform-origin: left;
+	transition: transform .25s ease;
+	transform: scaleX(0);
+}
+
+.navbar_item:hover:after{
+	transform: scaleX(1);
+}
+
+.nav_items_with_close .close {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+}
+
+
+.nav_items_with_close .close div::before,
+.nav_items_with_close .close div::after{
+	content: '';
+	position: absolute;
+	background: #fff;
+	transition: background .25s ease;
+}
+
+.nav_items_with_close .close div::before{
+	transform: rotate(-45deg);
+}
+
+.nav_items_with_close .close div::after{
+	transform: rotate(45deg);
+}
+
+.nav_items_with_close .close:hover div::before,
+.nav_items_with_close .close:hover div::after{
+	background: rgb(209, 3, 3);
+}
+
+
+

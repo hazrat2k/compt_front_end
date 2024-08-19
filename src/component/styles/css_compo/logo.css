@@ -1,0 +1,65 @@
+
+
+@media screen and (max-width:600px) {
+    .logo_image{
+        height: 30px;
+        width: 30px;
+    }
+    
+    
+    .logo_text_1{
+        font-size: 0.8rem;
+        font-weight: bold;
+        letter-spacing: 0.15rem;
+    }
+    
+    .logo_text_2{
+        font-size: 0.5rem;
+    }
+}
+
+
+@media screen and (min-width:600px) {
+
+    .logo_image{
+        height: 60px;
+        width: 60px;
+        color: var(--green);
+    }
+    
+    
+    .logo_text_1{
+        font-size: 1.75rem;
+        font-weight: bold;
+        letter-spacing: 0.2rem;
+    }
+    
+    .logo_text_2{
+        font-size: 1rem;
+    }
+}
+
+
+
+.logo_with_text{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+
+.logo_img{
+    padding: 0.25rem;
+}
+
+
+.logo_text{
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    font-family: "PT Serif";
+}
+
+
+
