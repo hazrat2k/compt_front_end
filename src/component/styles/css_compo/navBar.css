@@ -142,9 +142,20 @@
     justify-content: space-between;
     align-items: center;
     font-family: "PT Serif";
-    padding-left: 1%;
-    padding-right: 1%;
-    padding-top: 0.5%;
+    padding: 1rem;
+    background-image: url("../../../assets/images/nav_back.png");
+    background-color: rgba(255,255,255,0.75);
+    background-blend-mode: lighten;
+    animation: animatedBackground 5s linear infinite alternate;
+}
+
+@keyframes animatedBackground {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 100% 0;
+    }
 }
 
 .logo_with_nav_mid{
@@ -188,7 +199,6 @@
 
 .container{
 	cursor: pointer;
-	position: absolute;
 }
 
 

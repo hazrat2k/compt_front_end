@@ -55,8 +55,7 @@ export default function NavBar(props){
 
 
     return(
-        <>
-            
+        <> 
             <div className="logo_and_navbar">
                 <div className="logo_with_nav_mid">
 
@@ -114,10 +113,6 @@ export default function NavBar(props){
                 </div>
                 
             </div>
-            
-            
-
-
         </>
 
     );

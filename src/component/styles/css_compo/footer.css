@@ -1,0 +1,129 @@
+@media screen and (max-width:600px) {
+    .logo_with_imp_links{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer_label{
+        font-size: 0.9rem;
+    }
+
+    .imp_link{
+        font-size: 0.6rem;
+        margin-top: 0.25rem;
+    }
+
+    .contact_details{
+        font-size: 0.6rem;
+    }
+
+    .footer_copyright{
+        padding: 0.5rem;
+        font-size: 0.6rem;
+        border-top: 1px solid crimson;
+    }
+
+
+}
+
+@media screen and (min-width:600px) {
+    .logo_with_imp_links{
+        flex-direction: row;
+        align-items: center;
+        gap: 3rem;
+        
+    }
+
+    .footer_label{
+        font-size: 1.2rem;
+    }
+
+    .imp_link{
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .contact_details{
+        font-size: 1rem;
+    }
+
+    .footer_copyright{
+        padding: 1rem;
+        font-size: 1rem;
+        border-top: 2px solid crimson;
+    }
+}
+
+
+.footer_plate{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    font-family: "PT Serif";
+}
+
+.logo_with_imp_links{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+
+.footer_imp_links{
+    display: flex;
+    flex-direction: column;  
+}
+
+.footer_label{
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+    color: crimson;
+}
+
+.imp_link{
+    color: var(--green);
+}
+
+.imp_link:hover{
+    color: crimson;
+    cursor: pointer;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.footer_contact{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.contact_details{
+    color: var(--green);
+}
+
+.contact_details:hover{
+    color: crimson;
+    font-weight: 900;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.footer_copyright{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+}
+
+.cr_text{
+    margin-right: 0.25rem;
+}
+
+.cr_link:hover{
+    color: crimson;
+    font-weight: 900;
+    font-style: italic;
+    cursor: pointer;
+}
