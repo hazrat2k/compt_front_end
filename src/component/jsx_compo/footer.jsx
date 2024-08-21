@@ -46,9 +46,8 @@ export default function Footer(){
                             Comptroller Office, <br />
                             Ground Floor, Dr. M. A. Rashid Administrative Building, <br />
                             East BUET Campus, BUET, Dhaka - 1000, Bangladesh. <br />
-                            Phone: 880-2-55167100/6515, 880-2-9665602 <br />
-                            Email: diriict@iict.buet.ac.bd <br />
-                            Fax: 880-2-9665602 <br />
+                            Phone: 880-22-23365615<br />
+                            Email: comp@comp.buet.ac.bd <br />
                         </div>
 
                     </div>

@@ -23,7 +23,7 @@ export default function Logo(){
                         preserveAspectRatio="xMidYMid meet">
 
                         <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-                            fill={hovering ? "#dc143c" : "#46a052"} stroke={hovering ? "#dc143c" : "#46a052"}>
+                            fill={hovering ? "#3f8ba8" : "#dc143c"} stroke={hovering ? "#3f8ba8" : "#dc143c"}>
                                 <path d="M2434 4923 c-18 -3 -25 -22 -49 -119 -15 -63 -31 -116 -34 -118 -3
                                 -2 -36 -7 -72 -10 l-65 -7 -54 110 c-60 124 -54 120 -160 98 -53 -12 -55 -13
                                 -62 -52 -4 -22 -7 -77 -7 -122 -1 -93 1 -90 -89 -116 l-53 -16 -57 75 c-31 42
@@ -276,11 +276,11 @@ export default function Logo(){
                 </div>
                 
                 <div className="logo_text">
-                    <div className="logo_text_1" style={{color: hovering ? "#dc143c" : "#46a052"}} >
+                    <div className="logo_text_1" style={{color: hovering ? "#3f8ba8" : "#dc143c"}} >
                         COMPTROLLER OFFICE
                     </div>
 
-                    <div className="logo_text_2" style={{color: hovering ? "#dc143c" : "#46a052"}}>
+                    <div className="logo_text_2" style={{color: hovering ? "#3f8ba8" : "#dc143c"}}>
                         Bangladesh University of Engineering and Technology (BUET)
                     </div>
 

@@ -1,0 +1,9 @@
+.welcome_body{
+    display: flex;
+    flex-direction: column;
+}
+
+.photo_anime{
+    padding: 1rem;
+}
+
