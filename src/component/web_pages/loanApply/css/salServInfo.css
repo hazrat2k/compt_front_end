@@ -1,0 +1,10 @@
+.salServ_logo{
+    display: grid;
+    grid-template-columns: 100%;
+}
+
+.salServ_info{
+    display: grid;
+    grid-template-columns: 100%;
+    justify-items: center;
+}

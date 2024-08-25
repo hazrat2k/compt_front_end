@@ -1,0 +1,196 @@
+@media screen and (max-width: 800px) {
+    
+    .basicField{
+
+        display: grid;
+        grid-template-columns: 100%;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+        margin-top: 5%;
+        margin-bottom: 3%;
+        
+    }
+
+    .profilePicture{
+        margin-bottom: 1%;
+        padding: 1rem;
+    }
+
+    .profileImg{
+        display: grid;
+        grid-template-columns: 100%;
+        justify-content: center;
+        padding: 0.5rem 1rem 0.5rem 1rem;
+        text-align: center;
+        border: 3px dashed crimson;
+        padding: 0.5rem;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 2%;
+    }
+
+    .proImgFile{
+        width: 75px;
+        height: 75px;
+        margin-bottom: 1%;
+    }
+
+    .profileImgFile{
+        display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+    .profilePictureText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.6rem;
+        color: black;
+        
+    } 
+
+    .profilePictureErrorText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.5rem;
+        color: red;
+    }
+
+    .bisingleButton{
+        margin-top: 3%;
+        margin-bottom: 5%;
+    }
+
+    .binormalButton{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.7rem;
+        color: crimson;
+        height: 1.7rem;
+        width: 3.5rem;
+        border-radius: 2rem;
+        background-color: white;
+        border-color: crimson;
+
+    }
+
+    .binormalButton:hover{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.7rem;
+        color: white;
+        height: 1.7rem;
+        width: 3.5rem;
+        border-radius: 2rem;
+        background-color: crimson;
+        border-color: white;
+
+    }
+    
+
+}
+
+
+@media screen and (min-width: 800px) {
+
+    .basicField{
+
+        display: grid;
+        grid-template-columns: 100%;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+        margin-top: 5%;
+        margin-bottom: 3%;
+        
+    }
+
+    .profilePicture{
+        margin-bottom: 1%;
+        padding: 1rem;
+    }
+
+    .profileImg{
+
+        display: grid;
+        grid-template-columns: 100%;
+        justify-content: center;
+        padding: 1rem 2rem 1rem 2rem;
+        text-align: center;
+        border: 3px dashed crimson;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 2%;
+    }
+
+    .proImgFile{
+        width: 150px;
+        height: 150px;
+        margin-bottom: 1%;
+
+    }
+
+    .profileImgFile{
+        display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+    .profilePictureText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        color: black;
+        
+    } 
+
+    .profilePictureErrorText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        color: red;
+    }
+
+    .bisingleButton{
+        margin-top: 3%;
+        margin-bottom: 5%;
+    }
+
+    .binormalButton{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        color: crimson;
+        height: 2.5rem;
+        width: 5rem;
+        border-radius: 2rem;
+        background-color: white;
+        border-color: crimson;
+
+    }
+
+    .binormalButton:hover{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        color: white;
+        height: 2.5rem;
+        width: 5rem;
+        border-radius: 2rem;
+        background-color: crimson;
+        border-color: white;
+
+    }
+
+}
+
+
+.basic_logo{
+    display: grid;
+    grid-template-columns: 100%;
+}

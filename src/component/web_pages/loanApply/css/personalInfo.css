@@ -1,0 +1,68 @@
+@media screen and (max-width: 800px) {
+
+    .personalInfo{
+        width: 80%;
+        position: relative;
+        border: 1px solid crimson;
+        border-radius: 1rem;
+        padding: 1rem 1rem 1rem 1rem;
+        margin-top: 5%;
+        margin-bottom: 2%;
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
+
+    .personalInfoLabel{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 2%;
+        text-align: center;
+    }
+
+
+}
+
+@media screen and (min-width: 800px) {
+
+
+    .personalInfo{
+        width: 70%;
+        position: relative;
+        border: 1px solid crimson;
+        border-radius: 1rem;
+        padding: 1rem 2rem 1rem 2rem;
+        margin-top: 2%;
+        margin-bottom: 2%;
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
+
+    .personalInfoLabel{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        font-weight: bold;
+        color: black;
+        text-align: center;
+        margin-bottom: 2%;
+    }
+
+
+
+}
+
+
+
+.perInfo{
+    display: grid;
+    grid-template-columns: 100%;
+    justify-items: center;
+}
+
+.personal_logo{
+    display: grid;
+    grid-template-columns: 100%;
+}

@@ -1,15 +1,26 @@
 import React from "react"
 import { Routes, Route } from 'react-router';
 
-import Welcome from "./component/jsx/welcome";
-import PersonnelLogin from "./component/jsx/personnelLogin";
-import AboutUs from "./component/jsx/aboutUs";
-import Administration from "./component/jsx/administration";
-import Services from "./component/jsx/services";
-import Sections from "./component/jsx/sections";
-import Downloads from "./component/jsx/downloads";
-import Notices from "./component/jsx/notices";
-import Contact from "./component/jsx/contact";
+import Welcome from "./component/web_pages/welcome/welcome";
+import PersonnelLogin from "./component/web_pages/personeelLogin/personnelLogin";
+
+import Login from './component/web_pages/loanApply/jsx/login';
+import BasicInfo from './component/web_pages/loanApply/jsx/basicInfo';
+import PersonalInfo from './component/web_pages/loanApply/jsx/personalInfo';
+import SalServInfo from './component/web_pages/loanApply/jsx/salServInfo';
+import LoanInfo from './component/web_pages/loanApply/jsx/loanInfo';
+import LastPageInfo from './component/web_pages/loanApply/jsx/lastPageInfo';
+import PreviewApplication from './component/web_pages/loanApply/jsx/previewApplication';
+
+import AboutUs from "./component/web_pages/aboutUs/aboutUs";
+import Administration from "./component/web_pages/administration/administration";
+import Services from "./component/web_pages/services/services";
+import Sections from "./component/web_pages/sections/sections";
+import Downloads from "./component/web_pages/downloads/downloads";
+import Notices from "./component/web_pages/notices/notices";
+import Contact from "./component/web_pages/contact/contact";
+
+
 
 
 export default function App() {
@@ -28,6 +39,51 @@ return (
                 path="/login" 
                 element={ <PersonnelLogin /> }
             />
+
+
+            <Route 
+                path="/loanApplication" 
+                element={ <Login /> }
+            />
+
+            <Route 
+                path="/application/1" 
+                element={ <BasicInfo /> }
+                
+            />
+
+            <Route 
+                path="/application/2" 
+                element={ <PersonalInfo /> }
+
+            />
+
+            <Route 
+                path="/application/3" 
+                element={ <SalServInfo /> }
+
+            />
+
+            <Route 
+                path="/application/4" 
+                element={ <LoanInfo /> }
+
+            />
+
+
+            <Route 
+                path="/application/5" 
+                element={ <LastPageInfo /> }
+
+            />
+
+            <Route 
+                path="/application/preview" 
+                element={ <PreviewApplication /> }
+
+            />
+
+
 
             <Route 
                 path="/aboutus" 
@@ -63,11 +119,7 @@ return (
                 path="/contact" 
                 element={ <Contact /> }
             />
-
-
-            
-
-            
+ 
 
 
         </Routes>
@@ -75,6 +127,7 @@ return (
     
 
     </>
-)
+);
+
 }
 

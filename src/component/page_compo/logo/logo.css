@@ -1,0 +1,72 @@
+
+
+@media screen and (max-width:600px) {
+    .nv_logo_image{
+        height: 30px;
+        width: 30px;
+    }
+    
+    
+    .nv_logo_text_1{
+        font-size: 0.8rem;
+        font-weight: bold;
+        letter-spacing: 0.15rem;
+    }
+    
+    .nv_logo_text_2{
+        font-size: 0.5rem;
+    }
+}
+
+
+@media screen and (min-width:600px) {
+
+    .nv_logo_image{
+        height: 60px;
+        width: 60px;
+        color: var(--green);
+    }
+    
+    
+    .nv_logo_text_1{
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 0.2rem;
+    }
+    
+    .nv_logo_text_2{
+        font-size: 0.8rem;
+    }
+}
+
+
+
+.nv_logo_with_text{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nv_logo_with_text:hover{
+    cursor: pointer;
+}
+
+
+
+.nv_logo_img{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.25rem;
+}
+
+
+.nv_logo_text{
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    font-family: "PT Serif";
+}
+
+
+

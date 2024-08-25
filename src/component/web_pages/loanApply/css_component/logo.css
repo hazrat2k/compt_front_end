@@ -1,0 +1,92 @@
+
+@media screen and (min-width: 800px){
+    .logo{
+        display: flex;
+        padding: 1rem 1rem 1rem 1rem;
+    }
+
+
+    .logo_img{
+        float: left;
+    }
+
+    .l_img{
+        height: 4.5rem;
+        width: 5rem;
+    }
+
+
+    .logo_text{
+        color: crimson;
+        margin-left: 1%;
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
+
+    .logo_text_1{
+        font-size: 1.3rem;
+        font-weight: bold;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+    }
+
+    .logo_text_2{
+        width: 55%;
+        font-size: 0.9rem;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+    }
+
+
+}
+
+
+
+@media screen and (max-width: 800px){
+
+    .logo{
+        display: flex;
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    }
+
+
+    .logo_img{
+        float: left;
+    }
+
+    .l_img{
+        height: 3rem;
+        width: 3.3rem;
+    }
+
+
+    .logo_text{
+        color: crimson;
+        margin-left: 1%;
+        display: grid;
+        grid-template-columns: 100%;
+    }
+
+
+    .logo_text_1{
+        font-size: 0.9rem;
+        font-weight: bold;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+    }
+
+    .logo_text_2{
+        width: 80%;
+        font-size: 0.6rem;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+

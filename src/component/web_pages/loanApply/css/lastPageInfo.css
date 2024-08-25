@@ -1,0 +1,321 @@
+
+
+@media screen and (max-width: 800px) {
+
+
+    .lastPageInfo{
+        width: 80%;
+        border: 1px solid crimson;
+        border-radius: 1rem;
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+
+    .lastPageInfoLabel{
+        width: 100%;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: crimson;
+        margin-bottom: 2%;
+        text-align: center;
+    }
+
+    .tableText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.6rem;
+        color: black;
+    }
+
+
+    .tableDataInput{
+        height: 0.8rem;
+        width: 90%;
+        background: 0 0;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.6rem;
+        margin-left: 5px;
+        margin-right: 15px;
+        color: #0c0c0c;
+    }
+
+
+    .commitText{
+        width: 100%;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+    .commitRealText{
+        width: 80%;
+        margin-left: 10%;
+        text-align: justify;
+        color: black;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .signature{
+        width: 90%;
+        margin-bottom: 1%;
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    }
+
+    .signPic{
+        display: grid;
+        grid-template-columns: 100%;
+        justify-items: center;
+        text-align: center;
+        border: 3px dashed crimson;
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+        cursor: pointer;
+        float: right;
+
+    }
+
+    .signImg{
+        width: 150px;
+        height: 40px;
+        margin-bottom: 1%;
+    }
+
+    .signPictureText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.6rem;
+        color: black;
+
+        
+    } 
+
+    .signImgFile{
+        display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+    .signPictureErrorText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.5rem;
+        color: red;
+    }
+
+
+
+    .condition{
+        margin-left: 5%;
+    }
+
+    .conditionText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        text-align: justify;
+        color: black;
+        font-weight: bold;
+    }
+
+    .lpDataBox{
+        margin-top: 2px;
+    }
+
+
+    .lpDataCheckBox{
+        margin-bottom: 0.5rem;
+        width: 90%;
+    }
+    
+    .lpDataCheckBoxInput{
+        height: 0.8rem;
+        color: black;
+    
+    }
+    
+    .lpDataCheckBoxValue{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.6rem;
+        color: black;
+        position: relative;
+        margin-left: 0.5rem;
+        
+    }
+    
+
+
+}
+
+
+
+
+@media screen and (min-width: 800px) {
+
+    .lastPageInfo{
+        width: 70%;
+        border: 1px solid crimson;
+        border-radius: 1rem;
+        padding: 1rem 1rem 1rem 1rem;
+        margin-top: 2%;
+        margin-bottom: 2%;
+        
+    }
+
+    .lastPageInfoLabel{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        font-weight: bold;
+        color: crimson;
+        text-align: center;
+        margin-bottom: 2%;
+    }
+
+    .tableText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        color: black;
+    }
+
+
+    .tableDataInput{
+        height: 1rem;
+        width: 90%;
+        background: 0 0;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        margin-left: 5px;
+        margin-right: 15px;
+        color: #0c0c0c;
+    }
+
+
+    .commitText{
+        width: 100%;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+
+    .commitRealText{
+        width: 80%;
+        margin-left: 10%;
+        text-align: justify;
+        color: black;
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+
+    .signature{
+        width: 80%;
+        margin-bottom: 1%;
+        padding: 1rem 1rem 1rem 1rem;
+    }
+
+    .signPic{
+        display: grid;
+        grid-template-columns: 100%;
+        justify-items: center;
+        text-align: center;
+        border: 3px dashed crimson;
+        padding: 1rem;
+        cursor: pointer;
+        position: relative;
+        float: right;
+
+    }
+
+    .signImg{
+        width: 225px;
+        height: 60px;
+        margin-bottom: 1%;
+    }
+
+    .signPictureText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        color: black;
+
+        
+    } 
+
+    .signImgFile{
+        display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+    .signPictureErrorText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        color: red;
+    }
+
+    
+
+
+
+    .condition{
+        margin-left: 5%;
+    }
+
+    .conditionText{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 1rem;
+        text-align: justify;
+        color: black;
+        font-weight: bold;
+    }
+
+    .lpDataBox{
+        margin-top: 2px;
+    }
+
+
+    .lpDataCheckBox{
+        margin-bottom: 0.5rem;
+        width: 90%;
+    }
+    
+    .lpDataCheckBoxInput{
+        height: 1rem;
+        color: black;
+    
+    }
+    
+    .lpDataCheckBoxValue{
+        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-size: 0.8rem;
+        color: black;
+        position: relative;
+        margin-left: 0.5rem;
+        
+    }
+    
+}
+
+
+.lastPage{
+    display: grid;
+    grid-template-columns: 100%;
+    justify-items: center;
+}
+
+
+.loan_logo{
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+    align-items: center;
+}
