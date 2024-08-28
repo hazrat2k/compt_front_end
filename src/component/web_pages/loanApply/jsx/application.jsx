@@ -1,4 +1,4 @@
-import { PDFDownloadLink, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
+import { BlobProvider, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
 import logo_image from "../assets/logo.png";
 import PT_Serif_Bold from "../assets/fonts/pt-serif-latin-700-normal.ttf";
 import Noto_Serif_Bengali from "../assets/fonts/Noto_Serif_Bengali.ttf";
@@ -7,6 +7,7 @@ import AdorshoLipi from "../assets/fonts/AdorshoLipi.ttf";
 import AdorshoLipi_Bold from "../assets/fonts/AdorshoLipi_Bold.ttf";
 import SuttonyMJ from "../assets/fonts/SuttonyMJ.ttf";
 import SuttonyMJ_Bold from "../assets/fonts/SuttonyMJ_Bold.ttf";
+import axios from "axios";
 
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
@@ -479,7 +480,7 @@ const Application = (props) => {
 
 
 
-    const MyDoc = () => (
+    const MyDoc = (
         <Document>
             <Page size="A4" >
 
@@ -643,7 +644,7 @@ const Application = (props) => {
     );
 
 
-    const onClickEdit = (e) => {
+    const onClickEdit = async e => {
         e.preventDefault();
         applicationNavigate('/application/1', { state: {info: app_data, used: "yes"} });
     };
@@ -655,13 +656,29 @@ const Application = (props) => {
         link.click();
     }
 
-    const onClickSubmit = (e) => {
+    const onClickSubmit = async e => {
         e.preventDefault();
         if (!url) {
             return;
         }
-        downloadURI(url, `application.pdf`);
-        applicationNavigate("/");
+
+
+        const uploadData = new FormData();
+        for ( var key in app_data ) {
+            uploadData.append(key, app_data[key]);
+        }
+
+
+
+        try{
+            await axios.post("http://localhost:8800/loan", uploadData);
+            downloadURI(url, 'application.pdf');
+            applicationNavigate("/");
+
+        }catch(err){
+            console.log(err);
+        }
+
     }
 
 
@@ -672,7 +689,15 @@ const Application = (props) => {
             <PDFViewer style={styles.viewer}>
                 <MyDoc />
             </PDFViewer>
+
+
  */}
+
+            <BlobProvider document={MyDoc}>
+                {({ blob, url, loading, error }) => {
+                    setURL(url);
+                }}
+            </BlobProvider>
 
             <div className='preButton'>
                 <button className='preNormalButton' onClick={onClickEdit} >
@@ -681,12 +706,6 @@ const Application = (props) => {
 
                 <button className='preNormalButton' onClick={onClickSubmit} >
                     জমা দিন
-                    <PDFDownloadLink document={<MyDoc />} >
-                        
-                        {({ blob, url, loading, error }) => {
-                            setURL(url);
-                        }}
-                    </PDFDownloadLink>
                 </button> 
                 
                 

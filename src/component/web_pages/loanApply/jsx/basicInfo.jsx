@@ -5,6 +5,7 @@ import imgfile from "../assets/uploadImg.png"
 import DataField from "../jsx_component/dataField";
 import DataCheckBoxField from '../jsx_component/dataCheckBoxField';
 import Logo from '../jsx_component/logo';
+import axios from "axios";
 
 
 function BasicInfo(){
@@ -21,6 +22,7 @@ function BasicInfo(){
 
     if(state["used"] === "no"){
         basic_data["PROFILE_PIC"] = imgfile;
+        basic_data["PROFILE_PHOTO"] = imgfile;
         basic_data["LOAN_TYPE"] = "";
         basic_data["LOAN_AMNT"] = "";
         basic_data["REASON_FOR_LOAN"] = "";
@@ -38,6 +40,7 @@ function BasicInfo(){
     const reasonForLoanRef = useRef(null);
 
     const [proPicFile, setProPicFile] = useState(basic_data["PROFILE_PIC"]);
+    const [proPhoto, setProPhoto] = useState(basic_data["PROFILE_PHOTO"]);
     const [proPicFileError, setProPicFileError] = useState([]);
 
     const [applicantName, setApplicantName] = useState(basic_data["EMPLOYEE_NAME"]);
@@ -57,6 +60,7 @@ function BasicInfo(){
 
     function handleChange(e) {
         setProPicFile(URL.createObjectURL(e.target.files[0]));
+        setProPhoto(e.target.files[0]);
     }
 
     const scrollToSection = (elementRef) => {
@@ -108,12 +112,13 @@ function BasicInfo(){
     }
 
 
-    function onBasicAuthenticate(e){
+    async function onBasicAuthenticate(e){
         e.preventDefault();
 
         if(validBasicInfo()){
-
+            
             basic_data["PROFILE_PIC"] = proPicFile;
+            basic_data["PROFILE_PHOTO"] = proPhoto;
             basic_data["LOAN_TYPE"] = loanType;
             basic_data["LOAN_AMNT"] = loanAmount;
             basic_data["REASON_FOR_LOAN"] =  reasonForLoan;

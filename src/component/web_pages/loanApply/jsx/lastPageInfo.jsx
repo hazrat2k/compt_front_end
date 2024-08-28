@@ -19,6 +19,8 @@ function LastPageInfo(){
 
 
     const [signFile, setSignFile] = useState(last_data["SIGN_PIC"]);
+    const [signFileImg, setSignFileImg] = useState(last_data["SIGN_IMG"]);
+
     const [signFileError, setSignFileError] = useState([]);
 
     const signPicRef = useRef(null);
@@ -33,6 +35,7 @@ function LastPageInfo(){
 
     function handleSignChange(e) {
         setSignFile(URL.createObjectURL(e.target.files[0]));
+        setSignFileImg(e.target.files[0]);
     }
 
 
@@ -63,6 +66,7 @@ function LastPageInfo(){
         if(button == "second"){
             if(validLastInfo()){
                 last_data["SIGN_PIC"] = signFile;
+                last_data["SIGN_IMG"] = signFileImg;
                 const file = state["file"];
                 lastNavigate("/application/preview", {state: {info: last_data, used: "yes"}});
             }
