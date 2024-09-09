@@ -131,7 +131,7 @@ function Login(){
             <div>
                 <div className="login">
                     <div className='login_label' >
-                        Login
+                        Application Login
                     </div>
 
                     <div className='login_form'>

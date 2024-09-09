@@ -2,7 +2,10 @@ import React from "react"
 import { Routes, Route } from 'react-router';
 
 import Welcome from "./component/web_pages/welcome/welcome";
+
 import PersonnelLogin from "./component/web_pages/personeelLogin/personnelLogin";
+import PersonnelDash from "./component/web_pages/personeelLogin/inside/personeelDash/personeelDash";
+import LoanDetails from "./component/web_pages/personeelLogin/inside/loanDetails/loanDetails";
 
 import Login from './component/web_pages/loanApply/jsx/login';
 import BasicInfo from './component/web_pages/loanApply/jsx/basicInfo';
@@ -30,15 +33,35 @@ return (
 
         <Routes>
 
+            <Route index element={<Welcome />} />
+
             <Route 
                 path="/" 
                 element={ <Welcome /> }
             />
 
+
+
             <Route 
                 path="/login" 
                 element={ <PersonnelLogin /> }
             />
+
+            <Route
+                path="/personnel_dashboard" 
+                element={ <PersonnelDash /> }     
+            />
+
+            <Route 
+                path="/personnel_dashboard/pending_loan_details" 
+                element={ <LoanDetails /> }
+            />
+
+
+
+
+
+
 
 
             <Route 
@@ -82,6 +105,11 @@ return (
                 element={ <PreviewApplication /> }
 
             />
+
+
+
+
+
 
 
 

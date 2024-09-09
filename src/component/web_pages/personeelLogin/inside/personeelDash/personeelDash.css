@@ -1,0 +1,103 @@
+.personnel_dashboard{
+    display: flex;
+    flex-direction: column;
+    font-family: "PT Serif";
+    margin-top: 2%;
+}
+
+.pd_page_label{
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+
+.pd_section{
+    display: flex;
+    flex-direction: column; 
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.pd_section_label{
+    text-align: left;
+    font-size: x-large;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.pd_section_items{
+    display: flex;
+    width: 100%;
+}
+
+.profile{
+    flex-direction: row;
+}
+
+.pending_loan{
+    flex-direction: column;
+}
+
+
+
+.pd_section_items_div{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.pd_section_item{
+    display: flex;
+    flex-direction: row;
+    padding: 0rem 0.5rem 0.5rem 0.5rem;
+    align-items: center;
+}
+
+.pd_section_item_label{
+    font-size: medium;
+    font-weight: 550;
+    width: 30%;
+}
+
+.pd_section_item_colon{
+    font-size: medium;
+    font-weight: 550;
+    margin-right: 2%;
+}
+
+.pd_section_item_value{
+    font-size: medium;
+    width: 68%;
+}
+
+
+.pd_section_row{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 2pt;
+}
+
+.pd_section_head_row{
+    font-weight: 550;
+}
+
+.pd_section_col{
+    margin: 2pt;
+    padding: 5pt;
+    border: 1px solid black;
+    text-align: center;
+    width: 16.667%;
+}
+
+.linked_col{
+    cursor: pointer;
+    color: dodgerblue;
+    text-decoration: underline;
+}
+
+
+
+
+

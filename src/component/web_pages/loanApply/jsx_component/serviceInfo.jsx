@@ -92,6 +92,7 @@ function ServiceInfo(props){
     servData["DATE_FIRST_JOIN"] = service_data["DATE_FIRST_JOIN"];
     servData["SERV_PERIOD"] = yearDuration+" YEARS, "+monthDuration+" MONTHS, "+dateDuration+" DAYS";
     servData["TIME_OF_RETIREMENT"] = date_of_birth;
+    servData["APPOINTMENT_TYPE"] = service_data["APPOINTMENT_TYPE"].toUpperCase();
 
     props.setServData(servData);
 

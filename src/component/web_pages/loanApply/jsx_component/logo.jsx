@@ -1,14 +1,16 @@
 import React from 'react';
 import logo_image from "../assets/logo.png"
 import "../css_component/logo.css";
+import { useNavigate } from 'react-router';
 
 
 function Logo(){
 
+    const logoNavigate = useNavigate();
  
     return(
 
-        <div className="logo">
+        <div className="logo" onClick={() => {logoNavigate("/");}}>
             <div className="logo_img">
                 <img className="l_img" src={logo_image} alt='BUET Logo'/>
             </div>

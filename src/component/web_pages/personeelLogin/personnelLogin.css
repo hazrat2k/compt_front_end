@@ -1,0 +1,198 @@
+@media screen and (max-width: 600px) {
+	main {
+		padding: 2.5rem 0;
+	}
+
+	input[type='button'] {
+		padding: 6px 12px;
+		margin: 4px;
+		font-size: 12px;
+
+	}
+
+	.mainContainer {
+		height: 50vh;
+	}
+
+	.titleContainer {
+		font-size: 32px;
+	}
+
+	.resultContainer,
+	.historyItem {
+		width: 200px;
+	}
+
+	.historyContainer {
+		height: 100px;
+	}
+
+	.buttonContainer {
+		height: 130px;
+	}
+
+	.inputContainer {
+		padding: 0.5rem;
+	}
+	
+	.errorLabel {
+		font-size: 10px;
+	}
+
+	.inputBox {
+		height: 30px;
+		width: 200px;
+		font-size: small;
+		padding-left: 4px;
+	}
+
+	
+
+}
+
+@media screen and (min-width: 600px) {
+	main {
+		padding: 2.5rem 0;
+	}
+
+	input[type='button'] {
+		padding: 12px 24px;
+		margin: 8px;
+		font-size: 24px;
+
+	}
+
+	.mainContainer {
+		height: 80vh;
+	}
+
+	.titleContainer {
+		font-size: 64px;
+	}
+
+	.resultContainer,
+	.historyItem {
+		width: 400px;
+	}
+
+	.historyContainer {
+		height: 200px;
+	}
+
+	.buttonContainer {
+		height: 260px;
+	}
+
+	.inputContainer {
+		padding: 1rem;
+	}
+	
+	.errorLabel {
+		font-size: 12px;
+	}
+
+
+	.inputBox {
+		height: 48px;
+		width: 400px;
+		font-size: large;
+		padding-left: 8px;
+	}
+
+
+
+}
+
+
+
+
+
+.personnel_login{
+	padding: 0;
+	margin: 0;
+	font-family: "PT Serif"
+}
+
+* {
+  	box-sizing: border-box;
+}
+
+main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+code {
+	background: #fafafa;
+	border-radius: 5px;
+	padding: 0.75rem;
+	font-family: "PT Serif"
+}
+
+input[type='button'] {
+	border: none;
+	background: cornflowerblue;
+	color: white;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+
+.mainContainer {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+    font-weight: bolder;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2%;
+}
+
+.resultContainer,
+.historyItem {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.historyContainer {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    flex-grow: 5;
+    justify-content: flex-start;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.errorLabel {
+    color: red;
+}
+
+.inputBox {
+    border-radius: 8px;
+    border: 1px solid grey;
+
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router";
 import { useMediaQuery } from 'react-responsive';
@@ -6,6 +6,7 @@ import "./navBar.css";
 import Logo from "../logo/logo";
 
 export default function NavBar(props){
+
 
     const navNavigate = useNavigate();
 
@@ -39,7 +40,7 @@ export default function NavBar(props){
         if (tl.reversed()) {
             tl.play();
         } else {
-            tl.to('.nav_items_with_close', { right: 0 })
+            tl.to('.nav_items_with_close', { right: 0})
                 .to('.nav_items_with_close', { height: height_ }, '-=.1')
                 .to('.navbar_item', { opacity: 1, pointerEvents: 'all', stagger: .2 }, '-=.8')
                 .to('.close', { opacity: 1, pointerEvents: 'all' }, "-=.8");
@@ -54,9 +55,24 @@ export default function NavBar(props){
     };
 
 
+    const [padVal, setpadVal] = useState("3rem");
+    const [height, setheight] = useState("8rem");
+    const listenScrollEvent = () => {
+        window.scrollY > 10 ? setpadVal("1rem") : setpadVal("3rem");
+        window.scrollY > 10 ? setheight("6rem") : setheight("8rem");
+    };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        window.addEventListener("scroll", listenScrollEvent);
+        return () => {
+          window.removeEventListener("scroll", listenScrollEvent);
+        };
+      }, []);
+
     return(
         <> 
-            <div className="logo_and_navbar">
+            <div className="logo_and_navbar" style={{height: height,paddingLeft: padVal, paddingRight: padVal, transition: "all 0.5s"}}>
                 <div className="logo_with_nav_mid">
 
                     <Logo />

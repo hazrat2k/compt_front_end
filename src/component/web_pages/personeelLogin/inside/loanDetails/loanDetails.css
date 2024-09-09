@@ -1,0 +1,91 @@
+.loan_assessment_form{
+    display: flex;
+    flex-direction: column;
+    font-family: "PT Serif";
+    margin-top: 2%;
+}
+
+.page_label{
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+
+.assessment_section{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem 1rem 2rem;
+}
+
+.section_label{
+    text-align: left;
+    font-size: x-large;
+    font-weight: 600;
+    margin-bottom: 1%;
+}
+
+.subsection_label{
+    text-align: center;
+    font-size: x-large;
+    text-decoration: underline;
+}
+
+.section_items{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    
+}
+
+.section_items_div{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.pro_photo{
+    height: 200px;
+    width: 200px;
+}
+
+.section_item{
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+.sec_item_def{
+    font-size: large;
+    font-weight: 550;
+}
+
+.section_item_label{
+    width: 30%;
+    margin-right: 5pt;
+}
+
+.section_item_colon{
+    margin-right: 10pt;
+}
+
+.section_item_value{
+    font-size: large;
+}
+
+.assessment_comment_label{
+    display: flex;
+    flex-direction: column;
+    font-size: large;
+    font-weight: bold;
+    margin-top: 1%;
+    color: red;
+    padding-left: 2rem;
+}
+
+.assessment_comment{
+    font-size: medium;
+    font-weight: 400;
+    padding: 0.25rem;
+}

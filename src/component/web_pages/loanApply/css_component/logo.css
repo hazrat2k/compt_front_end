@@ -81,6 +81,10 @@
 
 }
 
+.logo:hover{
+    cursor: pointer;
+}
+
 
 
 

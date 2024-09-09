@@ -64,8 +64,16 @@ export default function Welcome(){
             caption: 'Slide 2'
         },
         {
-            url: 'https://www.tbsnews.net/sites/default/files/styles/big_3/public/images/2019/10/10/buet.jpg',
+            url: 'https://www.buet.ac.bd/web/assets/img/UgImg/large_new_1.jpg',
             caption: 'Slide 3'
+        },
+        {
+            url: 'https://www.buet.ac.bd/web/assets/img/UgImg/large_new_2.jpg',
+            caption: 'Slide 4'
+        },
+        {
+            url: 'https://www.tbsnews.net/sites/default/files/styles/big_3/public/images/2019/10/10/buet.jpg',
+            caption: 'Slide 5'
         },
     ];
 
@@ -89,12 +97,6 @@ export default function Welcome(){
                     </Slide>
 
                 </div>
-
-                
-
-
-
-
 
 
             </div>

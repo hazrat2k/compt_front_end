@@ -10,7 +10,7 @@
 
     .nav_mid{
         font-size: 0.5rem;
-        padding: 0.25rem;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
 
     }
 
@@ -75,7 +75,7 @@
 
     .nav_mid{
         font-size: 1rem;
-        padding: 0.5rem;
+        padding: 0.5rem 1rem 0.5rem 1rem;
     }
 
     .container{
@@ -130,17 +130,22 @@
 
 
 .logo_and_navbar{
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    height: 8rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     font-family: "PT Serif";
-    padding: 1rem;
+    padding: 1rem 3rem 1rem 3rem;
     background-image: url("../../../assets/images/nav_back.png");
-    background-color: rgba(255,255,255,0.75);
-    background-blend-mode: lighten;
+    background-color: rgb(255, 255, 255);
     animation: animatedBackground 5s linear infinite alternate;
 }
+
 
 @keyframes animatedBackground {
     from {
@@ -188,7 +193,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1030;
+    z-index: 999;
+    padding-right: 0.5rem;
 }
 
 
