@@ -209,7 +209,7 @@ function PersonalInfo(){
                         </span>
 
                         <div className='piDataInputField'>
-                            <textarea className="piDataInput" name="piPresentAddress" placeholder="i.e. Vill: , P.O.: , P.S.: and Dist.: " 
+                            <textarea className="piDataInput" style={{height: "1.75rem"}} name="piPresentAddress" placeholder="i.e. Vill: , P.O.: , P.S.: and Dist.: " 
                             value={presentAddressValue} onChange={(e) => {setPresentAddressValue(e.target.value);}} />
 
                             <button className="piDataClearBtn" onClick={(e) => {e.preventDefault(); setPresentAddressValue("");}}>×</button>
@@ -225,7 +225,7 @@ function PersonalInfo(){
                         </span>
 
                         <div className='piDataInputField'>
-                            <textarea className="piDataInput" name="piPermanantAddress" placeholder="i.e. Vill: , P.O.: , P.S.: and Dist.: " 
+                            <textarea className="piDataInput" style={{height: "1.75rem"}} name="piPermanantAddress" placeholder="i.e. Vill: , P.O.: , P.S.: and Dist.: " 
                             value={permanantAddressValue} onChange={(e) => {setPermanantAddressValue(e.target.value);}} />
 
                             <button className="piDataClearBtn" onClick={(e) => {e.preventDefault(); setPermanantAddressValue("");}}>×</button>

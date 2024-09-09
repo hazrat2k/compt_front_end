@@ -39,13 +39,15 @@ function LoanInfo(){
 
     for(let i=0;i<loan_file.length;i++){
         if((loan_data["EMPLOYEEID"] === loan_file[i]["EMPLOYEEID"]) && 
-        (loan_file[i]["REMAINING_AMOUNT"] !== "0")){
+        (loan_file[i]["REMAINING_AMOUNT"] > 0)){
 
             data_loan.push(loan_file[i]);
 
         }
         
     }
+
+    console.log(data_loan);
 
     for(let i=0;i<data_loan.length;i++){
         for(let j=0;j<7;j++){

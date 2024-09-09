@@ -232,13 +232,21 @@ export default function LoanDetails(){
     ld_tot_pay = ld_hb_loan + ld_consu_loan + ld_lap_loan + ld_sblws_loan;
     ld_net_rec = ld_tot_rec - ld_tot_pay;
 
-    ld_tot_ins_amnt = ld_hb_loan_ins_amnt + ld_consu_loan_ins_amnt + ld_lap_loan_ins_amnt + ld_sblws_loan_ins_amnt;
+    ld_tot_loan_ins_amnt = ld_hb_loan_ins_amnt + ld_consu_loan_ins_amnt + ld_lap_loan_ins_amnt + ld_sblws_loan_ins_amnt;
+
+    
 
     ld_75_pens = ld_pens_gra * 0.75;
     
     ld_60_basic_sal = ld_basic_salary * 0.6;
 
     var calc_mon = 0;
+
+    var available_ins_amount = ld_60_basic_sal - ld_tot_loan_ins_amnt;
+
+    var temp_prop_amnt = ld_app_amnt;
+
+    var temp_inst_amnt = ld_app_amnt;
 
     if(ld_rem_serv_m < 10){
 
@@ -253,33 +261,37 @@ export default function LoanDetails(){
             </div>
         );
         
-    }else if(ld_rem_serv_m >= 10 && ld_rem_serv_m < 30){
-        calc_mon = 10;
-    }else if(ld_rem_serv_m >= 30 && ld_rem_serv_m < 50){
-        calc_mon = 30;
-    }else if(ld_rem_serv_m >= 50 && ld_rem_serv_m < 80){
-        calc_mon = 50;
-    }else if(ld_rem_serv_m >= 80 && ld_rem_serv_m < 100){
-        calc_mon = 80;
-    }else{
-        calc_mon = 100;
+    }else {
+        if(ld_rem_serv_m >= 10 && ld_rem_serv_m < 30){
+            calc_mon = 10;
+        }else if(ld_rem_serv_m >= 30 && ld_rem_serv_m < 50){
+            calc_mon = 30;
+        }else if(ld_rem_serv_m >= 50 && ld_rem_serv_m < 80){
+            calc_mon = 50;
+        }else if(ld_rem_serv_m >= 80 && ld_rem_serv_m < 100){
+            calc_mon = 80;
+        }else{
+            calc_mon = 100;
+        }
+
+        // console.log("available_ins_amount : "+available_ins_amount);
+
+        // console.log("temp_inst_amnt : "+temp_inst_amnt);
+
+        while(temp_inst_amnt > available_ins_amount){
+            temp_inst_amnt = Math.ceil((temp_prop_amnt * ( 1 + ((7.75 * calc_mon) / (12 * 100)))) / calc_mon) ;
+            temp_prop_amnt = temp_prop_amnt - 10000;
+        }
+
+        // console.log("amount : "+(temp_prop_amnt+10000)+", installment : "+temp_inst_amnt);
+
     }
 
-    
+    ld_prop_amnt = temp_prop_amnt+10000;
 
-    var available_ins_amount = ld_60_basic_sal - ld_tot_ins_amnt;
+    ld_inst_amnt = temp_inst_amnt;
 
-    var temp_prop_amnt = ld_app_amnt;
-
-    var temp_inst_amnt = ld_app_amnt;
-
-    while(temp_inst_amnt < available_ins_amount){
-        temp_inst_amnt = (temp_prop_amnt * ( 1 + (7.75 / 100))) / calc_mon ;
-        temp_prop_amnt = temp_prop_amnt - 10000;
-    }
-
-
-
+    ld_tot_no_ins = calc_mon;
 
     ld_tot_ins_amnt = ld_tot_loan_ins_amnt + ld_inst_amnt;
 
