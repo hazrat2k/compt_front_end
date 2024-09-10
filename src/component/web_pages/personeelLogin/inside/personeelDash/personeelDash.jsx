@@ -15,6 +15,8 @@ export default function PersoneelDash(){
     const pd_navigate = useNavigate();
     const { state } = useLocation();
 
+    var pending_loan_status = false;
+
     const pd_data = state["data"];
 
 
@@ -54,7 +56,7 @@ export default function PersoneelDash(){
 
     for(let i=0;i<pd_pend_loan_data.length;i++){
         if(pd_data["designation"] === pd_pend_loan_data[i]["APP_STATUS"]){
-
+            pending_loan_status = true;
             pd_pend_loan_display.push(
                 <div className="pd_section_row">
                     <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}>{pd_pend_loan_data[i]["LOAN_ID"]}</div>
@@ -113,18 +115,30 @@ export default function PersoneelDash(){
                         Pending Loan :
                     </div>
 
-                    <div className="pd_section_items pending_loan">
-                        <div className="pd_section_row pd_section_head_row">
-                            <div className="pd_section_col">LOAN ID</div>
-                            <div className="pd_section_col">APPLICANT NAME</div>
-                            <div className="pd_section_col">DESIGNATION</div>
-                            <div className="pd_section_col">OFFICE/DEPT.</div>
-                            <div className="pd_section_col">LOAN TYPE</div>
-                            <div className="pd_section_col">APPLIED TIME</div>
+                    {
+                        pending_loan_status ? 
+                        <div className="pd_section_items pending_loan">
+                            <div className="pd_section_row pd_section_head_row">
+                                <div className="pd_section_col">LOAN ID</div>
+                                <div className="pd_section_col">APPLICANT NAME</div>
+                                <div className="pd_section_col">DESIGNATION</div>
+                                <div className="pd_section_col">OFFICE/DEPT.</div>
+                                <div className="pd_section_col">LOAN TYPE</div>
+                                <div className="pd_section_col">APPLIED TIME</div>
+                            </div>
+
+                            {pd_pend_loan_display}
+                        </div>
+                        
+                        :
+
+                        <div className="no_pending_loan">
+                            No Pending Loan
                         </div>
 
-                        {pd_pend_loan_display}
-                    </div>
+                    }
+
+                    
                 </div>
 
 

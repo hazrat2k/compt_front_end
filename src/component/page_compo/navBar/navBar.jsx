@@ -59,7 +59,7 @@ export default function NavBar(props){
     const [height, setheight] = useState("8rem");
     const listenScrollEvent = () => {
         window.scrollY > 10 ? setpadVal("1rem") : setpadVal("3rem");
-        window.scrollY > 10 ? setheight("5rem") : setheight("8rem");
+        window.scrollY > 10 ? setheight("6rem") : setheight("8rem");
     };
 
     useEffect(() => {

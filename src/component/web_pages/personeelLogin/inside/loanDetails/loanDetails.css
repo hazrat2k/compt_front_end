@@ -89,3 +89,56 @@
     font-weight: 400;
     padding: 0.25rem;
 }
+
+.remarks_item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+}
+
+.remarks_input{
+    width: 50%;
+    height: 4rem;
+    font-size: large;
+    font-family: "PT Serif";
+}
+
+
+.ld_button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ld_forward{
+    width: 8rem;
+    height: 3rem;
+    padding: 0.5rem;
+    text-align: center;
+    border: 2px solid var(--green);
+    border-radius: 2rem;
+    background-color: white;
+    color: var(--green);
+    font-size: large;
+    font-weight: bold;
+}
+
+.ld_forward:hover{
+    width: 10rem;
+    height: 3.5rem;
+    border: 2px solid white;
+    background-color: var(--green);
+    color: white;
+    cursor: pointer;
+    font-size: x-large;
+    transition: all 0.3s ease;
+}
+
+
+
+
+
+
+

@@ -16,12 +16,18 @@ export default function LoanDetails(){
 
     const ld_data = state["data"];
 
+    const loan_personnel = ["COMPT", "DP_COMPT", "AD_FUND", "AO_FUND", "ACCONT"];
+
     const [ld_pl_pers_serv, setLd_pl_pers_serv] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
     const [ld_pl_hl_cl, setLd_pl_hl_cl] = useState([]);
     const [ld_pl_ll_sbwsl, setLd_pl_ll_sbwsl] = useState([]);
     const [ld_pl_sbhl_buetl, setLd_pl_sbhl_buetl] = useState([]);
     const [ld_pl_oth_sum, setLd_pl_oth_sum] = useState([]);
+    const [ld_pl_remarks, setLd_pl_remarks] = useState([]);
+
+    const [ld_remarks, setLd_remarks] = useState("");
+    const [ld_remarks_error, setLd_remarks_error] = useState(false);
 
     const pension_rate_table = [0, 0, 0, 0, 0,
                                 21, 24, 27, 30, 33,
@@ -76,6 +82,8 @@ export default function LoanDetails(){
     var ld_60_basic_sal = 0;
 
     const ld_comment_display = [];
+
+    const ld_remarks_display = [];
 
     const dateFormation = ( date ) => {
         var temp_date = new Date(date);
@@ -141,6 +149,9 @@ export default function LoanDetails(){
 
                 const oth_sum_res = await axios.get("http://localhost:8800/processing_loan_others_sum");
                 setLd_pl_oth_sum(oth_sum_res.data);
+
+                const remarks_res = await axios.get("http://localhost:8800/processing_loan_remarks");
+                setLd_pl_remarks(remarks_res.data);
 
             }catch(err){
                 console.log(err);
@@ -248,10 +259,14 @@ export default function LoanDetails(){
 
     var temp_inst_amnt = ld_app_amnt;
 
+    var interest_rate = 7.75;
+
+    
+
     if(ld_rem_serv_m < 10){
 
-        ld_prop_amnt = 0;
-        ld_inst_amnt = 0;
+        temp_prop_amnt = 0;
+        temp_inst_amnt = 0;
         ld_tot_no_ins = 0;
         ld_processing = false;
 
@@ -279,7 +294,7 @@ export default function LoanDetails(){
         // console.log("temp_inst_amnt : "+temp_inst_amnt);
 
         while(temp_inst_amnt > available_ins_amount){
-            temp_inst_amnt = Math.ceil((temp_prop_amnt * ( 1 + ((7.75 * calc_mon) / (12 * 100)))) / calc_mon) ;
+            temp_inst_amnt = Math.ceil(((2 * temp_prop_amnt) * (1200 + calc_mon * interest_rate))/(calc_mon * (2400 - interest_rate + calc_mon * interest_rate)));
             temp_prop_amnt = temp_prop_amnt - 10000;
         }
 
@@ -287,13 +302,38 @@ export default function LoanDetails(){
 
     }
 
-    ld_prop_amnt = temp_prop_amnt+10000;
-
-    ld_inst_amnt = temp_inst_amnt;
+    if(temp_prop_amnt != 0){
+        ld_prop_amnt = temp_prop_amnt + 10000;
+    }
 
     ld_tot_no_ins = calc_mon;
 
+    ld_inst_amnt = temp_inst_amnt;
+
     ld_tot_ins_amnt = ld_tot_loan_ins_amnt + ld_inst_amnt;
+
+    for(let i=0;i<ld_pl_remarks.length;i++){
+        if(ld_data["LOAN_ID"] === ld_pl_remarks[i]["LOAN_ID"]){
+
+            for(let j=0;j<loan_personnel.length;j++){
+                if(ld_pl_remarks[i][loan_personnel[j]] !== null){
+                    ld_remarks_display.push(remarksItem(loan_personnel[j], ld_pl_remarks[i][loan_personnel[j]]));
+                }
+            }
+
+            break;
+        }
+    }
+
+    const remarksItem = (label, value) => {
+        return(
+            <div className="section_item">
+                <div className="section_item_label sec_item_def">{label}</div>
+                <div className="section_item_colon sec_item_def">:</div>
+                <div className="section_item_value">{value}</div>
+            </div>
+        );
+    };
 
     const sectionItem = (index, label, value) => {
         return(
@@ -305,6 +345,21 @@ export default function LoanDetails(){
                 <div className="section_item_value">{value}</div>
             </div>
         );
+    };
+
+    const onForwarClick = (e) =>{
+        e.preventDefault();
+
+        if(ld_remarks === ""){
+            setLd_remarks_error(true);
+            return;
+        }else{
+            setLd_remarks_error(false);
+        }
+
+        
+
+
     };
 
     return(
@@ -451,6 +506,36 @@ export default function LoanDetails(){
                     </div>
 
                 }
+
+                <div className="assessment_section remarks">
+                    <div className="section_label">F) Remarks :</div>
+
+                    {ld_remarks_error ?
+                        <div className="remarks_input" style={{color: "red"}}>
+                            ***Remarks must be written
+                        </div>
+                    
+                    : ""}
+                    
+                    <div className="section_items">
+                        {ld_remarks_display}
+                        <div className="remarks_item">
+                            <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={ld_remarks} onChange={(e) => {setLd_remarks(e.target.value)}} />
+                        </div>
+                        
+                    </div>
+
+                    
+
+                </div>
+
+                <div className="ld_button">
+                    <div className="ld_forward" onClick={onForwarClick}>
+                        Forward
+                    </div>
+                </div>
+
+
 
 
             </div>
