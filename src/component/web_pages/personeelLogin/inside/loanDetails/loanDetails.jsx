@@ -18,6 +18,7 @@ export default function LoanDetails(){
 
     const loan_personnel = ["COMPT", "DP_COMPT", "AD_FUND", "AO_FUND", "ACCONT"];
 
+    const [ld_pers_data, setLd_pers_data] = useState([]);
     const [ld_pl_pers_serv, setLd_pl_pers_serv] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
     const [ld_pl_hl_cl, setLd_pl_hl_cl] = useState([]);
@@ -132,6 +133,10 @@ export default function LoanDetails(){
     useEffect( () => {
         const fetch_processing_loan_data = async () =>{
             try{
+
+                const pers_data_res = await axios.get("http://localhost:8800/personeel_login");
+                setLd_pers_data(pers_data_res.data);
+
                 const pers_serv_res = await axios.get("http://localhost:8800/processing_loan_pers_serv");
                 setLd_pl_pers_serv(pers_serv_res.data);
 
@@ -312,23 +317,12 @@ export default function LoanDetails(){
 
     ld_tot_ins_amnt = ld_tot_loan_ins_amnt + ld_inst_amnt;
 
-    for(let i=0;i<ld_pl_remarks.length;i++){
-        if(ld_data["LOAN_ID"] === ld_pl_remarks[i]["LOAN_ID"]){
-
-            for(let j=0;j<loan_personnel.length;j++){
-                if(ld_pl_remarks[i][loan_personnel[j]] !== null){
-                    ld_remarks_display.push(remarksItem(loan_personnel[j], ld_pl_remarks[i][loan_personnel[j]]));
-                }
-            }
-
-            break;
-        }
-    }
+    
 
     const remarksItem = (label, value) => {
         return(
             <div className="section_item">
-                <div className="section_item_label sec_item_def">{label}</div>
+                <div className="remarks_item_label sec_item_def">{label}</div>
                 <div className="section_item_colon sec_item_def">:</div>
                 <div className="section_item_value">{value}</div>
             </div>
@@ -347,7 +341,29 @@ export default function LoanDetails(){
         );
     };
 
-    const onForwarClick = (e) =>{
+    for(let i=0;i<ld_pl_remarks.length;i++){
+        if(ld_data["LOAN_ID"] === ld_pl_remarks[i]["LOAN_ID"]){
+
+            for(let j=0;j<loan_personnel.length;j++){
+                if(ld_pl_remarks[i][loan_personnel[j]] !== null){
+                    ld_remarks_display.push(remarksItem(loan_personnel[j], ld_pl_remarks[i][loan_personnel[j]]));
+                }
+            }
+
+            break;
+        }
+    }
+
+    var ld_personnel_data = [];
+
+    for(let i=0;i<ld_pers_data.length;i++){
+        if (ld_data["APP_STATUS"] === ld_pers_data[i]["designation"]) {
+            ld_personnel_data = ld_pers_data[i];
+            break;
+        }
+    }
+
+    const onForwarClick = async e =>{
         e.preventDefault();
 
         if(ld_remarks === ""){
@@ -357,7 +373,25 @@ export default function LoanDetails(){
             setLd_remarks_error(false);
         }
 
-        
+
+
+        const updateRemarksData = {
+            "LOAN_ID": ld_loan_id,
+            "REMARKER": ld_data["APP_STATUS"],
+            "REMARKS": ld_remarks,
+        };
+
+
+        try{
+            await axios.put("http://localhost:8800/processing_loan_remarks/", updateRemarksData);
+            
+            ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data}});
+
+        }catch(err){
+            console.log(err);
+        }
+
+
 
 
     };
@@ -517,7 +551,7 @@ export default function LoanDetails(){
                     
                     : ""}
                     
-                    <div className="section_items">
+                    <div className="remarks_items">
                         {ld_remarks_display}
                         <div className="remarks_item">
                             <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={ld_remarks} onChange={(e) => {setLd_remarks(e.target.value)}} />
@@ -528,6 +562,7 @@ export default function LoanDetails(){
                     
 
                 </div>
+                
 
                 <div className="ld_button">
                     <div className="ld_forward" onClick={onForwarClick}>

@@ -90,6 +90,12 @@
     padding: 0.25rem;
 }
 
+.remarks_items{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .remarks_item{
     display: flex;
     flex-direction: column;
@@ -98,7 +104,13 @@
 
 }
 
+.remarks_item_label{
+    width: 10%;
+    margin-right: 5pt;
+}
+
 .remarks_input{
+    margin-top: 2%;
     width: 50%;
     height: 4rem;
     font-size: large;

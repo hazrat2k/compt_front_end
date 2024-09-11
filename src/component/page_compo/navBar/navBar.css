@@ -134,13 +134,12 @@
     top: 0;
     z-index: 999;
     width: 100%;
-    height: 8rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     font-family: "PT Serif";
-    padding: 1rem 3rem 1rem 3rem;
+    padding: 1rem;
     background-image: url("../../../assets/images/nav_back.png");
     background-color: rgb(255, 255, 255);
     animation: animatedBackground 5s linear infinite alternate;
