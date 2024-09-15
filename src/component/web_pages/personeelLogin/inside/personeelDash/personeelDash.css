@@ -84,11 +84,18 @@
 }
 
 .pd_section_col{
+    height: 4rem;
     margin: 2pt;
     padding: 5pt;
     border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 14.28%;
+}
+
+.pd_section_col_value{
     text-align: center;
-    width: 16.667%;
 }
 
 .linked_col{

@@ -133,10 +133,6 @@ code {
 }
 
 input[type='button'] {
-	border: none;
-	background: cornflowerblue;
-	color: white;
-	border-radius: 8px;
 	cursor: pointer;
 }
 
@@ -185,6 +181,21 @@ input[type='button'] {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+}
+
+.inputButton{
+	color: white;
+	background-color: var(--green);
+	border: 2px solid white;
+	border-radius: 1rem;
+	font-weight: bold;
+
+}
+
+.inputButton:hover{
+	color: var(--green);
+	background-color: white;
+	border: 2px solid var(--green);
 }
 
 .errorLabel {

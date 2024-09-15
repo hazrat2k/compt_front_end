@@ -18,6 +18,8 @@ export default function LoanDetails(){
 
     const loan_personnel = ["COMPT", "DP_COMPT", "AD_FUND", "AO_FUND", "ACCONT"];
 
+    
+
     const [ld_pers_data, setLd_pers_data] = useState([]);
     const [ld_pl_pers_serv, setLd_pl_pers_serv] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
@@ -41,6 +43,8 @@ export default function LoanDetails(){
     const ld_applicant_name = ld_data["APPLICANT_NAME"];
     const ld_designation = ld_data["DESIGNATION"];
     const ld_office_dept = ld_data["OFFICE_DEPT"];
+
+    const ld_user = ld_data["sendFrom"] === ld_data["APP_STATUS"];
 
     var ld_processing = true;
 
@@ -419,6 +423,12 @@ export default function LoanDetails(){
                             {sectionItem("4", "Designation", ld_designation)}
                             {sectionItem("5", "Office/Dept.", ld_office_dept)}
                             {sectionItem("6", "Date of Birth", ld_dob)}
+                            {
+                                ld_user ? 
+                                ""
+                                :
+                                sectionItem("7", "Application Status", ld_data["APP_STATUS"])
+                            }
 
                         </div>
                         <div className="section_items_div">
@@ -522,7 +532,7 @@ export default function LoanDetails(){
                         <div className="section_items_div">
                             {sectionItem("2", "Applied Amount", ld_app_amnt)}
                             {sectionItem("4", "Installment Amount", ld_inst_amnt)}
-                            {sectionItem("6", "Total Installment Amount", ld_tot_ins_amnt)}
+                            {sectionItem("6", "Total Installment Amount (D15.+E4.)", ld_tot_ins_amnt)}
                         </div>
                     </div>
 
@@ -544,31 +554,51 @@ export default function LoanDetails(){
                 <div className="assessment_section remarks">
                     <div className="section_label">F) Remarks :</div>
 
-                    {ld_remarks_error ?
+                    {
+                        ld_remarks_error ?
                         <div className="remarks_input" style={{color: "red"}}>
                             ***Remarks must be written
                         </div>
-                    
-                    : ""}
+                
+                        : ""    
+                    }
                     
                     <div className="remarks_items">
                         {ld_remarks_display}
-                        <div className="remarks_item">
-                            <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={ld_remarks} onChange={(e) => {setLd_remarks(e.target.value)}} />
-                        </div>
+
+                        {
+                            ld_user ?
+                            <div className="remarks_item">
+                                <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={ld_remarks} onChange={(e) => {setLd_remarks(e.target.value)}} />
+                            </div>
+                            :
+                            ""
+
+                        }
+
+                        
                         
                     </div>
 
                     
 
                 </div>
-                
 
-                <div className="ld_button">
-                    <div className="ld_forward" onClick={onForwarClick}>
-                        Forward
+
+                {
+                    ld_user ? 
+                    <div className="ld_button">
+                        <div className="ld_forward" onClick={onForwarClick}>
+                            Forward
+                        </div>
                     </div>
-                </div>
+                    :
+                    ""
+
+                }
+
+
+                
 
 
 

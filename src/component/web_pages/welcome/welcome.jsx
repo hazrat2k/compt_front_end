@@ -25,33 +25,41 @@ export default function Welcome(){
         height: '100vh'
     }
 
+    const diameter = "25px";
+
     const buttonStyle = {
-        height: "50px",
-        width: "50px",
+        height: diameter,
+        width: diameter,
         padding: "12px",
-        background: buttonHovering ? "#3f8ba8" : "#ffffff",
-        border: buttonHovering ? '2px Solid #ffffff' : '2px Solid #3f8ba8',
+        background: "transparent",
+        border: buttonHovering ? '2px Solid transparent' : '2px Solid #3f8ba8',
         borderRadius: "50px",
         marginLeft: "20px",
         marginRight: "20px"
     };
 
     const button2Style = {
-        height: "50px",
-        width: "50px",
+        height: diameter,
+        width: diameter,
         padding: "12px",
-        background: button2Hovering ? "#3f8ba8" : "#ffffff",
-        border: button2Hovering ? '2px Solid #ffffff' : '2px Solid #3f8ba8',
+        background: "transparent",
+        border: button2Hovering ? '2px Solid transparent' : '2px Solid #3f8ba8',
         borderRadius: "50px",
         marginLeft: "20px",
         marginRight: "20px"
     };
     
     const properties = {
-        prevArrow: <button onMouseEnter={() => setButtonHovering(true)} onMouseLeave={() => setButtonHovering(false)} style={{ ...buttonStyle }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill={buttonHovering ? "#ffffff" : "#3f8ba8"}><path d="M242 180.6v-138L0 256l242 213.4V331.2h270V180.6z"/></svg></button>,
-        nextArrow: <button onMouseEnter={() => setButton2Hovering(true)} onMouseLeave={() => setButton2Hovering(false)} style={{ ...button2Style }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill={button2Hovering ? "#ffffff" : "#3f8ba8"}><path d="M512 256L270 42.6v138.2H0v150.6h270v138z"/></svg></button>
+        prevArrow: 
+            <div onMouseEnter={() => setButtonHovering(true)} onMouseLeave={() => setButtonHovering(false)} style={{ ...buttonStyle }}>
+                {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill={buttonHovering ? "#ffffff" : "#3f8ba8"}><path d="M242 180.6v-138L0 256l242 213.4V331.2h270V180.6z"/></svg> */}
+                <svg fill={buttonHovering ? "#ffffff" : "#3f8ba8"} width={diameter} height={diameter} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M 26 6 L 6 15.21875 L 6 16.78125 L 26 26 L 26 23.84375 L 9.46875 16 L 26 8.15625 Z"/></svg>
+            </div>,
+        nextArrow: 
+        <button onMouseEnter={() => setButton2Hovering(true)} onMouseLeave={() => setButton2Hovering(false)} style={{ ...button2Style }}>
+            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill={button2Hovering ? "#ffffff" : "#3f8ba8"}><path d="M512 256L270 42.6v138.2H0v150.6h270v138z"/></svg> */}
+        
+        </button>
     }
 
     const slideImages = [
@@ -86,7 +94,7 @@ export default function Welcome(){
             <div className="welcome_body">
 
                 <div className="photo_anime">
-                    <Slide {...properties}>
+                    <Slide >
                         {slideImages.map((slideImage, index)=> (
                             <div key={index}>
                                 <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage.url})` }}>

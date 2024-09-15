@@ -1,0 +1,29 @@
+.about_us_page{
+    display: flex;
+    flex-direction: row;
+    font-family: "PT Serif";
+    width: 100%;
+}
+
+.about_us_nav{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.about_us_display{
+    display: flex;
+    flex-direction: column;
+}
+
+.about_us_nav_items{
+    padding: 0;
+}
+
+
+.about_us_nav_item{
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+}
+
