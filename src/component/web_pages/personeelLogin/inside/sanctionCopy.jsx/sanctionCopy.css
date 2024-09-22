@@ -1,0 +1,68 @@
+.sanction_copy{
+    display: flex;
+    flex-direction: column;
+    font-family: "PT Serif";
+    margin-top: 2%;
+}
+
+
+.sc_page_title{
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+
+.sc_table{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.sc_table_row{
+    display: flex;
+    flex-direction: row;
+    padding: 0.25rem 0.5rem;
+    gap: 0.25rem;
+    border-top: 1px solid black;
+}
+
+.sc_bold{
+    font-weight: bold;
+}
+
+.sc_table_col{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.125rem;
+}
+
+.large_col{
+    width: 6%;
+}
+
+.small_col{
+    width: 5%;
+}
+
+.sc_table_cell{
+    font-size: 9pt;
+    text-align: center;
+}
+
+.sc_in_words{
+    display: flex;
+    flex-direction: row;
+    padding: 1rem 2rem;
+}
+
+.sc_text{
+    font-weight: bold;
+    font-size: small;
+    text-transform: uppercase;
+}
+
+
+

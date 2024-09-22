@@ -668,8 +668,6 @@ const Application = (props) => {
             uploadData.append(key, app_data[key]);
         }
 
-
-
         try{
             await axios.post("http://localhost:8800/loan", uploadData);
             downloadURI(url, 'application.pdf');

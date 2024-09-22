@@ -15,8 +15,11 @@ export default function PersoneelDash(){
     const pd_navigate = useNavigate();
     const { state } = useLocation();
 
+    const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT",];
+
     var pending_loan_status = false;
     var processing_loan_status = false;
+    var sanction_loan_status = false;
 
     const pd_data = state["data"];
 
@@ -30,6 +33,8 @@ export default function PersoneelDash(){
     const pd_process_loan_display = [];
 
     const [pd_pend_loan_data, setPd_pend_loan_data] = useState([]);
+    const [pd_sanc_loan_data, setPd_sanc_loan_data] = useState([]);
+
 
     useEffect( () => {
         const fetch_pending_loan_data = async () =>{
@@ -40,6 +45,16 @@ export default function PersoneelDash(){
             }catch(err){
                 console.log(err);
             }
+
+            try{
+                const sanc_res = await axios.get("http://localhost:8800/sanction_loan");
+                setPd_sanc_loan_data(sanc_res.data);
+
+            }catch(err){
+                console.log(err);
+            }
+
+
         }
         fetch_pending_loan_data();
     }, []);
@@ -57,9 +72,29 @@ export default function PersoneelDash(){
 
     };
 
+    const status = (status_text) =>{
+        var ret_val = "";
+
+        if(temp_status <= 5){
+            ret_val = "Loan Assesment ("+status_text+")";
+        }else if(temp_status > 5 && temp_status <= 11){
+            ret_val = "Sanction ("+status_text+")";
+        }else if(temp_status > 11 && temp_status <= 14){
+            ret_val = "Office Order ("+status_text+")";
+        }else if(temp_status > 14){
+            ret_val = "Bill ("+status_text+")";
+        }
+
+        return ret_val;
+    }
+
     for(let i=0;i<pd_pend_loan_data.length;i++){
-        if(pd_data["designation"] === pd_pend_loan_data[i]["APP_STATUS"]){
+
+        var temp_status = Number(pd_pend_loan_data[i]["APP_STATUS"]);
+        
+        if(pd_desig === loan_personnel[temp_status]){
             pending_loan_status = true;
+
             pd_pend_loan_display.push(
                 <div className="pd_section_row">
                     <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
@@ -67,13 +102,14 @@ export default function PersoneelDash(){
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APP_STATUS"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{status(loan_personnel[temp_status])}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
                 </div>
             );
 
         }else{
             processing_loan_status = true;
+            
             pd_process_loan_display.push(
                 <div className="pd_section_row">
                     <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
@@ -81,11 +117,19 @@ export default function PersoneelDash(){
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APP_STATUS"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{status(loan_personnel[temp_status])}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
                 </div>
             );
         }
+    }
+
+    for(let i=0;i<pd_sanc_loan_data.length;i++){
+        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
+            sanction_loan_status = true;
+            break;
+        }
+        
     }
 
 
@@ -99,6 +143,12 @@ export default function PersoneelDash(){
             </div>
         );
     };
+
+
+    const onSanctionClick = (e) => {
+        e.preventDefault();
+        pd_navigate("/personnel_dashboard/sanction_copy");
+    }
 
     return(
         <>
@@ -126,6 +176,38 @@ export default function PersoneelDash(){
                         </div>
                     </div>
                 </div>
+
+                {
+                    pd_desig === "ACCONT" ?
+                    <div className="pd_section">
+                        <div className="pd_section_label">
+                            Preview Copy :
+                        </div>
+
+                        <div className="pd_section_copy">
+                            {
+                                sanction_loan_status ?
+                                <div className="pd_butt" onClick={onSanctionClick}>
+                                    Preview Sanction
+                                </div>
+                                :
+                                <div className="no_pending_loan">
+                                    No Loan is available for sanction
+                                </div>
+                            }
+
+                        </div>
+
+                        
+
+                        
+                        
+
+                        
+                    </div>
+                    :
+                    ""
+                }
 
                 <div className="pd_section">
                     <div className="pd_section_label">
@@ -183,13 +265,15 @@ export default function PersoneelDash(){
                         :
 
                         <div className="no_pending_loan">
-                            No Pending Loan
+                            No Processing Loan
                         </div>
 
                     }
 
                     
                 </div>
+
+                
 
 
             </div>

@@ -38,6 +38,32 @@
     flex-direction: column;
 }
 
+.pd_section_copy{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.pd_butt{
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    border: 2px solid var(--green);
+    border-radius: 2rem;
+    background-color: white;
+    color: var(--green);
+    font-size: large;
+    font-weight: bold;
+    transition: all ease 0.3s;
+}
+
+.pd_butt:hover{
+    border: 2px solid white;
+    background-color: var(--green);
+    color: white;
+    cursor: pointer;
+    font-size: x-large;
+}
 
 
 .pd_section_items_div{
