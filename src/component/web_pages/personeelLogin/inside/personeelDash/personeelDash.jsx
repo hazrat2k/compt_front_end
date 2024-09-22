@@ -72,17 +72,17 @@ export default function PersoneelDash(){
 
     };
 
-    const status = (status_text) =>{
+    const app_status = (value) =>{
         var ret_val = "";
 
-        if(temp_status <= 5){
-            ret_val = "Loan Assesment ("+status_text+")";
-        }else if(temp_status > 5 && temp_status <= 11){
-            ret_val = "Sanction ("+status_text+")";
-        }else if(temp_status > 11 && temp_status <= 14){
-            ret_val = "Office Order ("+status_text+")";
-        }else if(temp_status > 14){
-            ret_val = "Bill ("+status_text+")";
+        if(value <= 5){
+            ret_val = "Loan Assesment ("+loan_personnel[value]+")";
+        }else if(value > 5 && value <= 11){
+            ret_val = "Sanction ("+loan_personnel[value]+")";
+        }else if(value > 11 && value <= 14){
+            ret_val = "Office Order ("+loan_personnel[value]+")";
+        }else if(value > 14){
+            ret_val = "Bill ("+loan_personnel[value]+")";
         }
 
         return ret_val;
@@ -102,7 +102,7 @@ export default function PersoneelDash(){
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{status(loan_personnel[temp_status])}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
                 </div>
             );
@@ -117,7 +117,7 @@ export default function PersoneelDash(){
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{status(loan_personnel[temp_status])}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
                     <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
                 </div>
             );

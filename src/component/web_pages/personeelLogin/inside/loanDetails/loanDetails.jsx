@@ -41,6 +41,7 @@ export default function LoanDetails(){
 
     var ld_value = {}                          
     ld_value["loan_id"] = ld_data["LOAN_ID"];
+    ld_value["salary_id"] = ld_data["SALARY_ID"];
     ld_value["loan_type"] = ld_data["LOAN_TYPE"];
     ld_value["buet_id"] = ld_data["BUET_ID"];
     ld_value["applicant_name"] = ld_data["APPLICANT_NAME"];
@@ -54,23 +55,23 @@ export default function LoanDetails(){
     const ld_user = ld_data["sendFrom"] === loan_personnel[temp_status];
     
 
-    const status = (status_text) =>{
+    const app_status = (value) =>{
         var ret_val = "";
 
-        if(temp_status <= 5){
-            ret_val = "Loan Assesment ("+status_text+")";
-        }else if(temp_status > 5 && temp_status <= 11){
-            ret_val = "Sanction ("+status_text+")";
-        }else if(temp_status > 11 && temp_status <= 14){
-            ret_val = "Office Order ("+status_text+")";
-        }else if(temp_status > 14){
-            ret_val = "Bill ("+status_text+")";
+        if(value <= 5){
+            ret_val = "Loan Assesment ("+loan_personnel[value]+")";
+        }else if(value > 5 && value <= 11){
+            ret_val = "Sanction ("+loan_personnel[value]+")";
+        }else if(value > 11 && value <= 14){
+            ret_val = "Office Order ("+loan_personnel[value]+")";
+        }else if(value > 14){
+            ret_val = "Bill ("+loan_personnel[value]+")";
         }
 
         return ret_val;
     }
 
-    var temp_status_t = status(loan_personnel[temp_status]);
+    var temp_status_t = app_status(temp_status);
     
 
     var ld_processing = true;
@@ -363,7 +364,7 @@ export default function LoanDetails(){
     const remarksItem = (label, value) => {
         return(
             <div className="remarks_item">
-                <div className="remarks_item_label sec_item_def">{status(label)}</div>
+                <div className="remarks_item_label sec_item_def">{app_status(label)}</div>
                 <div className="section_item_colon sec_item_def">:</div>
                 <div className="section_item_value">{value}</div>
             </div>
@@ -386,9 +387,9 @@ export default function LoanDetails(){
         if(ld_data["LOAN_ID"] === ld_pl_remarks[i]["LOAN_ID"]){
 
             for(let j=0;j<temp_status;j++){
-                if(ld_pl_remarks[i][loan_personnel[j]] !== null){
+                if(ld_pl_remarks[i][j+"_"] !== null){
 
-                    ld_remarks_display.push(remarksItem(loan_personnel[j], ld_pl_remarks[i][loan_personnel[j]]));
+                    ld_remarks_display.push(remarksItem(j, ld_pl_remarks[i][j+"_"]));
                 
                 }
             }
@@ -437,7 +438,20 @@ export default function LoanDetails(){
             temp_status > 6 ){
 
             try{
-                await axios.put("http://localhost:8800/sanction", {"loan_id" : ld_value["loan_id"]});
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : ld_value["loan_id"], "status" : "OFF_ORD"});
+    
+            }catch(err){
+                console.log(err);
+            }
+
+        }
+
+        if(ld_user && 
+            (ld_data["sendFrom"] == "COMPT") && 
+            temp_status > 13 ){
+
+            try{
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : ld_value["loan_id"], "status" : "BILL"});
     
             }catch(err){
                 console.log(err);
