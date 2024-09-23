@@ -29,6 +29,8 @@ export default function SanctionCopy(){
         str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
         return str;
     }
+
+    let nf = new Intl.NumberFormat('en-US');
     
 
     useEffect( () => {
@@ -72,13 +74,13 @@ export default function SanctionCopy(){
                     {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["NET_PAY"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["APPLY_AMOUNT"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["ALLOW_AMOUNT"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["SANCTION_AMOUNT"], "large_col sc_bold")}
-                    {sc_table_col(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["INSTALL_AMOUNT"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["TOTAL_INTEREST"], "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col sc_bold")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["ACCOUNT_NO"], "small_col")}
                     {sc_table_col(" ", "small_col")}

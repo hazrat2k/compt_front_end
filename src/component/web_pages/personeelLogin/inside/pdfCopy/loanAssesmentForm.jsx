@@ -266,6 +266,8 @@ export default function LoanAssesmentForm(props){
         );
     }
 
+    let nf = new Intl.NumberFormat('en-US');
+
     const MyForm = (
 
         <Document>
@@ -346,13 +348,13 @@ export default function LoanAssesmentForm(props){
 
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("1", "Basic Salary", laf_basic_salary)}
-                                {sectionItem("3", "Deduction", laf_deduct)}
+                                {sectionItem("1", "Basic Salary", nf.format(laf_basic_salary))}
+                                {sectionItem("3", "Deduction", nf.format(laf_deduct))}
                             </View>
 
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("2", "Gross Salary", laf_gross_salary)}
-                                {sectionItem("4", "Net Salary", laf_net_salary)}
+                                {sectionItem("2", "Gross Salary", nf.format(laf_gross_salary))}
+                                {sectionItem("4", "Net Salary", nf.format(laf_net_salary))}
                             </View>
                             
 
@@ -372,17 +374,17 @@ export default function LoanAssesmentForm(props){
 
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("1", "Pension/Gratuity", laf_pens_gra)}
+                                {sectionItem("1", "Pension/Gratuity", nf.format(laf_pens_gra))}
                             </View>
 
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("2", "Leave Salary", laf_leav_sal)}
+                                {sectionItem("2", "Leave Salary", nf.format(laf_leav_sal))}
                             </View>
 
                         </View>
 
-                        {sectionItem("3", "25 Months Grant (Trust Fund) (Service Length × Basic Salary)", laf_25_mon_gran)}
-                        {sectionItem("4", "Total Receivable (TR) (1.+2.+3.)", laf_tot_rec)}
+                        {sectionItem("3", "25 Months Grant (Trust Fund) (Service Length × Basic Salary)", nf.format(laf_25_mon_gran))}
+                        {sectionItem("4", "Total Receivable (TR) (1.+2.+3.)", nf.format(laf_tot_rec))}
 
 
                         <Text style={style_laf.subsection_label}>
@@ -391,17 +393,17 @@ export default function LoanAssesmentForm(props){
 
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("5", "House Building Loan", laf_hb_loan)}
-                                {sectionItem("7", "Laptop Loan", laf_lap_loan)}
+                                {sectionItem("5", "House Building Loan", nf.format(laf_hb_loan))}
+                                {sectionItem("7", "Laptop Loan", nf.format(laf_lap_loan))}
                             </View>
 
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("6", "Consumer Loan", laf_consu_loan)}
-                                {sectionItem("8", "SBL Whole Sale Loan", laf_sblws_loan)}
+                                {sectionItem("6", "Consumer Loan", nf.format(laf_consu_loan))}
+                                {sectionItem("8", "SBL Whole Sale Loan", nf.format(laf_sblws_loan))}
                             </View>
                         </View>
-                        {sectionItem("9", "Total Payable (TP) (5.+6.+7.+8.)", laf_tot_pay)}
-                        {sectionItem("10", "Net Receivable (TR-TP) (4.-9.)", laf_net_rec)}
+                        {sectionItem("9", "Total Payable (TP) (5.+6.+7.+8.)", nf.format(laf_tot_pay))}
+                        {sectionItem("10", "Net Receivable (TR-TP) (4.-9.)", nf.format(laf_net_rec))}
                     </View>
 
 
@@ -424,16 +426,16 @@ export default function LoanAssesmentForm(props){
 
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("11", "House Building Loan", laf_hb_loan_ins_amnt)}
-                                {sectionItem("13", "Laptop Loan", laf_lap_loan_ins_amnt)}
+                                {sectionItem("11", "House Building Loan", nf.format(laf_hb_loan_ins_amnt))}
+                                {sectionItem("13", "Laptop Loan", nf.format(laf_lap_loan_ins_amnt))}
                             </View>
 
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("12", "Consumer Loan", laf_consu_loan_ins_amnt)}
-                                {sectionItem("14", "SBL Whole Sale Loan", laf_sblws_loan_ins_amnt)}
+                                {sectionItem("12", "Consumer Loan", nf.format(laf_consu_loan_ins_amnt))}
+                                {sectionItem("14", "SBL Whole Sale Loan", nf.format(laf_sblws_loan_ins_amnt))}
                             </View>
                         </View>
-                        {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", laf_tot_loan_ins_amnt)}
+                        {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", nf.format(laf_tot_loan_ins_amnt))}
 
                     </View>
 
@@ -445,16 +447,16 @@ export default function LoanAssesmentForm(props){
 
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("1", "75% of Pension", laf_75_pens)}
-                                {sectionItem("3", "Proposed Amount", laf_prop_amnt)}
+                                {sectionItem("1", "75% of Pension", nf.format(laf_75_pens))}
+                                {sectionItem("3", "Proposed Amount", nf.format(laf_prop_amnt))}
                                 {sectionItem("5", "Total Number of Installment", laf_tot_no_ins)}
-                                {sectionItem("7", "60% of Basic Salary", laf_60_basic_sal)}
+                                {sectionItem("7", "60% of Basic Salary", nf.format(laf_60_basic_sal))}
                             </View>
 
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("2", "Applied Amount", laf_app_amnt)}
-                                {sectionItem("4", "Installment Amount", laf_inst_amnt)}
-                                {sectionItem("6", "Total Installment Amount (D15.+E4.)", laf_tot_ins_amnt)}
+                                {sectionItem("2", "Applied Amount", nf.format(laf_app_amnt))}
+                                {sectionItem("4", "Installment Amount", nf.format(laf_inst_amnt))}
+                                {sectionItem("6", "Total Installment Amount (D15.+E4.)", nf.format(laf_tot_ins_amnt))}
                             </View>
                             
 

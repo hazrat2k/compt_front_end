@@ -491,6 +491,8 @@ export default function LoanDetails(){
         tot_ins: ld_value["tot_no_ins"]
     }
 
+    let nf = new Intl.NumberFormat('en-US');
+
 
     return(
         <>
@@ -552,12 +554,12 @@ export default function LoanDetails(){
                     
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("1", "Basic Salary", ld_value["basic_salary"])}
-                            {sectionItem("3", "Deduction", ld_value["deduct"])}
+                            {sectionItem("1", "Basic Salary", nf.format(ld_value["basic_salary"]))}
+                            {sectionItem("3", "Deduction", nf.format(ld_value["deduct"]))}
                         </div>
                         <div className="section_items_div">
-                            {sectionItem("2", "Gross Salary", ld_value["gross_salary"])}
-                            {sectionItem("4", "Net Salary", ld_value["net_salary"])}
+                            {sectionItem("2", "Gross Salary", nf.format(ld_value["gross_salary"]))}
+                            {sectionItem("4", "Net Salary", nf.format(ld_value["net_salary"]))}
                         </div>
                     </div>
                 </div>
@@ -569,46 +571,46 @@ export default function LoanDetails(){
                     <div className="subsection_label">Receivables</div>
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("1", "Pension/Gratuity", ld_value["pens_gra"])}
+                            {sectionItem("1", "Pension/Gratuity", nf.format(ld_value["pens_gra"]))}
                         </div>
                         <div className="section_items_div">
-                            {sectionItem("2", "Leave Salary", ld_value["leav_sal"])}
+                            {sectionItem("2", "Leave Salary", nf.format(ld_value["leav_sal"]))}
                         </div>
                         
                     </div>
-                    {sectionItem("3", "25 Months Grant (Trust Fund) (Service Length × Basic Salary)", ld_value["25_mon_gran"])}
-                    {sectionItem("4", "Total Receivable (TR) (1.+2.+3.)", ld_value["tot_rec"])}
+                    {sectionItem("3", "25 Months Grant (Trust Fund) (Service Length × Basic Salary)", nf.format(ld_value["25_mon_gran"]))}
+                    {sectionItem("4", "Total Receivable (TR) (1.+2.+3.)", nf.format(ld_value["tot_rec"]))}
 
 
                     <div className="subsection_label">Payables</div>
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("5", "House Building Loan", ld_value["hb_loan"])}
-                            {sectionItem("7", "Laptop Loan", ld_value["lap_loan"])}
+                            {sectionItem("5", "House Building Loan", nf.format(ld_value["hb_loan"]))}
+                            {sectionItem("7", "Laptop Loan", nf.format(ld_value["lap_loan"]))}
                         </div>
                         <div className="section_items_div">
-                            {sectionItem("6", "Consumer Loan", ld_value["consu_loan"])}
-                            {sectionItem("8", "SBL Whole Sale Loan", ld_value["sblws_loan"])}
+                            {sectionItem("6", "Consumer Loan", nf.format(ld_value["consu_loan"]))}
+                            {sectionItem("8", "SBL Whole Sale Loan", nf.format(ld_value["sblws_loan"]))}
                         </div>
                         
                     </div>
-                    {sectionItem("9", "Total Payable (TP) (5.+6.+7.+8.)", ld_value["tot_pay"])}
-                    {sectionItem("10", "Net Receivable (TR-TP) (4.-9.)", ld_value["net_rec"])}
+                    {sectionItem("9", "Total Payable (TP) (5.+6.+7.+8.)", nf.format(ld_value["tot_pay"]))}
+                    {sectionItem("10", "Net Receivable (TR-TP) (4.-9.)", nf.format(ld_value["net_rec"]))}
 
 
                     <div className="subsection_label">Installment Amount of Loan</div>
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("11", "House Building Loan", ld_value["hb_loan_ins_amnt"])}
-                            {sectionItem("13", "Laptop Loan", ld_value["lap_loan_ins_amnt"])}
+                            {sectionItem("11", "House Building Loan", nf.format(ld_value["hb_loan_ins_amnt"]))}
+                            {sectionItem("13", "Laptop Loan", nf.format(ld_value["lap_loan_ins_amnt"]))}
                         </div>
                         <div className="section_items_div">
-                            {sectionItem("12", "Consumer Loan", ld_value["consu_loan_ins_amnt"])}
-                            {sectionItem("14", "SBL Whole Sale Loan", ld_value["sblws_loan_ins_amnt"])}
+                            {sectionItem("12", "Consumer Loan", nf.format(ld_value["consu_loan_ins_amnt"]))}
+                            {sectionItem("14", "SBL Whole Sale Loan", nf.format(ld_value["sblws_loan_ins_amnt"]))}
                         </div>
                         
                     </div>
-                    {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", ld_value["tot_loan_ins_amnt"])}
+                    {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", nf.format(ld_value["tot_loan_ins_amnt"]))}
 
 
                 </div>
@@ -618,15 +620,15 @@ export default function LoanDetails(){
                     
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("1", "75% of Pension", ld_value["75_pens"])}
-                            {sectionItem("3", "Proposed Amount", ld_value["prop_amnt"])}
-                            {sectionItem("5", "Total Number of Installment", ld_value["tot_no_ins"])}
-                            {sectionItem("7", "60% of Basic Salary", ld_value["60_basic_sal"])}
+                            {sectionItem("1", "75% of Pension", nf.format(ld_value["75_pens"]))}
+                            {sectionItem("3", "Proposed Amount", nf.format(ld_value["prop_amnt"]))}
+                            {sectionItem("5", "Total Number of Installment", nf.format(ld_value["tot_no_ins"]))}
+                            {sectionItem("7", "60% of Basic Salary", nf.format(ld_value["60_basic_sal"]))}
                         </div>
                         <div className="section_items_div">
-                            {sectionItem("2", "Applied Amount", ld_value["app_amnt"])}
-                            {sectionItem("4", "Installment Amount", ld_value["inst_amnt"])}
-                            {sectionItem("6", "Total Installment Amount (D15.+E4.)", ld_value["tot_ins_amnt"])}
+                            {sectionItem("2", "Applied Amount", nf.format(ld_value["app_amnt"]))}
+                            {sectionItem("4", "Installment Amount", nf.format(ld_value["inst_amnt"]))}
+                            {sectionItem("6", "Total Installment Amount (D15.+E4.)", nf.format(ld_value["tot_ins_amnt"]))}
                         </div>
                     </div>
 

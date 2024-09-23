@@ -282,6 +282,8 @@ export default function SanctionCopyForm(){
         );
     }
 
+    let nf = new Intl.NumberFormat('en-US');
+
     var count = 0;
     var sanction_total = 0;
 
@@ -301,15 +303,15 @@ export default function SanctionCopyForm(){
                     {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["NET_PAY"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["APPLY_AMOUNT"],"small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["ALLOW_AMOUNT"],"small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]),"small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]),"small_col")}
                     <View style={[style_sc.sc_table_col, style_sc.large_col, style_sc.sc_bold]}> 
-                        <Text style={style_sc.sc_table_cell}>{sc_sanc_loan_data[i]["SANCTION_AMOUNT"]}</Text>
+                        <Text style={style_sc.sc_table_cell}>{nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"])}</Text>
                     </View>
-                    {sc_table_col(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["INSTALL_AMOUNT"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["TOTAL_INTEREST"], "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
+                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["ACCOUNT_NO"], "small_col")}
                     {sc_table_col(" ", "small_col")}
@@ -337,7 +339,7 @@ export default function SanctionCopyForm(){
             {sc_table_col(" ", "small_col")}
             {sc_table_col("TOTAL","small_col")}
             <View style={[style_sc.sc_table_col, style_sc.large_col, style_sc.sc_bold]}> 
-                <Text style={style_sc.sc_table_cell}>{sanction_total}</Text>
+                <Text style={style_sc.sc_table_cell}>{nf.format(sanction_total)}</Text>
             </View>
             
         </View>
@@ -424,6 +426,8 @@ export default function SanctionCopyForm(){
                     </View>
                 </View>
 
+                <View style={{marginTop:"5pt",marginBottom: "5pt", borderTop: "1px solid black", width: "80%", alignSelf: "center"}}></View>
+
                 <View style={style_sig.all_sig}>
                     <Text style={style_sig.sig_label}>
                         Fund Section
@@ -435,6 +439,8 @@ export default function SanctionCopyForm(){
                         {sc_sig("COMPTROLLER")}
                     </View>
                 </View>
+
+                <View style={{marginTop:"5pt",marginBottom: "5pt", borderTop: "1px solid black", width: "80%", alignSelf: "center"}}></View>
 
                 <View style={style_sig.all_sig}>
                     <Text style={style_sig.sig_label}>

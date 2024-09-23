@@ -179,7 +179,7 @@ export default function OfficeOrderCopy(props){
         return str;
     }
 
-    const toBn = n => n.replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d])
+    let nf = new Intl.NumberFormat('bn-BN');
 
     const MyOfficeOrder = (
 
@@ -289,14 +289,14 @@ export default function OfficeOrderCopy(props){
                     <View style={style_orc.or_text_box}>
                         <Text style={style_orc.or_text_2}>
                             ১ । ডঃ/জনাব/বেগম {value["name"]} পদবী {value["desig"]} অফিস/বিভাগ {value["off_dept"]} কে উপরোক্ত শর্ত 
-                            মতে গৃহনির্মাণ ঋণ বাবদ টাকা {toBn(value["amnt"].toString()) + "/- (" + inWords(value["amnt"]).toUpperCase()+") "} 
+                            মতে গৃহনির্মাণ ঋণ বাবদ টাকা {nf.format(value["amnt"]) + "/- (" + inWords(value["amnt"]).toUpperCase()+") "} 
                             মাত্র মঞ্জুর করা হইয়াছে।
                         </Text>
 
                         <Text style={style_orc.or_text_2}>
-                            ২ । প্রতি কিস্তি টাকা {toBn(value["ins_amnt"].toString()) + "/- (" + inWords(value["ins_amnt"]).toUpperCase()+") "} 
-                            হারে মাসিক বেতন বিল হইতে {toBn(value["tot_ins"].toString())} কিস্তিতে সুদসহ সর্বমোট টাকা 
-                            {" "+toBn((value["tot_ins"] * value["ins_amnt"]).toString())+ "/-"} মাত্র আদায় করা হইবে।
+                            ২ । প্রতি কিস্তি টাকা {nf.format(value["ins_amnt"]) + "/- (" + inWords(value["ins_amnt"]).toUpperCase()+") "} 
+                            হারে মাসিক বেতন বিল হইতে {nf.format(value["tot_ins"])} কিস্তিতে সুদসহ সর্বমোট টাকা 
+                            {" "+nf.format((value["tot_ins"] * value["ins_amnt"]))+ "/-"} মাত্র আদায় করা হইবে।
                         </Text>
 
                     </View>

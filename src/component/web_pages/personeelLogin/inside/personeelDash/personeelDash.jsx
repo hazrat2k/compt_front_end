@@ -20,6 +20,7 @@ export default function PersoneelDash(){
     var pending_loan_status = false;
     var processing_loan_status = false;
     var sanction_loan_status = false;
+    var bill_loan_status = false;
 
     const pd_data = state["data"];
 
@@ -129,6 +130,10 @@ export default function PersoneelDash(){
             sanction_loan_status = true;
             break;
         }
+        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
+            bill_loan_status = true;
+            break;
+        }
         
     }
 
@@ -148,6 +153,11 @@ export default function PersoneelDash(){
     const onSanctionClick = (e) => {
         e.preventDefault();
         pd_navigate("/personnel_dashboard/sanction_copy");
+    }
+
+    const onBillClick = (e) => {
+        e.preventDefault();
+        pd_navigate("/personnel_dashboard/bill_copy");
     }
 
     return(
@@ -192,9 +202,20 @@ export default function PersoneelDash(){
                                 </div>
                                 :
                                 <div className="no_pending_loan">
-                                    No Loan is available for sanction
+                                    No loan is available for sanction
                                 </div>
                             }
+                            {
+                                bill_loan_status ?
+                                <div className="pd_butt" onClick={onBillClick}>
+                                    Preview Bill
+                                </div>
+                                :
+                                <div className="no_pending_loan">
+                                    No loan is available for billing
+                                </div>
+                            }
+
 
                         </div>
 

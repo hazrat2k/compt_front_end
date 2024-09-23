@@ -7,6 +7,7 @@ import PersonnelLogin from "./component/web_pages/personeelLogin/personnelLogin"
 import PersonnelDash from "./component/web_pages/personeelLogin/inside/personeelDash/personeelDash";
 import LoanDetails from "./component/web_pages/personeelLogin/inside/loanDetails/loanDetails";
 import SanctionCopy from "./component/web_pages/personeelLogin/inside/sanctionCopy.jsx/sanctionCopy";
+import BillCopy from "./component/web_pages/personeelLogin/inside/billCopy/billCopy";
 
 import Login from './component/web_pages/loanApply/jsx/login';
 import BasicInfo from './component/web_pages/loanApply/jsx/basicInfo';
@@ -63,6 +64,11 @@ return (
             <Route 
                 path="/personnel_dashboard/sanction_copy" 
                 element={ <SanctionCopy /> }
+            />
+
+            <Route 
+                path="/personnel_dashboard/bill_copy" 
+                element={ <BillCopy /> }
             />
 
 
