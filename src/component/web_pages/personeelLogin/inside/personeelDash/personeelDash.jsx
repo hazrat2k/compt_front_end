@@ -15,7 +15,7 @@ export default function PersoneelDash(){
     const pd_navigate = useNavigate();
     const { state } = useLocation();
 
-    const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT",];
+    const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT", "AO_CASH", "ACCONT"];
 
     var pending_loan_status = false;
     var processing_loan_status = false;
