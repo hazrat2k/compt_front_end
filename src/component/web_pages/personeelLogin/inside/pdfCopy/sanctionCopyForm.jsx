@@ -205,6 +205,7 @@ export default function SanctionCopyForm(){
             color: laf_hover ? "white" : "#3f8ba8",
             fontSize: laf_hover ? "20pt" : "15pt",
             cursor: laf_hover ? "pointer" : "default",
+            transition: "all ease 0.3s"
         },
     });
 

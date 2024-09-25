@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import axios from "axios";
 
 import "./billCopy.css";
@@ -9,7 +10,14 @@ import Footer from "../../../../page_compo/footer/footer";
 import BillCopyForm from "../pdfCopy/billCopyForm";
 import BankCopyForm from "../pdfCopy/bankCopyForm";
 
+
 export default function BillCopy(){
+
+    const { state } = useLocation();
+
+    const loan_type = state["type"];
+
+    var billStatus = false;
 
 
     const [bc_sanc_loan_data, setbc_sanc_loan_data] = useState([]);
@@ -79,7 +87,8 @@ export default function BillCopy(){
         total_sanction = 0;
 
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if(bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
+            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
+                billStatus = true;
                 bc_sanc_loan_display.push(
                     <div className="bc_table_row">
                         {bc_table_col(++count, "small_col")}
@@ -111,8 +120,8 @@ export default function BillCopy(){
                         {sal_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"])}
                         {sal_table_col(bc_sanc_loan_data[i]["DESIGNATION"])}
                         {sal_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["CATEGORY"])}
                         {sal_table_col(bc_sanc_loan_data[i]["ACCOUNT_NO"])}
-                        
                         {sal_table_col(nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
     
                     </div>
@@ -147,7 +156,8 @@ export default function BillCopy(){
         );
 
         sal_sanc_loan_display.push(
-            <div className="bc_table_row">
+            <div className="bc_table_row bc_bold">
+                {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
@@ -165,7 +175,8 @@ export default function BillCopy(){
         total_sanction = 0;
 
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if((bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (bc_sanc_loan_data[i]["CATEGORY"] == selectedCategory)){
+            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (bc_sanc_loan_data[i]["CATEGORY"] == selectedCategory)){
+                billStatus = true;
                 bc_sanc_loan_display.push(
                     <div className="bc_table_row">
                         {bc_table_col(++count, "small_col")}
@@ -257,7 +268,7 @@ export default function BillCopy(){
             <div className="bill_copy">
 
                 <select className="bc_select" onChange={(e) => {setSelectedCategory(e.target.value)}} >
-                    <option value="null">Select a Category</option>
+                    <option value="null">Select a Category......</option>
                     <option value="ALL">ALL</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
@@ -276,6 +287,7 @@ export default function BillCopy(){
 
                     :
 
+                    billStatus ?
                     <>
                         <div className="bc_table">
                             <div className="bc_table_row bc_bold">
@@ -283,7 +295,7 @@ export default function BillCopy(){
                                 {bc_table_col("LOAN ID", "large_col")}
                                 {bc_table_col("NAME", "large_col")}
                                 {bc_table_col("DESIGNATION", "large_col")}
-                                {bc_table_col("OFFICE/DEPT.", "small_col")}
+                                {bc_table_col("OFFICE/ DEPT.", "small_col")}
                                 {
                                     selectedCategory == "ALL" ?
                                     bc_table_col("CATEGORY", "small_col")
@@ -315,9 +327,13 @@ export default function BillCopy(){
                             TK. Only
                         </div>
 
-                        <BillCopyForm category={selectedCategory} />
+                        <BillCopyForm category={selectedCategory} loan_type={loan_type}/>
 
                     </>
+                    :
+                    <div className="no_billing_loan">
+                        No bill copy is available for {selectedCategory} category
+                    </div>
 
                 }
 
@@ -333,6 +349,7 @@ export default function BillCopy(){
 
                     :
 
+                    billStatus ?
                     <>
                         <div className="bc_table">
                             <div className="bc_table_row bc_bold">
@@ -341,6 +358,12 @@ export default function BillCopy(){
                                 {sal_table_col("EMPLOYEE NAME")}
                                 {sal_table_col("DESIGNATION")}
                                 {sal_table_col("OFFICE/ DEPT.")}
+                                {
+                                    selectedCategory == "ALL" ? 
+                                    sal_table_col("CATEGORY")
+                                    :
+                                    ""
+                                }
                                 {sal_table_col("ACCOUNT NO")}
                                 {sal_table_col("NET PAY")}
                             </div>
@@ -355,11 +378,15 @@ export default function BillCopy(){
                             TK. Only
                         </div>
 
-                        <BankCopyForm category={selectedCategory}/>
+                        <BankCopyForm category={selectedCategory} loan_type={loan_type}/>
 
                         
 
                     </>
+                    :
+                    <div className="no_billing_loan">
+                        No bank copy is available for {selectedCategory} category
+                    </div>
 
                 }
 

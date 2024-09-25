@@ -16,8 +16,11 @@
 .bc_select{
     align-self: center;
     width: 20%;
+    height: 40px;
     margin-top: 2%;
     margin-bottom: 2%;
+    font-size: large;
+
 }
 
 .bc_table{

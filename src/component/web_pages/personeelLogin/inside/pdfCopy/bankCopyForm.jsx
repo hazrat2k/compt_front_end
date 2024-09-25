@@ -159,7 +159,7 @@ const style_sal = StyleSheet.create({
      
     no_billing_loan:{
         textAlign: "center",
-        color: "gray",
+        color: "red",
         fontSize: "15pt",
         marginBottom: "2%",
         fontFamily: "English"
@@ -177,6 +177,8 @@ const style_sal = StyleSheet.create({
 export default function BankCopyForm(props){
 
     const sel_cat = props.category;
+    const bac_loan_type = props.loan_type;
+    const [download_Error, setDownload_Error] = useState("");
 
     const [sal_sanc_loan_data, setSal_sanc_loan_data] = useState([]);
     const sal_sanc_loan_display = useState([]);
@@ -201,6 +203,7 @@ export default function BankCopyForm(props){
             fontSize: laf_hover ? "20pt" : "15pt",
             cursor: laf_hover ? "pointer" : "default",
             marginBottom: "10pt",
+            transition: "all ease 0.3s"
         },
     });
 
@@ -236,10 +239,10 @@ export default function BankCopyForm(props){
     }, []);
 
 
-    const sal_table_col = (value, cn) => {
+    const sal_table_col = (value) => {
         
         return(
-            <View style={[style_sal.sal_table_col, cn == "small_col" ? style_sal.small_col : style_sal.large_col]}> 
+            <View style={[style_sal.sal_table_col]}> 
                 <Text style={style_sal.sal_table_cell}>{value}</Text>
             </View>
         );
@@ -256,7 +259,7 @@ export default function BankCopyForm(props){
         sanction_total = 0;
         for(let i=0;i<sal_sanc_loan_data.length;i++){
             
-            if(sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
+            if((sal_sanc_loan_data[i]["LOAN_TYPE"] == bac_loan_type) && (sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
     
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
@@ -265,6 +268,7 @@ export default function BankCopyForm(props){
                         {sal_table_col(sal_sanc_loan_data[i]["APPLICANT_NAME"])}
                         {sal_table_col(sal_sanc_loan_data[i]["DESIGNATION"])}
                         {sal_table_col(sal_sanc_loan_data[i]["OFFICE_DEPT"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["CATEGORY"])}
                         {sal_table_col(sal_sanc_loan_data[i]["ACCOUNT_NO"])}
                         {sal_table_col(nf.format(sal_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
 
@@ -277,7 +281,8 @@ export default function BankCopyForm(props){
         }
     
         sal_sanc_loan_display.push(
-            <View style={style_sal.sal_table_row}>
+            <View style={[style_sal.sal_table_row, style_sal.sal_bold]}>
+                {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
@@ -288,11 +293,12 @@ export default function BankCopyForm(props){
                 
             </View>
         );
+
     }else if(["A", "B", "C", "D"].includes(sel_cat)){
         count = 0;
         sanction_total = 0;
         for(let i=0;i<sal_sanc_loan_data.length;i++){
-            if((sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (sal_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
+            if((sal_sanc_loan_data[i]["LOAN_TYPE"] == bac_loan_type) && (sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (sal_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
     
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
@@ -313,7 +319,7 @@ export default function BankCopyForm(props){
         }
     
         sal_sanc_loan_display.push(
-            <View style={style_sal.sal_table_row}>
+            <View style={[style_sal.sal_table_row, style_sal.sal_bold]}>
                 {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
@@ -329,7 +335,7 @@ export default function BankCopyForm(props){
     
 
 
-    const MyBankForm = (
+    const MyBankForm = () => (
 
         <Document>
 
@@ -350,7 +356,7 @@ export default function BankCopyForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={[styles.pageLabel, style_sal.sal_bold]}>
-                            LOAN BANK COPY
+                            {bac_loan_type} BANK COPY
                         </Text>
 
                         <Text style={style_sal.sal_text}>
@@ -377,6 +383,13 @@ export default function BankCopyForm(props){
                                 {sal_table_col("EMPLOYEE NAME")}
                                 {sal_table_col("DESIGNATION")}
                                 {sal_table_col("OFFICE/ DEPT.")}
+                                {
+                                    sel_cat == "ALL" ? 
+                                    sal_table_col("CATEGORY")
+                                    :
+                                    ""
+                                }
+
                                 {sal_table_col("ACCOUNT NO")}
                                 {sal_table_col("NET PAY")}
                             </View>
@@ -489,6 +502,14 @@ export default function BankCopyForm(props){
         if (!salUrl) {
             return;
         }
+
+        // if([["null", "ALL"].includes(sel_cat)]){
+        //     setDownload_Error("Select Right Category to Download");
+        //     return;
+        // }else{
+        //     setDownload_Error("");
+        // }
+
         downloadURI(salUrl, 'bank_copy.pdf');
     }
 
@@ -497,6 +518,7 @@ export default function BankCopyForm(props){
         // <PDFViewer style={styles.viewer}>
         //     <MyBankForm />
         // </PDFViewer>
+
         <>
 
             <BlobProvider document={MyBankForm}>
@@ -504,6 +526,10 @@ export default function BankCopyForm(props){
                     setSalUrl(url);
                 }}
             </BlobProvider>
+
+            <div style={style_sal.no_billing_loan}>
+                {download_Error}
+            </div>
             
 
             <div style={style_butt.download_butt} onClick={onSALDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>

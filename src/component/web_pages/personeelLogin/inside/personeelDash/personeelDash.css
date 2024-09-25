@@ -12,6 +12,16 @@
     margin-bottom: 1%;
 }
 
+.pd_select{
+    align-self: center;
+    width: 20%;
+    height: 40px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    font-size: large;
+    font-family: "PT Serif";
+}
+
 .pd_section{
     display: flex;
     flex-direction: column; 
@@ -80,19 +90,19 @@
 }
 
 .pd_section_item_label{
-    font-size: medium;
+    font-size: large;
     font-weight: 550;
     width: 30%;
 }
 
 .pd_section_item_colon{
-    font-size: medium;
+    font-size: large;
     font-weight: 550;
     margin-right: 2%;
 }
 
 .pd_section_item_value{
-    font-size: medium;
+    font-size: large;
     width: 68%;
 }
 

@@ -288,7 +288,7 @@ export default function LoanAssesmentForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={styles.pageLabel}>
-                            Loan Assesment Form
+                            {laf_loan_type} Assesment Form
                         </Text>
                     </View>
 

@@ -17,6 +17,8 @@ export default function PersoneelDash(){
 
     const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT", "AO_CASH", "ACCONT"];
 
+    const [pd_select, setPd_select] = useState("null");
+
     var pending_loan_status = false;
     var processing_loan_status = false;
     var sanction_loan_status = false;
@@ -91,53 +93,57 @@ export default function PersoneelDash(){
 
     for(let i=0;i<pd_pend_loan_data.length;i++){
 
-        var temp_status = Number(pd_pend_loan_data[i]["APP_STATUS"]);
+        if(pd_pend_loan_data[i]["LOAN_TYPE"] == pd_select){
+            var temp_status = Number(pd_pend_loan_data[i]["APP_STATUS"]);
         
-        if(pd_desig === loan_personnel[temp_status]){
-            pending_loan_status = true;
+            if(pd_desig === loan_personnel[temp_status]){
+                pending_loan_status = true;
 
-            pd_pend_loan_display.push(
-                <div className="pd_section_row">
-                    <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
-                </div>
-            );
+                pd_pend_loan_display.push(
+                    <div className="pd_section_row">
+                        <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
+                    </div>
+                );
 
-        }else{
-            processing_loan_status = true;
-            
-            pd_process_loan_display.push(
-                <div className="pd_section_row">
-                    <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
-                    <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
-                </div>
-            );
-        }
+            }else{
+                processing_loan_status = true;
+                
+                pd_process_loan_display.push(
+                    <div className="pd_section_row">
+                        <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
+                        <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
+                    </div>
+                );
+            }
+            }
+
     }
 
     for(let i=0;i<pd_sanc_loan_data.length;i++){
-        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
-            sanction_loan_status = true;
-            break;
-        }
-        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
-            bill_loan_status = true;
-            break;
+
+        if(pd_pend_loan_data[i]["LOAN_TYPE"] == pd_select){
+            if(pd_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
+                sanction_loan_status = true;
+                break;
+            }
+            if(pd_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
+                bill_loan_status = true;
+                break;
+            }
         }
         
     }
-
-
 
     const pdSectionItem = (label, value) => {
         return(
@@ -152,12 +158,12 @@ export default function PersoneelDash(){
 
     const onSanctionClick = (e) => {
         e.preventDefault();
-        pd_navigate("/personnel_dashboard/sanction_copy");
+        pd_navigate("/personnel_dashboard/sanction_copy", {state : {type: pd_select}});
     }
 
     const onBillClick = (e) => {
         e.preventDefault();
-        pd_navigate("/personnel_dashboard/bill_copy");
+        pd_navigate("/personnel_dashboard/bill_copy", {state : {type: pd_select}});
     }
 
     return(
@@ -187,112 +193,126 @@ export default function PersoneelDash(){
                     </div>
                 </div>
 
+                <select className="pd_select" onChange={(e) => {setPd_select(e.target.value)}}>
+                    <option value="null">Select a Loan Type......</option>
+                    <option value="HOUSE BUILDING LOAN">HOUSE BUILDING LOAN</option>
+                    <option value="CONSUMER LOAN">CONSUMER LOAN</option>
+                    <option value="LAPTOP LOAN">LAPTOP LOAN</option>
+                </select>
+
                 {
-                    pd_desig === "ACCONT" ?
-                    <div className="pd_section">
-                        <div className="pd_section_label">
-                            Preview Copy :
-                        </div>
-
-                        <div className="pd_section_copy">
-                            {
-                                sanction_loan_status ?
-                                <div className="pd_butt" onClick={onSanctionClick}>
-                                    Preview Sanction
-                                </div>
-                                :
-                                <div className="no_pending_loan">
-                                    No loan is available for sanction
-                                </div>
-                            }
-                            {
-                                bill_loan_status ?
-                                <div className="pd_butt" onClick={onBillClick}>
-                                    Preview Bill
-                                </div>
-                                :
-                                <div className="no_pending_loan">
-                                    No loan is available for billing
-                                </div>
-                            }
-
-
-                        </div>
-
-                        
-
-                        
-                        
-
-                        
+                    pd_select == "null" ?
+                    <div className="no_pending_loan">
+                        Select a Loan Type to Display
                     </div>
                     :
-                    ""
+                    <>
+                        {
+                            pd_desig === "ACCONT" ?
+                            <div className="pd_section">
+                                <div className="pd_section_label">
+                                    Preview Copy :
+                                </div>
+        
+                                <div className="pd_section_copy">
+                                    {
+                                        sanction_loan_status ?
+                                        <div className="pd_butt" onClick={onSanctionClick}>
+                                            Preview Sanction
+                                        </div>
+                                        :
+                                        <div className="no_pending_loan">
+                                            No loan is available for sanction
+                                        </div>
+                                    }
+                                    {
+                                        bill_loan_status ?
+                                        <div className="pd_butt" onClick={onBillClick}>
+                                            Preview Bill
+                                        </div>
+                                        :
+                                        <div className="no_pending_loan">
+                                            No loan is available for billing
+                                        </div>
+                                    }
+        
+        
+                                </div>
+                                
+                            </div>
+                            :
+                            ""
+                        }
+
+                        <div className="pd_section">
+                            <div className="pd_section_label">
+                                Pending Loan :
+                            </div>
+
+                            {
+                                pending_loan_status ? 
+                                <div className="pd_section_items pending_loan">
+                                    <div className="pd_section_row pd_section_head_row">
+                                        <div className="pd_section_col"><div className="pd_section_col_value">LOAN ID</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLICANT NAME</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">DESIGNATION</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">OFFICE/DEPT.</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">LOAN TYPE</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLICATION STATUS</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLIED TIME</div></div>
+                                    </div>
+
+                                    {pd_pend_loan_display}
+                                </div>
+                                
+                                :
+
+                                <div className="no_pending_loan">
+                                    No Pending Loan
+                                </div>
+
+                            }
+
+                            
+                        </div>
+
+                        <div className="pd_section">
+                            <div className="pd_section_label">
+                                Processing Loan :
+                            </div>
+
+                            {
+                                processing_loan_status ? 
+                                <div className="pd_section_items pending_loan">
+                                    <div className="pd_section_row pd_section_head_row">
+                                        <div className="pd_section_col"><div className="pd_section_col_value">LOAN ID</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLICANT NAME</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">DESIGNATION</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">OFFICE/DEPT.</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">LOAN TYPE</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLICATION STATUS</div></div>
+                                        <div className="pd_section_col"><div className="pd_section_col_value">APPLIED TIME</div></div>
+                                    </div>
+
+                                    {pd_process_loan_display}
+                                </div>
+                                
+                                :
+
+                                <div className="no_pending_loan">
+                                    No Processing Loan
+                                </div>
+
+                            }
+
+                            
+                        </div>
+                    </>
+                    
+
                 }
 
-                <div className="pd_section">
-                    <div className="pd_section_label">
-                        Pending Loan :
-                    </div>
-
-                    {
-                        pending_loan_status ? 
-                        <div className="pd_section_items pending_loan">
-                            <div className="pd_section_row pd_section_head_row">
-                                <div className="pd_section_col"><div className="pd_section_col_value">LOAN ID</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLICANT NAME</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">DESIGNATION</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">OFFICE/DEPT.</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">LOAN TYPE</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLICATION STATUS</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLIED TIME</div></div>
-                            </div>
-
-                            {pd_pend_loan_display}
-                        </div>
-                        
-                        :
-
-                        <div className="no_pending_loan">
-                            No Pending Loan
-                        </div>
-
-                    }
-
-                    
-                </div>
-
-                <div className="pd_section">
-                    <div className="pd_section_label">
-                        Processing Loan :
-                    </div>
-
-                    {
-                        processing_loan_status ? 
-                        <div className="pd_section_items pending_loan">
-                            <div className="pd_section_row pd_section_head_row">
-                                <div className="pd_section_col"><div className="pd_section_col_value">LOAN ID</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLICANT NAME</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">DESIGNATION</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">OFFICE/DEPT.</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">LOAN TYPE</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLICATION STATUS</div></div>
-                                <div className="pd_section_col"><div className="pd_section_col_value">APPLIED TIME</div></div>
-                            </div>
-
-                            {pd_process_loan_display}
-                        </div>
-                        
-                        :
-
-                        <div className="no_pending_loan">
-                            No Processing Loan
-                        </div>
-
-                    }
-
-                    
-                </div>
+                
 
                 
 
