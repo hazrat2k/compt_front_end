@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import axios from 'axios';
+
 import "../css/loanInfo.css";
+
 import Logo from '../jsx_component/logo';
 import DoubleButton from '../jsx_component/doubleButton';
 
 
-function LoanInfo(){
+export default function LoanInfo(){
 
     const loanNavigate = useNavigate();
     const { state } = useLocation();
     var loan_data = state["info"];
     const loan_file = state["file"]["loan"];
+    const loan_type_file = state["file"]["loan_type"];
 
     var state_used = "no";
     
@@ -34,34 +38,45 @@ function LoanInfo(){
 
     var jsx_table_data = [];
 
+    let nf = new Intl.NumberFormat('en-US');
 
     var data_loan = [];
 
     for(let i=0;i<loan_file.length;i++){
-        if((loan_data["EMPLOYEEID"] === loan_file[i]["EMPLOYEEID"]) && 
-        (loan_file[i]["REMAINING_AMOUNT"] > 0)){
-
+        if(loan_file[i]["REMAINING_AMOUNT"] > 0){
             data_loan.push(loan_file[i]);
-
         }
-        
     }
 
-    console.log(data_loan);
+    const checkLoanType = (loan_type_id) =>{
+        for(let i=0;i<loan_type_file.length;i++){
+            if(loan_type_file[i]["LOAN_TYPE_ID"] == loan_type_id){
+                return loan_type_file[i]["LOAN_TYPE_NAME"];
+            }
+        }
+    }
 
     for(let i=0;i<data_loan.length;i++){
         for(let j=0;j<7;j++){
-            if(data_loan[i]["LOAN_TYPE_NAME"] === table_data[j][2]){
+            var temp = checkLoanType(data_loan[i]["LOAN_TYPE_ID"]);
+            
+            if(temp.includes(table_data[j][2])){
                 loan_table_value[j][0] += Number(data_loan[i]["TOTAL_AMOUNT_TO_REF"]);
                 loan_table_value[j][1] += Number(data_loan[i]["AMOUNT_OF_INSTALLMENT"]);
                 loan_table_value[j][2] += Number(data_loan[i]["NO_OF_INSTALLMENT"]);
-                loan_table_value[j][3] += Number(data_loan[i]["REC_INSTALL"]);
+
+                var temp  = Number(data_loan[i]["TOTAL_AMOUNT_TO_REF"]) - Number(data_loan[i]["REMAINING_AMOUNT"]);
+                temp -= Number(data_loan[i]["FIRST_INSTALLMENT"]);
+                temp /= Number(data_loan[i]["AMOUNT_OF_INSTALLMENT"]);
+                temp++;
+
+                loan_table_value[j][3] += Math.round(temp);
                 loan_table_value[j][4] += Number(data_loan[i]["REMAINING_AMOUNT"]);
 
                 loan_table_value[7][0] += Number(data_loan[i]["TOTAL_AMOUNT_TO_REF"]);
                 loan_table_value[7][1] += Number(data_loan[i]["AMOUNT_OF_INSTALLMENT"]);
                 loan_table_value[7][2] += Number(data_loan[i]["NO_OF_INSTALLMENT"]);
-                loan_table_value[7][3] += Number(data_loan[i]["REC_INSTALL"]);
+                loan_table_value[7][3] += Math.round(temp);
                 loan_table_value[7][4] += Number(data_loan[i]["REMAINING_AMOUNT"]);
             }
         }
@@ -82,11 +97,11 @@ function LoanInfo(){
                 <tr>
                     <td className='tableText'>{table_data[i][0]}</td>
                     <td className='tableText'>{table_data[i][1]}</td>
-                    <td><input className='tableDataInput' type='text' value={loan_table_value[i][0]} name={loan_amount} /></td>
-                    <td><input className='tableDataInput' type='text' value={loan_table_value[i][1]} name={installment_amount} /></td>
-                    <td><input className='tableDataInput' type='text' value={loan_table_value[i][2]} name={total_installment_number} /></td>
-                    <td><input className='tableDataInput' type='text' value={loan_table_value[i][3]} name={refined_installment_number} /></td>
-                    <td><input className='tableDataInput' type='text' value={loan_table_value[i][4]} name={unrefined_loan_amount} /></td>
+                    <td><input className='tableDataInput' type='text' value={nf.format(loan_table_value[i][0])} name={loan_amount} /></td>
+                    <td><input className='tableDataInput' type='text' value={nf.format(loan_table_value[i][1])} name={installment_amount} /></td>
+                    <td><input className='tableDataInput' type='text' value={nf.format(loan_table_value[i][2])} name={total_installment_number} /></td>
+                    <td><input className='tableDataInput' type='text' value={nf.format(loan_table_value[i][3])} name={refined_installment_number} /></td>
+                    <td><input className='tableDataInput' type='text' value={nf.format(loan_table_value[i][4])} name={unrefined_loan_amount} /></td>
                 </tr>
             </tbody>
         )
@@ -158,5 +173,3 @@ function LoanInfo(){
         </div>
     )
 }
-
-export default LoanInfo

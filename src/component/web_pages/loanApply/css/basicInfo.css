@@ -49,14 +49,14 @@
     }
 
     .profilePictureText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: black;
         
     } 
 
     .profilePictureErrorText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.5rem;
         color: red;
     }
@@ -67,7 +67,7 @@
     }
 
     .binormalButton{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.7rem;
         color: crimson;
         height: 1.7rem;
@@ -79,7 +79,7 @@
     }
 
     .binormalButton:hover{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.7rem;
         color: white;
         height: 1.7rem;
@@ -146,14 +146,14 @@
     }
 
     .profilePictureText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         color: black;
         
     } 
 
     .profilePictureErrorText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         color: red;
     }
@@ -164,7 +164,7 @@
     }
 
     .binormalButton{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         color: crimson;
         height: 2.5rem;
@@ -176,7 +176,7 @@
     }
 
     .binormalButton:hover{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         color: white;
         height: 2.5rem;

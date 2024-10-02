@@ -8,7 +8,7 @@ import Logo from '../jsx_component/logo';
 import axios from "axios";
 
 
-function BasicInfo(){
+export default function BasicInfo(){
 
     const basicNavigate = useNavigate();
     const { state } = useLocation();
@@ -28,7 +28,6 @@ function BasicInfo(){
         basic_data["REASON_FOR_LOAN"] = "";
     }
 
-    
 
     const profilePicRef = useRef(null);
     const applicantNameRef = useRef(null);
@@ -71,7 +70,7 @@ function BasicInfo(){
     };
 
 
-    function validBasicInfo(){
+    const validBasicInfo = () => {
         if(proPicFile === imgfile){
             const tem = [];
             tem.push(
@@ -243,7 +242,6 @@ function BasicInfo(){
 }
 
 
-export default BasicInfo;
 
 
 

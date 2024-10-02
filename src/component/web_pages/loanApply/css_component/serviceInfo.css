@@ -19,7 +19,7 @@
 
 
     .serviceInfoLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.7rem;
         font-weight: bold;
         color: black;
@@ -34,7 +34,7 @@
     
     
     .siDataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: black;
         width: 25%;
@@ -62,7 +62,7 @@
     }
     
     .siDataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: black;
         position: relative;
@@ -92,7 +92,7 @@
 
 
     .serviceInfoLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         font-weight: bold;
         color: black;
@@ -107,7 +107,7 @@
     
     
     .siDataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         color: black;
         width: 25%;
@@ -135,7 +135,7 @@
     }
     
     .siDataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         color: black;
         position: relative;

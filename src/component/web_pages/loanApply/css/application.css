@@ -1,6 +1,6 @@
 @media screen and (max-width: 800px) {
 
-    .preButton{
+    .preAppButton{
         display: flex;
         padding: 0.5rem;
         justify-content: space-evenly;
@@ -8,8 +8,8 @@
         margin-bottom: 2%;
     }
     
-    .preNormalButton{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+    .preAppNormalButton{
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 0.7rem;
         color: crimson;
         text-decoration: none;
@@ -19,20 +19,6 @@
         border-radius: 2rem;
         background-color: white;
         border-color: crimson;
-        cursor: pointer;
-    }
-
-    .preNormalButton:hover{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
-        font-size: 0.7rem;
-        color: white;
-        text-decoration: none;
-        height: auto;
-        width: auto;
-        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
-        border-radius: 2rem;
-        background-color: crimson;
-        border-color: white;
         cursor: pointer;
     }
 
@@ -40,7 +26,7 @@
 
 
 @media screen and (min-width: 800px) {
-    .preButton{
+    .preAppButton{
         display: flex;
         padding: 1rem 1rem 1rem 1rem;
         justify-content: space-evenly;
@@ -48,8 +34,8 @@
         margin-bottom: 2%;
     }
     
-    .preNormalButton{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+    .preAppNormalButton{
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 1rem;
         color: crimson;
         text-decoration: none;
@@ -60,22 +46,15 @@
         background-color: white;
         border-color: crimson;
         cursor: pointer;
-    }
-
-    .preNormalButton:hover{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
-        font-size: 1rem;
-        color: white;
-        text-decoration: none;
-        height: auto;
-        width: auto;
-        padding: 0.5rem 1rem 0.5rem 1rem;
-        border-radius: 2rem;
-        background-color: crimson;
-        border-color: white;
-        cursor: pointer;
-    }
+    } 
 }
 
 
 
+.preAppNormalButton:hover{
+
+    color: white;
+    background-color: crimson;
+    border-color: white;
+
+}

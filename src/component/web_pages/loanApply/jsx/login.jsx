@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-import "../css/login.css";
 import axios from "axios";
+import moment from "moment";
+
+import "../css/login.css";
+
 import Logo from '../jsx_component/logo';
 
 
@@ -10,23 +13,10 @@ function Login(){
 
     const [err_text_color, setErr_text_color] = useState(true);
 
-    const [emp_data, setEmp_data] = useState([]);
+    var emp_data = [];
+    var real_dob = "";
 
     const loginNavigate = useNavigate();
-
-    useEffect( () => {
-        const fetch_empl_data = async () =>{
-            try{
-                const res = await axios.get("http://localhost:8800/employee");
-                setEmp_data(res.data);
-
-            }catch(err){
-                console.log(err);
-            }
-        }
-        fetch_empl_data();
-    }, []);
-
 
     const [buetId, setBuetId] = useState("");
     const [dob, setDob] = useState("");
@@ -96,25 +86,53 @@ function Login(){
         setError_Display(temp);
     }
 
-    function authenticate(e){
-        e.preventDefault();
+    const checkValidation = () => {
 
-        const emp_data_length = emp_data.length;
+        const duration = duration_calculation(real_dob);
+
+        if(duration["year"] < 10){
+            error_message("Service period needs to be more than 10 years. Yours is "+duration["year"]+" years, "+duration["month"]+" months, "+duration["day"]+" days");
+            return false;
+        }
+
+        const retirementDate = new Date(emp_data[0]["DATE_OF_RETIREMENT"]);
+        const currentDate = new Date();
+
+        if(retirementDate < currentDate){
+            error_message("You are already retired.");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    const authenticate = async (e) => {
+        e.preventDefault();
 
         var data_found = false;
 
-        for(let i=0;i<emp_data_length;i++){
-            if (buetId === emp_data[i]["IDNO"] && dob === emp_data[i]["DATE_OF_BIRTH"]) {
-                data_found = true;
-                const duration = duration_calculation(emp_data[i]["DATE_FIRST_JOIN"]);
-                if(duration["year"] >= 10){
-                    loginNavigate('/application/1', { state: {info: emp_data[i], used: "no"} });
-                }else{
-                    error_message("Service period needs to be more than 10 years. Yours is "+duration["year"]+" years, "+duration["month"]+" months, "+duration["day"]+" days");
-                }
-                break;
+        const uploadData = {
+            "BUETID": buetId
+        }
+
+        try{
+            const res = await axios.post("http://localhost:8800/application_login", uploadData);
+            emp_data = res.data;
+            
+        }catch(err){
+            console.log(err);
+        }
+
+        real_dob = moment(new Date(emp_data[0]["DATE_OF_BIRTH"])).format("YYYY-MM-DD");
+
+        if(dob === real_dob){
+            data_found = true;
+            if(checkValidation()){
+                loginNavigate('/application/1', { state: {info: emp_data[0], used: "no"} });
             }
         }
+        
 
         if(!data_found){
             error_message("Invalid BUET ID and/or password \n Try Again!!!");

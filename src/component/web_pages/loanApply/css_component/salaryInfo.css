@@ -13,7 +13,7 @@
 
     .salaryInfoLabel{
         width: 100%;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.7rem;
         font-weight: bold;
         color: black;
@@ -23,7 +23,7 @@
 
 
     .tableText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: black;
         text-align: center;
@@ -34,7 +34,7 @@
         height: 0.8rem;
         width: 90%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         margin-left: 5px;
         margin-right: 15px;
@@ -64,7 +64,7 @@
 
 
     .salaryInfoLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         font-weight: bold;
         color: black;
@@ -74,7 +74,7 @@
 
 
     .tableText{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         color: black;
         text-align: center;
@@ -85,7 +85,7 @@
         height: 1rem;
         width: 90%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         margin-left: 5px;
         margin-right: 15px;

@@ -7,7 +7,7 @@
 
     .pageLabel{
         text-align: center;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 1rem;
         font-weight: bold;
     }
@@ -27,7 +27,7 @@
     }
 
     .prePersInfoLabel{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 0.7rem;
         font-weight: bold;
         text-align: justify;
@@ -39,7 +39,7 @@
 
     .tableIndexCol{
         width: 6%;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 0.5rem;
         font-weight: bold;
         border: 1px solid black;
@@ -47,7 +47,7 @@
 
     .tableLabelCol{
         width: 20%;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 0.5rem;
         font-weight: bold;
         text-align: left;
@@ -56,7 +56,7 @@
     }
     
     .tableValueCol{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 0.5rem;
         text-align: left;
         padding-left: 0.5rem;
@@ -102,7 +102,7 @@
     }
 
     .preNormalButton{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 0.6rem;
         color: crimson;
         height: auto;
@@ -132,7 +132,7 @@
 
     .pageLabel{
         text-align: center;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 2rem;
         font-weight: bold;
         margin-top: 1%;
@@ -153,7 +153,7 @@
     }
 
     .prePersInfoLabel{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 1.2rem;
         font-weight: bold;
         text-align: justify;
@@ -165,7 +165,7 @@
 
     .tableIndexCol{
         width: 5%;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 1rem;
         font-weight: bold;
         border: 1px solid black;
@@ -173,7 +173,7 @@
 
     .tableLabelCol{
         width: 20%;
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 1rem;
         font-weight: bold;
         text-align: left;
@@ -182,7 +182,7 @@
     }
     
     .tableValueCol{
-        font-family: 'AdorshoLipi', sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial  !important;
         font-size: 1rem;
         text-align: left;
         padding-left: 1rem;
@@ -229,7 +229,7 @@
     }
 
     .preNormalButton{
-        font-family: 'AdorshoLipi',sans-serif, Arial  !important;
+        font-family: 'AdorshoLipi',PT Serif, Arial  !important;
         font-size: 1rem;
         color: crimson;
         height: auto;
@@ -259,6 +259,12 @@
     grid-template-columns: 100%;
     justify-content: center;
     align-items: center;
+}
+
+.preBasicField{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
 }
 
 .preBasicFieldwithProPic{

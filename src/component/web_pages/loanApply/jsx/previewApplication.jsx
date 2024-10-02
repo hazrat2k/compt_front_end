@@ -1,12 +1,15 @@
 import React from "react";
 import { useLocation } from 'react-router';
+import moment from "moment";
+
 import "../css/previewApplication.css";
+
 import Logo from "../jsx_component/logo";
 import PreviewText from "../jsx_component/previewText";
 import Application from "./application";
 
 
-function PreviewApplication(){
+export default function PreviewApplication(){
 
     const { state } = useLocation();
 
@@ -24,14 +27,17 @@ function PreviewApplication(){
     const preAppPersoInfo = [["ক", "খ", "গ", "ঘ", "ঙ", "চ", "ছ", "জ", "ঝ"],
                             ["পিতা/স্বামীর নাম", "মাতার নাম", "নমিনীর নাম", "আপনার সাথে নমিনীর সম্পর্ক", "বর্তমান ঠিকানা",
                                  "স্থায়ী ঠিকানা", "জন্ম তারিখ", "আবেদনকারীর জাতীয় পরিচয়পত্র নম্বর", "নমিনীর জাতীয় পরিচয়পত্র নম্বর"],
-                            [previewData["FATHERS_NAME"], previewData["MOTHERS_NAME"], previewData["NOMINEES_NAME"], previewData["NOMINEES_RELSHIP"], previewData["ADDRESS"],
-                            previewData["ADDRESS"], previewData["DATE_OF_BIRTH"], previewData["NID_NO"], previewData["NOMINEES_NID"]]
+                            [previewData["FATHERS_NAME"], previewData["MOTHERS_NAME"], previewData["NOMINEES_NAME"], previewData["NOMINEES_RELSHIP"], previewData["ADDRESS"], previewData["ADDRESS"], 
+                            moment(new Date(previewData["DATE_OF_BIRTH"])).format("DD MMM YYYY"), previewData["NID_NO"], previewData["NOMINEES_NID"]]
                             ];
 
 
     const preAppServInfo = [["ক", "খ", "গ", "ঘ", "ঙ"],
                             ["বুয়েট আই.ডি. নং", "বিশ্ববিদ্যালয়ের চাকুরী", "বিশ্ববিদ্যালয়ে যোগদানের তারিখ", "এই বিশ্ববিদ্যালয়ে মোট চাকুরীকাল", "চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর)"],
-                            [previewData["IDNO"], previewData["SERV_TYPE"] ? "স্থায়ী" : "অস্থায়ী", previewData["DATE_FIRST_JOIN"], previewData["SERV_PERIOD"], previewData["TIME_OF_RETIREMENT"]]
+                            [previewData["EMPLOYEE_ID"], previewData["APPOINTMENT_TYPE"], 
+                            moment(new Date(previewData["DATE_FIRST_JOIN"])).format("DD MMM YYYY"), 
+                            previewData["SERV_PERIOD"], 
+                            moment(new Date(previewData["DATE_OF_RETIREMENT"])).format("DD MMM YYYY")]
                             ];
 
     var preAppSalInfo = [[" ","ক", "খ", "গ", "ঘ"],
@@ -142,6 +148,9 @@ function PreviewApplication(){
             </tbody>
         );
     }
+
+    
+
 
     return(
         <div>
@@ -271,9 +280,6 @@ function PreviewApplication(){
         </div>
     );
 }
-
-
-export default PreviewApplication;
 
 
 

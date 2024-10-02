@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState }  from 'react';
 import "../css_component/salaryInfo.css";
 import axios from "axios";
 
-function SalaryInfo(props){
+export default function SalaryInfo(props){
 
     const salary_data = props.salary_data;
     const salary_file = props.salary_file;
@@ -16,23 +16,16 @@ function SalaryInfo(props){
     const salText = ["ক) মূল বেতন : ","খ) মোট বেতন : ", "গ) মোট কর্তন : ", "ঘ) নীট বেতন : "];
 
     const salData = [];
-    
+
+    let nf = new Intl.NumberFormat('en-US');
     
 
     for(let i=0;i<salary_file.length;i++){
-        for(let j=2;j>=0;j--){
-            if((Number(salary_data["EMPLOYEEID"]) === salary_file[i]["SAL_ID"]) && 
-            (salary_file[i]["YEAR"] === currYear) &&
-            (salary_file[i]["MONTH"] === (currMonth-j))){
-                
-                prevMonthSal.push([salary_file[i]["BASIC_SALARY"], 
-                                    salary_file[i]["GROSS_SALARY"], 
-                                    salary_file[i]["TOTAL_DEDUCTION"], 
-                                    salary_file[i]["NET_SALARY"]]);
 
-
-            }
-        }
+        prevMonthSal.push([salary_file[i]["EMPLOYEE_BASIC"], 
+                            salary_file[i]["GROSS_SALARY"], 
+                            salary_file[i]["TOTAL_DEDUCTION"], 
+                            salary_file[i]["NET_SALARY"]]);
         
     }
 
@@ -44,25 +37,24 @@ function SalaryInfo(props){
                 <tbody>
                     <tr>
                         <td className='tableText'>{salText[i]}</td>
-                        <td><div className='tableDataInput' > {prevMonthSal[0][i]} </div> </td>
-                        <td><div className='tableDataInput' > {prevMonthSal[1][i]} </div> </td>
-                        <td><div className='tableDataInput' > {prevMonthSal[2][i]} </div> </td>
+                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[0][i])} </div> </td>
+                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[1][i])} </div> </td>
+                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[2][i])} </div> </td>
                     </tr>
                 </tbody>
             );
         }
         var prevMonSal = [];
 
-        for(let i=0;i<3;i++){
-            prevMonthName.push(month[currMonth-i-1] + ' ' + currYear);
-            prevMonSal.push([prevMonthName[i]]);
-            prevMonSal[i] = [...prevMonSal[i],...prevMonthSal[i]];
+        var j = 0;
+
+        for(let i=2;i>=0;i--){
+            prevMonthName.push(month[salary_file[i]["MONTH"]-1] + ' ' + salary_file[i]["YEAR"]);
+            prevMonSal.push([prevMonthName[j]]);
+            prevMonSal[j] = [...prevMonSal[j],...prevMonthSal[j]];
+            j++;
         }
     }
-
-
-
-    
 
     var prevSal = {"PREV_MON_SAL": prevMonSal};
 
@@ -94,6 +86,3 @@ function SalaryInfo(props){
         </div>
     )
 }
-
-
-export default SalaryInfo

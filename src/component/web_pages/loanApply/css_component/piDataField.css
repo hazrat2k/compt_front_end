@@ -13,7 +13,7 @@
     .piDataLabel{
 
         width: 25%;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         text-align: justify;
         font-size: 0.6rem;
         color: black;
@@ -32,7 +32,7 @@
         height: 0.8rem;
         width: 100%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: #0c0c0c;
         text-transform:uppercase;
@@ -62,7 +62,7 @@
 
     .piDataLabel{
         width: 26%;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         text-align: justify;
         font-size: 0.8rem;
         color: black;
@@ -80,7 +80,7 @@
         height: 1.3rem;
         width: 100%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         color: black;
         text-transform:uppercase;

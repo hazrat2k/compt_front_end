@@ -8,7 +8,7 @@ import ServiceInfo from '../jsx_component/serviceInfo';
 import SalaryInfo from '../jsx_component/salaryInfo';
 import DoubleButton from '../jsx_component/doubleButton';
 
-function SalServInfo(){
+export default function SalServInfo(){
 
     const salServNavigate = useNavigate();
     const { state } = useLocation();
@@ -23,13 +23,17 @@ function SalServInfo(){
     }
 
     const [loan_file, setLoan_file] = useState([]);
+    const [loan_type_file, setLoan_type_file] = useState([]);
 
 
     useEffect( () => {
         const fetch_loan_data = async () =>{
             try{
-                const res = await axios.get("http://localhost:8800/loan");
+                const res = await axios.post("http://localhost:8800/loan", {"SALARY_ID" : salServData["EMPLOYEEID"]});
                 setLoan_file(res.data);
+
+                const type_res = await axios.get("http://localhost:8800/loan_type");
+                setLoan_type_file(type_res.data);
 
             }catch(err){
                 console.log(err);
@@ -46,14 +50,14 @@ function SalServInfo(){
     };
 
 
-    function onSalServAuthenticate(button){
+    const onSalServAuthenticate = (button) => {
 
         if(button == "first")
             salServNavigate('/application/2', {state: {info: salServData, used: "yes"}});
 
         if(button == "second"){
-            const file = {salary: salary_file, loan: loan_file}
-            salServNavigate('/application/4', {state: {info: salServData, file: file, used: state_used}});
+            const file = {salary: salary_file, loan: loan_file, loan_type: loan_type_file}
+            salServNavigate('/application/4', {state: {info: salServData, file: file,  used: state_used}});
         }
 
     }
@@ -69,7 +73,7 @@ function SalServInfo(){
 
                 <ServiceInfo service_data={state["info"]} setServData={(data) => {setSalServData(data)}} />
 
-                <SalaryInfo salary_data={state["info"]} salary_file={salary_file}  setSalData={(data) => {setSalServData(data)}} />
+                <SalaryInfo salary_data={state["info"]} salary_file={salary_file} setSalData={(data) => {setSalServData(data)}} />
 
                 <DoubleButton 
                     firstButtonName="পূর্ববর্তী"
@@ -84,5 +88,3 @@ function SalServInfo(){
 
 
 }
-
-export default SalServInfo;

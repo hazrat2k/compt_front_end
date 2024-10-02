@@ -7,7 +7,7 @@
     }
 
     .previewDataLabel{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 0.7rem;
         font-weight: bold;
         text-align: justify;
@@ -15,7 +15,7 @@
     }
     
     .previewColon{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 0.7rem;
         font-weight: bold;
         padding-right: 0.5rem;
@@ -24,7 +24,7 @@
     
     .previewDataValue{
         width:auto;
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 0.7rem;
         width: 50%;
     }
@@ -41,15 +41,15 @@
     }
 
     .previewDataLabel{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 1.2rem;
         font-weight: bold;
         text-align: justify;
-        width:60%;
+        width:40%;
     }
     
     .previewColon{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 1.2rem;
         font-weight: bold;
         padding-right: 1rem;
@@ -57,9 +57,9 @@
     }
     
     .previewDataValue{
-        font-family: 'AdorshoLipi', sans-serif, Arial !important;
+        font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 1.2rem;
-        width:40%;
+        width:60%;
     }
 }
 

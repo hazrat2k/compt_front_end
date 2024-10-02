@@ -10,14 +10,14 @@
     }
     
     .dataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         font-weight: bold;
         color: black;
     }
 
     .dataCheckBoxValid{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.4rem;
         font-weight: bold;
         color: red;
@@ -35,7 +35,7 @@
     }
     
     .dataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: black;
         position: relative;
@@ -60,14 +60,14 @@
     }  
     
     .dataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         font-weight: bold;
         color: black;
     }  
 
     .dataCheckBoxValid{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         font-weight: bold;
         color: red;
@@ -85,7 +85,7 @@
     }
     
     .dataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         color: black;
         position: relative;

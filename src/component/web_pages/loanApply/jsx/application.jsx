@@ -1,5 +1,15 @@
+import { React,  useState } from 'react';
+import { useNavigate } from 'react-router';
 import { BlobProvider, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
+
+import axios from "axios";
+import moment from 'moment';
+
+import "./../css/application.css";
+
 import logo_image from "../assets/logo.png";
+import checkBox_image from "../assets/checkbox_image.png";
+
 import PT_Serif_Bold from "../assets/fonts/pt-serif-latin-700-normal.ttf";
 import Noto_Serif_Bengali from "../assets/fonts/Noto_Serif_Bengali.ttf";
 import Noto_Serif_Bengali_Bold from "../assets/fonts/Noto_Serif_Bengali_Bold.ttf";
@@ -7,10 +17,6 @@ import AdorshoLipi from "../assets/fonts/AdorshoLipi.ttf";
 import AdorshoLipi_Bold from "../assets/fonts/AdorshoLipi_Bold.ttf";
 import SuttonyMJ from "../assets/fonts/SuttonyMJ.ttf";
 import SuttonyMJ_Bold from "../assets/fonts/SuttonyMJ_Bold.ttf";
-import axios from "axios";
-
-import { useNavigate } from 'react-router';
-import { useState } from 'react';
 
 
 Font.register({family: 'English', fontWeight: 'normal', src: "http://fonts.gstatic.com/s/ptserif/v8/EgBlzoNBIHxNPCMwXaAhYPesZW2xOQ-xsNqO47m55DA.ttf"});
@@ -28,9 +34,10 @@ const styles = StyleSheet.create({
     pageLabel:{
         textAlign: "center",
         fontFamily: "English Bold",
-        fontSize: "20pt",
-        fontWeight: "bold",
-        marginBottom: "5pt",
+        fontSize: "16pt",
+        marginBottom: "2pt",
+        marginTop: "2pt",
+        color: "black"
     },
 
 });
@@ -40,37 +47,34 @@ const style_logo = StyleSheet.create({
         marginTop: "5pt",
         display: "flex",
         flexDirection: "row",
-        padding: "10pt",
+        padding: "5pt",
         alignSelf:"center",
-        alignItems:"center"
     },
 
     logo_img:{
-        float: "center",
+        marginRight: "1%",
     },
 
     l_img:{
-        height: "40pt",
-        width: "45pt"
+        height: "30pt",
+        width: "30pt"
     },
 
 
     logo_text:{
         color: "crimson",
-        marginLeft: "1%",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center"
     },
 
 
     logo_text_1:{
-        fontSize: "15pt",
-        fontWeight: "bold",
+        fontSize: "13pt",
         fontFamily: "English Bold",
     },
 
     logo_text_2:{
-        width: "65%",
         fontSize: "11pt",
         fontFamily: "English"
     },
@@ -101,7 +105,28 @@ const style_field = StyleSheet.create({
     },
 
     preOtherField:{
+        padding: "0pt 5pt 0pt 5pt",
+        display: "flex",
+        flexDirection: "column",
+    },
+
+    preSigField:{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+
+    preSigFieldBox:{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+    },
+
+    preOtherFieldR:{
         padding: "5pt 5pt 0pt 5pt",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center"
     },
 
     preOtherFieldLabel:{
@@ -109,6 +134,22 @@ const style_field = StyleSheet.create({
         fontSize: "12pt",
         fontWeight: "bold",
         textAlign: "justify",
+    },
+
+    preOtherFieldText:{
+        fontFamily: "English",
+        fontSize: "10pt",
+        textAlign: "justify",
+    },
+
+    preBold:{
+        fontFamily: "English Bold",
+    },
+
+    preOtherFieldImg:{
+        height: "20pt",
+        width: "20pt",
+        padding: "2pt",
     },
 
 
@@ -131,15 +172,26 @@ const style_pic = StyleSheet.create({
     },
 
     preSignPic:{
-        padding: "5pt",
+        padding: "2.5pt",
         alignSelf: "flex-end",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
     },
 
     preSignPicImg:{
         height: "30pt",
         width: "100pt",
         padding: "5pt",
+        borderBottom: "1px solid black",
     },
+
+    preSignPicText:{
+        fontFamily: "English",
+        fontSize: "8pt"
+    },
+
+
 
 });
 
@@ -148,29 +200,27 @@ const style_data = StyleSheet.create({
     preData:{
         display: "flex",
         flexDirection: "row",
-        padding: "3pt 6pt 3pt 6pt",
+        padding: "2pt 5pt 2pt 5pt",
         alignItems: "center",
     },
 
     preDataLabel:{
         fontFamily: "English Bold",
-        fontSize: "12pt",
-        fontWeight: "bold",
+        fontSize: "11pt",
         textAlign: "justify",
         width: "50%",
     },
 
     preDataColon:{
         fontFamily: "English Bold",
-        fontSize: "12pt",
-        fontWeight: "bold",
+        fontSize: "11pt",
         paddingLeft: "15pt",
         paddingRight: "15pt",
     },
 
     preDataValue:{
         fontFamily: "English",
-        fontSize: "11pt",
+        fontSize: "10pt",
         width: "50%",
     }
 
@@ -181,8 +231,8 @@ const style_table = StyleSheet.create({
     table:{
         display: "flex",
         flexDirection: "column",
-        marginTop: "5pt",
-        marginBottom: "5pt",
+        marginTop: "2pt",
+        marginBottom: "2pt",
     },
 
     row:{
@@ -191,17 +241,22 @@ const style_table = StyleSheet.create({
         textAlign: "center",
     },
 
+
     double_column:{
         display: "flex",
         flexDirection: "row",
         flexBasis: "50%",
     },
 
+    border_column:{
+        border: "1px solid black"
+    },
+
     index_column:{
         width: "5%",
         fontFamily: "English Bold",
         fontSize: "10pt",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent: "center",
@@ -214,7 +269,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
@@ -226,11 +281,22 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "center",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
+    },
 
+    last_column:{
+        width: "45%",
+        fontFamily: "English Bold",
+        fontSize: "10pt",
+        fontWeight: "bold",
+        textAlign: "center",
+        padding: "1pt 5pt 1pt 5pt",
+        border: "0px",
+        margin: "2pt",
+        justifyContent:"center",
     },
 
     personal_label_column:{
@@ -239,7 +305,7 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
@@ -252,7 +318,7 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
@@ -265,7 +331,7 @@ const style_table = StyleSheet.create({
         fontSize: "9pt",
         textAlign: "left",
         paddingLeft: "10pt",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
@@ -277,7 +343,7 @@ const style_table = StyleSheet.create({
         fontSize: "9pt",
         textAlign: "center",
         paddingLeft: "10pt",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent:"center",
@@ -289,7 +355,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         paddingLeft: "10pt",
-        padding: "2pt 5pt 2pt 5pt",
+        padding: "1pt 5pt 1pt 5pt",
         border: "0px",
         margin: "2pt",
         justifyContent: "center",
@@ -318,10 +384,7 @@ const PreviewData = (props) => {
 }
 
 
-
-
-
-const Application = (props) => {
+export default function Application(props){
 
     const applicationNavigate = useNavigate();
 
@@ -329,11 +392,13 @@ const Application = (props) => {
 
     const app_data = props.applicationData;
 
+    let nf = new Intl.NumberFormat('en-US');
+
     const pdfPersoInfo = [["a", "b", "c", "d", "e", "f", "g", "h", "i"],
                             ["Father's / Husband's Name", "Mother's Name", "Nominee's Name", "Relationship with Nominee",
                             "Present Address", "Permanant Address", "Date of Birth", "Applicant's NID", "Nominee's NID"],
-                            [app_data["FATHERS_NAME"], app_data["MOTHERS_NAME"], app_data["NOMINEES_NAME"], app_data["NOMINEES_RELSHIP"], 
-                            app_data["ADDRESS"], app_data["ADDRESS"], app_data["DATE_OF_BIRTH"], app_data["NID_NO"], app_data["NOMINEES_NID"]]
+                            [app_data["FATHERS_NAME"], app_data["MOTHERS_NAME"], app_data["NOMINEES_NAME"], app_data["NOMINEES_RELSHIP"], app_data["ADDRESS"], app_data["ADDRESS"], 
+                            moment(new Date(app_data["DATE_OF_BIRTH"])).format("DD MMM YYYY"), app_data["NID_NO"], app_data["NOMINEES_NID"]]
                             ];
 
     const pdf_pers_table = [];
@@ -390,7 +455,10 @@ const Application = (props) => {
 
     const pdfServInfo = [["a", "b", "c", "d", "e"],
                             ["BUET ID No.", "Service of University", "Joining Date to University", "Total Service Period in this University", "Service Completion Date (Teacher's Age 65 Years, Officer's / Staff's Age 60 years)"],
-                            [app_data["IDNO"], app_data["SERV_TYPE"] ? "PERMANENT" : "TEMPORARY", app_data["DATE_FIRST_JOIN"], app_data["SERV_PERIOD"], app_data["TIME_OF_RETIREMENT"]]
+                            [app_data["EMPLOYEE_ID"], app_data["APPOINTMENT_TYPE"], 
+                            moment(new Date(app_data["DATE_FIRST_JOIN"])).format("DD MMM YYYY"), 
+                            app_data["SERV_PERIOD"], 
+                            moment(new Date(app_data["DATE_OF_RETIREMENT"])).format("DD MMM YYYY")]
                             ];
 
     const pdf_serv_table = [];
@@ -434,14 +502,26 @@ const Application = (props) => {
 
     const pdf_sal_table = [];
 
-    for(let i=0;i<5;i++){
+    for(let i=0;i<1;i++){
         pdf_sal_table.push(
             <View style={style_table.row}>
-                <View style={style_table.index_column}><Text>{pdfSalInfo[0][i]}</Text></View>
-                <View style={style_table.label_column}><Text>{pdfSalInfo[1][i]}</Text></View>
-                <View style={style_table.sal_value_column}><Text>{pdfSalInfo[2][i]}</Text></View>
-                <View style={style_table.sal_value_column}><Text>{pdfSalInfo[3][i]}</Text></View>
-                <View style={style_table.sal_value_column}><Text>{pdfSalInfo[4][i]}</Text></View>
+                <View style={[style_table.index_column, style_table.border_column]}><Text>{pdfSalInfo[0][i]}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfSalInfo[1][i]}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfSalInfo[2][i]}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfSalInfo[3][i]}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfSalInfo[4][i]}</Text></View>
+            </View>
+        );
+    }
+
+    for(let i=1;i<5;i++){
+        pdf_sal_table.push(
+            <View style={style_table.row}>
+                <View style={[style_table.index_column, style_table.border_column]}><Text>{pdfSalInfo[0][i]}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfSalInfo[1][i]}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column]}><Text>{nf.format(pdfSalInfo[2][i])}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column]}><Text>{nf.format(pdfSalInfo[3][i])}</Text></View>
+                <View style={[style_table.sal_value_column, style_table.border_column]}><Text>{nf.format(pdfSalInfo[4][i])}</Text></View>
             </View>
         );
     }
@@ -463,17 +543,60 @@ const Application = (props) => {
     }
 
     const pdf_loan_table = [];
+    const pdf_loan_table_2 = [];
 
-    for(let i=0;i<9;i++){
+    for(let i=0;i<1;i++){
         pdf_loan_table.push(
             <View style={style_table.row}>
-                <View style={style_table.loan_index_column}><Text>{pdfLoanInfo[0][i]}</Text></View>
-                <View style={style_table.label_column}><Text>{pdfLoanInfo[1][i]}</Text></View>
-                <View style={style_table.loan_value_column}><Text>{pdfLoanInfo[2][i]}</Text></View>
-                <View style={style_table.loan_value_column}><Text>{pdfLoanInfo[3][i]}</Text></View>
-                <View style={style_table.loan_value_column}><Text>{pdfLoanInfo[4][i]}</Text></View>
-                <View style={style_table.loan_value_column}><Text>{pdfLoanInfo[5][i]}</Text></View>
-                <View style={style_table.loan_value_column}><Text>{pdfLoanInfo[6][i]}</Text></View>
+                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>{pdfLoanInfo[0][i]}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfLoanInfo[1][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[2][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[3][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[4][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[5][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[6][i]}</Text></View>
+            </View>
+        );
+    }
+
+    for(let i=1;i<3;i++){
+        pdf_loan_table.push(
+            <View style={style_table.row}>
+                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[0][i])}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfLoanInfo[1][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[2][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[3][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[4][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[5][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[6][i])}</Text></View>
+            </View>
+        );
+    }
+
+    for(let i=0;i<1;i++){
+        pdf_loan_table_2.push(
+            <View style={style_table.row}>
+                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>{pdfLoanInfo[0][i]}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfLoanInfo[1][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[2][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[3][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[4][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[5][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column, style_field.preBold]}><Text>{pdfLoanInfo[6][i]}</Text></View>
+            </View>
+        );
+    }
+
+    for(let i=3;i<9;i++){
+        pdf_loan_table_2.push(
+            <View style={style_table.row}>
+                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[0][i])}</Text></View>
+                <View style={[style_table.label_column, style_table.border_column]}><Text>{pdfLoanInfo[1][i]}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[2][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[3][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[4][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[5][i])}</Text></View>
+                <View style={[style_table.loan_value_column, style_table.border_column]}><Text>{nf.format(pdfLoanInfo[6][i])}</Text></View>
             </View>
         );
     }
@@ -482,9 +605,7 @@ const Application = (props) => {
 
     const MyDoc = (
         <Document>
-            <Page size="A4" >
-
-                <View style={{marginTop:"20pt"}}></View>
+            <Page size="A4" style={{marginTop:"10pt"}} >
 
                 <View style={style_logo.logo}>
                     <View style={style_logo.logo_img}>
@@ -496,16 +617,16 @@ const Application = (props) => {
                             Bangladesh University of Engineering and Technology (BUET)
                         </Text>
                         <Text style={style_logo.logo_text_2}>
-                            Application for Laptop, Consumer, Vehicle Buying/House Building/Repair, Land Buying and Sonali Bank Wholesale Loan
+                            Comptroller Office
+                        </Text>
+
+                        <Text style={styles.pageLabel}>
+                            Application for Loan
                         </Text>
                     </View>
 
                 </View>
 
-
-                <Text style={styles.pageLabel}>
-                    Application for Loan
-                </Text>
 
                 <View style={style_field.allField}>
 
@@ -538,7 +659,7 @@ const Application = (props) => {
 
                             <PreviewData
                                 label="6. Amount of Loan"
-                                name={app_data["LOAN_AMNT"]}
+                                name={nf.format(app_data["LOAN_AMNT"])}
                             />
 
                             <PreviewData
@@ -598,19 +719,6 @@ const Application = (props) => {
 
                     </View>
 
-
-
-                </View>
-
-                
-            </Page>
-
-            <Page size="A4" >
-
-                <View style={{marginTop:"30pt"}}></View>
-
-                <View style={style_field.allField}>
-
                     <View style={style_field.preOtherField}>
                         <Text style={style_field.preOtherFieldLabel}>
                             11. Information about Loan Taken from University and Sonali Bank (Attested by Comptroller Office) :
@@ -624,18 +732,132 @@ const Application = (props) => {
 
                     </View>
 
+                </View>
+
+                
+            </Page>
+
+            <Page size="A4" style={{marginTop:"30pt"}}>
+                <View style={style_field.allField}>
+
+                    <View style={style_field.preOtherField}>
+
+                        <View style={style_table.table}>
+                            {pdf_loan_table_2}
+
+                        </View>
+                        
+
+                    </View>
+
                     <View style={style_field.preOtherField}>
                         <Text style={style_field.preOtherFieldLabel}>
-                        I warrant that the above information is completely true and correct and I will be obliged to pay the loan installments accepted as per the rules. 
-                        <br /> Otherwise there is no objection to bear the responsibility prescribed by the authority. If any information or documents provided are proved to be incorrect after taking the loan, then I will be bound to accept any decision of the university without any objection.
+                            12. Approximate Receivable from University (To be by Comptroller Office) :
+                        </Text>
+
+                        <View style={style_table.table}>
+                            <View style={style_table.row}>
+                                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>a</Text></View>
+                                <View style={[style_table.last_column, style_table.border_column]}><Text>Net Pension (One-off)</Text></View>
+                                <View style={[style_table.last_column, style_table.border_column]}><Text> </Text></View>
+                            </View>
+
+                            <View style={style_table.row}>
+                                <View style={[style_table.loan_index_column, style_table.border_column]}><Text>b</Text></View>
+                                <View style={[style_table.last_column, style_table.border_column]}><Text></Text></View>
+                                <View style={[style_table.last_column, style_table.border_column]}><Text> </Text></View>
+                            </View>
+
+                        </View>
+                        
+
+                    </View>
+
+                    <View style={style_field.preOtherField}>
+                        <Text style={style_field.preOtherFieldText}>
+                            I warrant that the above information is completely true and correct and I will be obliged to pay the loan installments accepted as per the rules. 
+                        </Text>
+                        <Text style={style_field.preOtherFieldText}>
+                            Otherwise there is no objection to bear the responsibility prescribed by the authority. If any information or documents provided are proved to be incorrect after taking the loan, then I will be bound to accept any decision of the university without any objection.
                         </Text>
                     </View>
 
                     <View style={style_pic.preSignPic}>
                         <Image style={style_pic.preSignPicImg} src={app_data["SIGN_PIC"]} />
+                        <Text style={style_pic.preSignPicText}> Applicant Signature</Text>
+                        <Text style={style_pic.preSignPicText}> with Date</Text>
                     </View>
 
+                    <View style={style_field.preOtherField}>
+                        <Text style={style_field.preOtherFieldLabel}>
+                            Sign after selecting applicable field
+                        </Text>
 
+                        <View style={style_field.preOtherFieldR}>
+                            <Image style={style_field.preOtherFieldImg} src={checkBox_image} />
+
+                            <Text style={style_field.preOtherFieldText}>
+                                It is recommended to give Consumer Loan, Vehicle Buying/House Building/Repair/Land Buying and Personal or other or any purpose loan under Sonali Bank Wholesale loan and House Building Loan, House Buying, Building, Repair, Land Buying loan on availability.
+                            </Text>
+                        </View>
+
+                        <View style={style_field.preOtherFieldR}>
+                            <Image style={style_field.preOtherFieldImg} src={checkBox_image} />
+
+                            <Text style={style_field.preOtherFieldText}>
+                                It is attested that applicant can directly use laptop in educational activities and is recommended to give on availability.
+                            </Text>
+                        </View>
+
+                        
+                    </View>
+
+                    <View style={style_pic.preSignPic}>
+                        <View style={{marginTop:"20pt"}}></View>
+                        <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                        <Text style={style_pic.preSignPicText}>Head of Office / Dept.</Text>
+                        <Text style={style_pic.preSignPicText}>(Seal and Signature)</Text>
+                    </View>
+
+                    <View style={style_pic.preSignPic}>
+                        <Text style={[style_field.preOtherFieldText, style_field.preBold]}>It is attested that, documents provided by applicant is correct.</Text>
+                    </View>
+
+                    <View style={style_pic.preSignPic}>
+                        <View style={{marginTop:"20pt"}}></View>
+                        <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                        <Text style={style_pic.preSignPicText}>Deputy Director</Text>
+                        <Text style={style_pic.preSignPicText}>(Salary Section)</Text>
+                        <Text style={style_pic.preSignPicText}>(Signature with Name and Seal)</Text>
+                    </View>
+
+                    <View style={{marginTop:"20pt"}}></View>
+                    <View style={style_field.preSigField}>
+                        <View style={style_field.preSigFieldBox}>
+                            <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                            <Text style={style_pic.preSignPicText}>Accountant</Text>
+                            <Text style={style_pic.preSignPicText}>(Signature with Name and Seal)</Text>
+                        </View>
+
+                        <View style={style_field.preSigFieldBox}>
+                            <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                            <Text style={style_pic.preSignPicText}>SR. ASST. Director</Text>
+                            <Text style={style_pic.preSignPicText}>(Fund Section)</Text>
+                            <Text style={style_pic.preSignPicText}>(Signature with Name and Seal)</Text>
+                        </View>
+
+                        <View style={style_field.preSigFieldBox}>
+                            <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                            <Text style={style_pic.preSignPicText}>Deputy Comptroller</Text>
+                            <Text style={style_pic.preSignPicText}>(Signature with Name and Seal)</Text>
+                        </View>
+
+                        <View style={style_field.preSigFieldBox}>
+                            <Text style={style_pic.preSignPicText}>------------------------------</Text>
+                            <Text style={style_pic.preSignPicText}>Comptroller</Text>
+                            <Text style={style_pic.preSignPicText}>(Signature with Name and Seal)</Text>
+                        </View>
+                    </View>
 
                 </View>
 
@@ -649,7 +871,7 @@ const Application = (props) => {
         applicationNavigate('/application/1', { state: {info: app_data, used: "yes"} });
     };
 
-    function downloadURI(uri, name) {
+    const downloadURI = (uri, name) => {
         const link = document.createElement("a");
         link.href = uri;
         link.download = name;
@@ -663,13 +885,8 @@ const Application = (props) => {
         }
 
 
-        const uploadData = new FormData();
-        for ( var key in app_data ) {
-            uploadData.append(key, app_data[key]);
-        }
-
         try{
-            await axios.post("http://localhost:8800/loan", uploadData);
+            await axios.post("http://localhost:8800/loan_register", app_data);
             downloadURI(url, 'application.pdf');
             applicationNavigate("/");
 
@@ -683,13 +900,13 @@ const Application = (props) => {
     return(
         <div>
 
-{/* 
-            <PDFViewer style={styles.viewer}>
+
+            {/* <PDFViewer style={styles.viewer}>
                 <MyDoc />
-            </PDFViewer>
+            </PDFViewer> */}
 
 
- */}
+
 
             <BlobProvider document={MyDoc}>
                 {({ blob, url, loading, error }) => {
@@ -697,12 +914,12 @@ const Application = (props) => {
                 }}
             </BlobProvider>
 
-            <div className='preButton'>
-                <button className='preNormalButton' onClick={onClickEdit} >
+            <div className='preAppButton'>
+                <button className='preAppNormalButton' onClick={onClickEdit} >
                     সম্পাদন
                 </button>
 
-                <button className='preNormalButton' onClick={onClickSubmit} >
+                <button className='preAppNormalButton' onClick={onClickSubmit} >
                     জমা দিন
                 </button> 
                 
@@ -714,5 +931,3 @@ const Application = (props) => {
     );
 }
 
-
-export default Application;

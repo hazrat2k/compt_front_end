@@ -13,14 +13,14 @@
     }
     
     .dataLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         font-weight: bold;
         color: black;
     }
 
     .dataValid{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.4rem;
         font-weight: bold;
         color: red;
@@ -35,7 +35,7 @@
         display: block;
         width: 95%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.6rem;
         color: #0c0c0c;
         text-transform:uppercase;
@@ -70,14 +70,14 @@
     }
 
     .dataLabel{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         font-weight: bold;
         color: black;
     }
 
     .dataValid{
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 0.8rem;
         font-weight: bold;
         color: red;
@@ -93,7 +93,7 @@
         display: block;
         width: 95%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, sans-serif !important;
+        font-family: 'AdorshoLipi', Arial, PT Serif !important;
         font-size: 1rem;
         color: #0c0c0c;
         text-transform:uppercase;

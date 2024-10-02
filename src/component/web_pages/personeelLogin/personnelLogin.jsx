@@ -12,7 +12,7 @@ export default function PersonnelLogin(){
 
     const perLoginNavigate = useNavigate();
 
-    const [personeelData, setPersoneelData] = useState([]);
+    var personeelData = [];
 
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
@@ -20,20 +20,7 @@ export default function PersonnelLogin(){
     const [passwordError, setPasswordError] = useState('');
     const [matchError, setMatchError] = useState('');
 
-    useEffect( () => {
-        const fetch_personeel_data = async () =>{
-            try{
-                const res = await axios.get("http://localhost:8800/personeel_login");
-                setPersoneelData(res.data);
-
-            }catch(err){
-                console.log(err);
-            }
-        }
-        fetch_personeel_data();
-    }, []);
-
-    const onButtonClick = (e) => {
+    const onButtonClick = async (e) => {
         e.preventDefault();
 
         if ('' === user) {
@@ -53,12 +40,22 @@ export default function PersonnelLogin(){
 
         var data_found = false;
 
-        for(let i=0;i<personeelData.length;i++){
-            if (user === personeelData[i]["username"] && password === personeelData[i]["password"]) {
-                data_found = true;
-                perLoginNavigate("/personnel_dashboard", {state : {data : personeelData[i]}})
-                break;
-            }
+        const uploadData = {
+            "USERNAME": user
+        }
+
+
+        try{
+            const res = await axios.post("http://localhost:8800/personeel_login", uploadData);
+            personeelData = res.data;
+
+        }catch(err){
+            console.log(err);
+        }
+
+        if (password == personeelData[0]["PASSWORD"]) {
+            data_found = true;
+            perLoginNavigate("/personnel_dashboard", {state : {data : personeelData[0]}})
         }
 
         if(!data_found){

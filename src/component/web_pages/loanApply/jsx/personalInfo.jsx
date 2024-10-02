@@ -1,23 +1,28 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import axios from 'axios';
+import moment from 'moment';
+
 import "../css/personalInfo.css";
+
 import PiDataField from '../jsx_component/piDataField';
 import Logo from '../jsx_component/logo';
 import DoubleButton from '../jsx_component/doubleButton';
-import axios from 'axios';
 
-function PersonalInfo(){
+
+export default function PersonalInfo(){
 
     const personalNavigate = useNavigate();
     const { state } = useLocation();
 
     const [salary_file, setSalary_file] = useState([]);
 
-
+    var personal_data = state["info"];
+    
     useEffect( () => {
         const fetch_salServ_data = async () =>{
             try{
-                const res = await axios.get("http://localhost:8800/salary");
+                const res = await axios.post("http://localhost:8800/salary", {"SALARY_ID" : personal_data["EMPLOYEEID"]});
                 setSalary_file(res.data);
 
             }catch(err){
@@ -27,8 +32,6 @@ function PersonalInfo(){
         fetch_salServ_data();
     }, []);
 
-
-    var personal_data = state["info"];
 
     var state_used = "no";
     
@@ -70,7 +73,7 @@ function PersonalInfo(){
     const [nomineeRelship, setNomineeRelship] = useState(personal_data["NOMINEES_RELSHIP"]);
     const [nomineeRelshipError, setNomineeRelshipError] = useState("");
 
-    const [dob, setDOB] = useState(personal_data["DATE_OF_BIRTH"]);
+    const [dob, setDOB] = useState(moment(new Date(personal_data["DATE_OF_BIRTH"])).format("DD MMM YYYY"));
     const [nID, setNID] = useState(personal_data["NID_NO"]);
 
     const [nomineeNID, setNomineeNID] = useState(personal_data["NOMINEES_NID"]);
@@ -80,7 +83,7 @@ function PersonalInfo(){
     const [permanantAddressValue, setPermanantAddressValue] = useState(personal_data["ADDRESS"]);
 
 
-    function validPersonalInfo(){
+    const validPersonalInfo = () => {
 
         if(motherName === ""){
             setMotherNameError("খ) আপনার মাতার নাম লিখুন***");
@@ -118,7 +121,7 @@ function PersonalInfo(){
         return true;
     }
 
-    function onPersonalAuthenticate(button){
+    const onPersonalAuthenticate = (button) => {
 
         personal_data["MOTHERS_NAME"] = motherName;
         personal_data["NOMINEES_NAME"] = nomineeName;
@@ -286,5 +289,3 @@ function PersonalInfo(){
 
 }
 
-
-export default PersonalInfo

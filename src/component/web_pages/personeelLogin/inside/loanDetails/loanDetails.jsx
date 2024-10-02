@@ -17,106 +17,44 @@ export default function LoanDetails(){
 
     const ld_data = state["data"];
 
-    const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT", "AO_CASH", "ACCONT"];
-
-    const [lafClicked, setLafClicked] = useState(false);
-
+    const loan_personnel = ["accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ad_fund", "compt", "accntt_fund", "accntt_cash", "accntt_fund"];
+    
     const [ld_pers_data, setLd_pers_data] = useState([]);
-    const [ld_pl_pers_serv, setLd_pl_pers_serv] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
-    const [ld_pl_hl_cl, setLd_pl_hl_cl] = useState([]);
-    const [ld_pl_ll_sbwsl, setLd_pl_ll_sbwsl] = useState([]);
-    const [ld_pl_sbhl_buetl, setLd_pl_sbhl_buetl] = useState([]);
-    const [ld_pl_oth_sum, setLd_pl_oth_sum] = useState([]);
+    const [ld_pl_prev_loan_1, setLd_pl_prev_loan_1] = useState([]);
     const [ld_pl_remarks, setLd_pl_remarks] = useState([]);
 
-    const [ld_remarks, setLd_remarks] = useState("");
-    const [ld_remarks_error, setLd_remarks_error] = useState(false);
+    useEffect(() => {
 
-    const pension_rate_table = [0, 0, 0, 0, 0,
-                                21, 24, 27, 30, 33,
-                                36, 39, 43, 47, 51,
-                                54, 57, 63, 65, 69, 
-                                72, 75, 79, 83, 87, 90];
-
-    var ld_value = {}                          
-    ld_value["loan_id"] = ld_data["LOAN_ID"];
-    ld_value["salary_id"] = ld_data["SALARY_ID"];
-    ld_value["loan_type"] = ld_data["LOAN_TYPE"];
-    ld_value["buet_id"] = ld_data["BUET_ID"];
-    ld_value["applicant_name"] = ld_data["APPLICANT_NAME"];
-    ld_value["designation"] = ld_data["DESIGNATION"];
-    ld_value["account_no"] = ld_data["ACCOUNT_NO"];
-    ld_value["category"] = ld_data["CATEGORY"];
-    ld_value["office_dept"] = ld_data["OFFICE_DEPT"];
-
-    var temp_status = Number(ld_data["APP_STATUS"]);
-
-    const ld_user = ld_data["sendFrom"] === loan_personnel[temp_status];
-    
-
-    const app_status = (value) =>{
-        var ret_val = "";
-
-        if(value <= 5){
-            ret_val = "Loan Assesment ("+loan_personnel[value]+")";
-        }else if(value > 5 && value <= 11){
-            ret_val = "Sanction ("+loan_personnel[value]+")";
-        }else if(value > 11 && value <= 14){
-            ret_val = "Office Order ("+loan_personnel[value]+")";
-        }else if(value > 14){
-            ret_val = "Bill ("+loan_personnel[value]+")";
+        const fetch_data = async () => {
+            try{
+                var uploadData = {
+                    "USERNAME" : ld_data["sendFrom"]
+                }
+        
+                const pers_data_res = await axios.post("http://localhost:8800/personeel_login", uploadData);
+                setLd_pers_data(pers_data_res.data);
+        
+                uploadData = {
+                    "LOAN_ID" : ld_data["LOAN_ID"]
+                }
+        
+                const sal_res = await axios.post("http://localhost:8800/processing_loan_salary", uploadData);
+                setLd_pl_sal(sal_res.data);
+        
+                const prev_loan_1_res = await axios.post("http://localhost:8800/processing_loan_prev_loan_1", uploadData);
+                setLd_pl_prev_loan_1(prev_loan_1_res.data);
+        
+                const remarks_res = await axios.post("http://localhost:8800/processing_loan_remarks", uploadData);
+                setLd_pl_remarks(remarks_res.data);
+        
+            }catch(err){
+                console.log(err);
+            }
         }
-
-        return ret_val;
-    }
-
-    var temp_status_t = app_status(temp_status);
     
-
-    var ld_processing = true;
-
-    ld_value["dob"] = "";
-
-    ld_value["joining_date"] = "";
-    ld_value["mos"] = "";
-    ld_value["serv_len_y"] = 0;
-    ld_value["rem_serv_m"] = 0;
-
-    ld_value["basic_salary"] = 0;
-    ld_value["gross_salary"] = 0;
-    ld_value["deduct"] = 0;
-    ld_value["net_salary"] = 0;
-
-    ld_value["pens_gra"] = 0;
-    ld_value["leav_sal"] = 0;
-    ld_value["25_mon_gran"] = 0;
-    ld_value["tot_rec"] = 0;
-
-    ld_value["hb_loan"] = 0;
-    ld_value["consu_loan"] = 0;
-    ld_value["lap_loan"] = 0;
-    ld_value["sblws_loan"] = 0;
-    ld_value["tot_pay"] = 0;
-    ld_value["net_rec"] = 0;
-    
-    ld_value["hb_loan_ins_amnt"] = 0;
-    ld_value["consu_loan_ins_amnt"] = 0;
-    ld_value["lap_loan_ins_amnt"] = 0;
-    ld_value["sblws_loan_ins_amnt"] = 0;
-    ld_value["tot_loan_ins_amnt"] = 0;
-
-    ld_value["75_pens"] = 0;
-    ld_value["app_amnt"] = Number(ld_data["LOAN_AMOUNT"]);
-    ld_value["prop_amnt"] = 0;
-    ld_value["inst_amnt"] = 0;
-    ld_value["tot_no_ins"] = 0;
-    ld_value["tot_ins_amnt"] = 0;
-    ld_value["60_basic_sal"] = 0;
-
-    const ld_comment_display = [];
-
-    const ld_remarks_display = [];
+        fetch_data();
+    }, []);
 
     const dateFormation = ( date ) => {
         var temp_date = new Date(date);
@@ -162,60 +100,103 @@ export default function LoanDetails(){
     
     };
 
-    useEffect( () => {
-        const fetch_processing_loan_data = async () =>{
-            try{
+    
 
-                const pers_data_res = await axios.get("http://localhost:8800/personeel_login");
-                setLd_pers_data(pers_data_res.data);
+    const [ld_remarks, setLd_remarks] = useState("");
+    const [ld_remarks_error, setLd_remarks_error] = useState(false);
 
-                const pers_serv_res = await axios.get("http://localhost:8800/processing_loan_pers_serv");
-                setLd_pl_pers_serv(pers_serv_res.data);
+    const pension_rate_table = [0, 0, 0, 0, 0,
+                                21, 24, 27, 30, 33,
+                                36, 39, 43, 47, 51,
+                                54, 57, 63, 65, 69, 
+                                72, 75, 79, 83, 87, 90];
 
-                const sal_res = await axios.get("http://localhost:8800/processing_loan_salary");
-                setLd_pl_sal(sal_res.data);
+    var ld_value = {}                          
+    ld_value["loan_id"] = ld_data["LOAN_ID"];
+    ld_value["salary_id"] = ld_data["EMPLOYEEID"];
+    ld_value["loan_type"] = ld_data["LOAN_TYPE"];
+    ld_value["buet_id"] = ld_data["EMPLOYEE_ID"];
+    ld_value["applicant_name"] = ld_data["EMPLOYEE_NAME"];
+    ld_value["designation"] = ld_data["DESIGNATION"];
+    ld_value["account_no"] = ld_data["ACCOUNT_NO"];
+    ld_value["category"] = ld_data["CATEGORY"];
+    ld_value["office_dept"] = ld_data["OFFICE"];
 
-                const hl_cl_res = await axios.get("http://localhost:8800/processing_loan_hl_cl");
-                setLd_pl_hl_cl(hl_cl_res.data);
+    var temp_status = Number(ld_data["APP_POS"]);
 
-                const ll_sbwsl_res = await axios.get("http://localhost:8800/processing_loan_ll_sbwsl");
-                setLd_pl_ll_sbwsl(ll_sbwsl_res.data);
+    const ld_user = ld_data["sendFrom"] === loan_personnel[temp_status];
+    
 
-                const sbhl_buetl_res = await axios.get("http://localhost:8800/processing_loan_sbhl_buetl");
-                setLd_pl_sbhl_buetl(sbhl_buetl_res.data);
+    const app_status = (value) =>{
+        var ret_val = "";
 
-                const oth_sum_res = await axios.get("http://localhost:8800/processing_loan_others_sum");
-                setLd_pl_oth_sum(oth_sum_res.data);
-
-                const remarks_res = await axios.get("http://localhost:8800/processing_loan_remarks");
-                setLd_pl_remarks(remarks_res.data);
-
-            }catch(err){
-                console.log(err);
-            }
+        if(value <= 5){
+            ret_val = "Loan Assesment ("+loan_personnel[value]+")";
+        }else if(value > 5 && value <= 11){
+            ret_val = "Sanction ("+loan_personnel[value]+")";
+        }else if(value > 11 && value <= 14){
+            ret_val = "Office Order ("+loan_personnel[value]+")";
+        }else if(value > 14){
+            ret_val = "Bill ("+loan_personnel[value]+")";
         }
-        fetch_processing_loan_data();
-    }, []);
 
-
-    for(let i=0;i<ld_pl_pers_serv.length;i++){
-        if(ld_data["BUET_ID"] === ld_pl_pers_serv[i]["BUET_ID"]){
-
-            ld_value["dob"] = dateFormation(ld_pl_pers_serv[i]["DATE_OF_BIRTH"]);
-
-            ld_value["joining_date"] = dateFormation(ld_pl_pers_serv[i]["UNI_JOINING_DATE"]);
-
-            ld_value["mos"] = dateFormation(ld_pl_pers_serv[i]["SERVICE_COMPLETION_DATE"]);
-
-            ld_value["serv_len_y"] = Number(ld_pl_pers_serv[i]["TOTAL_SERVICE_PERIOD"].split(" ")[0]);
-
-            var ld_duration = timeDuration(ld_pl_pers_serv[i]["SERVICE_COMPLETION_DATE"], new Date());
-
-            ld_value["rem_serv_m"] = ld_duration[0] * 12 + ld_duration[1]; 
-
-            break;
-        }
+        return ret_val;
     }
+
+    var temp_status_t = app_status(temp_status);
+    
+
+    var ld_processing = true;
+
+    ld_value["dob"] = dateFormation(ld_data["DATE_OF_BIRTH"]);
+
+    ld_value["joining_date"] = dateFormation(ld_data["DATE_FIRST_JOIN"]);
+
+    ld_value["mos"] = dateFormation(ld_data["DATE_OF_RETIREMENT"]);
+
+    ld_value["serv_len_y"] = Number(ld_data["TOTAL_SERVICE_PERIOD"].split(" ")[0]);
+
+    var ld_duration = timeDuration(ld_data["DATE_OF_RETIREMENT"], new Date());
+
+    ld_value["rem_serv_m"] = ld_duration[0] * 12 + ld_duration[1]; 
+
+    ld_value["basic_salary"] = 0;
+    ld_value["gross_salary"] = 0;
+    ld_value["deduct"] = 0;
+    ld_value["net_salary"] = 0;
+
+    ld_value["pens_gra"] = 0;
+    ld_value["leav_sal"] = 0;
+    ld_value["25_mon_gran"] = 0;
+    ld_value["tot_rec"] = 0;
+
+    ld_value["hb_loan"] = 0;
+    ld_value["consu_loan"] = 0;
+    ld_value["lap_loan"] = 0;
+    ld_value["sblws_loan"] = 0;
+    ld_value["tot_pay"] = 0;
+    ld_value["net_rec"] = 0;
+    
+    ld_value["hb_loan_ins_amnt"] = 0;
+    ld_value["consu_loan_ins_amnt"] = 0;
+    ld_value["lap_loan_ins_amnt"] = 0;
+    ld_value["sblws_loan_ins_amnt"] = 0;
+    ld_value["tot_loan_ins_amnt"] = 0;
+
+    ld_value["75_pens"] = 0;
+    ld_value["app_amnt"] = Number(ld_data["LOAN_AMOUNT"]);
+    ld_value["prop_amnt"] = 0;
+    ld_value["inst_amnt"] = 0;
+    ld_value["tot_no_ins"] = 0;
+    ld_value["tot_ins_amnt"] = 0;
+    ld_value["60_basic_sal"] = 0;
+
+    const ld_comment_display = [];
+
+    const ld_remarks_display = [];
+
+    
+
 
     var ld_gra_rate = 0;
 
@@ -231,18 +212,13 @@ export default function LoanDetails(){
 
     var ld_pens_rate = ld_value["serv_len_y"] > 25 ? pension_rate_table[25] : pension_rate_table[ld_value["serv_len_y"]];
 
-
     for(let i=0;i<ld_pl_sal.length;i++){
-        if(ld_data["LOAN_ID"] === ld_pl_sal[i]["LOAN_ID"]){
-
-            ld_value["basic_salary"] = Number(ld_pl_sal[i]["LAST_MONTH_BASIC_SAL"]);
-            ld_value["gross_salary"] = Number(ld_pl_sal[i]["LAST_MONTH_TOTAL_SAL"]);
-            ld_value["deduct"] = Number(ld_pl_sal[i]["LAST_MONTH_TOTAL_DEDUCT"]);
-            ld_value["net_salary"] = Number(ld_pl_sal[i]["LAST_MONTH_NET_SAL"]);
-
-            break;
-        }
+        ld_value["basic_salary"] = Number(ld_pl_sal[0]["LAST_MON_BASIC_SAL"]);
+        ld_value["gross_salary"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_SAL"]);
+        ld_value["deduct"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_DEDUCT"]);
+        ld_value["net_salary"] = Number(ld_pl_sal[0]["LAST_MON_NET_SAL"]);
     }
+    
 
 
     ld_value["pens_gra"] = (ld_value["basic_salary"] * 0.5 * ld_pens_rate * ld_gra_rate) / 100;
@@ -250,39 +226,26 @@ export default function LoanDetails(){
     ld_value["tot_rec"] = ld_value["pens_gra"] + ld_value["leav_sal"] + ld_value["25_mon_gran"];
 
 
-    for(let i=0;i<ld_pl_hl_cl.length;i++){
-        if(ld_data["LOAN_ID"] === ld_pl_hl_cl[i]["LOAN_ID"]){
+    for(let i=0;i<ld_pl_prev_loan_1.length;i++){
 
-            ld_value["hb_loan"] = ld_pl_hl_cl[i]["HL_REMAIN_INST_AMNT"];
-            ld_value["consu_loan"] = ld_pl_hl_cl[i]["CL_REMAIN_INST_AMNT"];
+        ld_value["hb_loan"] = ld_pl_prev_loan_1[0]["HL_REM_INST_AMNT"];
+        ld_value["consu_loan"] = ld_pl_prev_loan_1[0]["CL_REM_INST_AMNT"];
+        ld_value["lap_loan"] = ld_pl_prev_loan_1[0]["LL_REM_INST_AMNT"];
+        ld_value["sblws_loan"] = ld_pl_prev_loan_1[0]["SBWSL_REM_INST_AMNT"];
 
-            ld_value["hb_loan_ins_amnt"] = ld_pl_hl_cl[i]["HL_INST_AMNT"];
-            ld_value["consu_loan_ins_amnt"] = ld_pl_hl_cl[i]["CL_INST_AMNT"];
+        ld_value["hb_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["HL_INST_AMNT"];
+        ld_value["consu_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["CL_INST_AMNT"];
+        ld_value["lap_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["LL_INST_AMNT"];
+        ld_value["sblws_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["SBWSL_INST_AMNT"];
 
-            break;
-        }
     }
 
-
-    for(let i=0;i<ld_pl_ll_sbwsl.length;i++){
-        if(ld_data["LOAN_ID"] === ld_pl_ll_sbwsl[i]["LOAN_ID"]){
-
-            ld_value["lap_loan"] = ld_pl_ll_sbwsl[i]["LL_REMAIN_INST_AMNT"];
-            ld_value["sblws_loan"] = ld_pl_ll_sbwsl[i]["SBWSL_REMAIN_INST_AMNT"];
-
-            ld_value["lap_loan_ins_amnt"] = ld_pl_ll_sbwsl[i]["LL_INST_AMNT"];
-            ld_value["sblws_loan_ins_amnt"] = ld_pl_ll_sbwsl[i]["SBWSL_INST_AMNT"];
-
-            break;
-        }
-    }
 
     ld_value["tot_pay"] = ld_value["hb_loan"] + ld_value["consu_loan"] + ld_value["lap_loan"] + ld_value["sblws_loan"];
     ld_value["net_rec"] = ld_value["tot_rec"] - ld_value["tot_pay"];
 
     ld_value["tot_loan_ins_amnt"] = ld_value["hb_loan_ins_amnt"] + ld_value["consu_loan_ins_amnt"] + ld_value["lap_loan_ins_amnt"] + ld_value["sblws_loan_ins_amnt"];
 
-    
 
     ld_value["75_pens"] = ld_value["pens_gra"] * 0.75;
     
@@ -298,7 +261,6 @@ export default function LoanDetails(){
 
     var interest_rate = 7.75;
 
-    
 
     if(ld_value["rem_serv_m"] < 10){
 
@@ -398,14 +360,13 @@ export default function LoanDetails(){
         }
     }
 
-    var ld_personnel_data = [];
 
-    for(let i=0;i<ld_pers_data.length;i++){
-        if (ld_data["sendFrom"] === ld_pers_data[i]["designation"]) {
-            ld_personnel_data = ld_pers_data[i];
-            break;
-        }
+    var ld_personnel_data = [];
+    if(ld_pers_data.length != 0){
+        ld_personnel_data = ld_pers_data[0];
     }
+    
+
 
     const onForwardClick = async e =>{
         e.preventDefault();
@@ -420,12 +381,12 @@ export default function LoanDetails(){
 
 
         if(ld_user && 
-            (ld_data["sendFrom"] == "DC_AUDIT") && 
+            (ld_data["sendFrom"] == "dc_audit") && 
             temp_status < 6 && 
             ld_value["inst_amnt"] != 0){
 
             try{
-                await axios.post("http://localhost:8800/sanction", ld_value);
+                await axios.post("http://localhost:8800/sanction_register", ld_value);
     
             }catch(err){
                 console.log(err);
@@ -434,7 +395,7 @@ export default function LoanDetails(){
         }
 
         if(ld_user && 
-            (ld_data["sendFrom"] == "DC_AUDIT") && 
+            (ld_data["sendFrom"] == "dc_audit") && 
             temp_status > 6 ){
 
             try{
@@ -447,7 +408,7 @@ export default function LoanDetails(){
         }
 
         if(ld_user && 
-            (ld_data["sendFrom"] == "COMPT") && 
+            (ld_data["sendFrom"] == "compt") && 
             temp_status > 13 ){
 
             try{
@@ -471,7 +432,7 @@ export default function LoanDetails(){
         try{
             await axios.put("http://localhost:8800/processing_loan_remarks/", updateRemarksData);
             
-            ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data}});
+            //ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data}});
 
         }catch(err){
             console.log(err);
@@ -686,13 +647,13 @@ export default function LoanDetails(){
                             Forward
                         </div>
                         {
-                            (ld_data["sendFrom"] === "ACCONT") ?
+                            (ld_data["sendFrom"] === "accntt_fund") ?
                                 <LoanAssesmentForm lafData={ld_value}/>
                             :
                             ""
                         }
                         {
-                            (ld_data["sendFrom"] === "ACCONT") && (temp_status > 11)?
+                            (ld_data["sendFrom"] === "accntt_fund") && (temp_status > 11)?
                                 <OfficeOrderCopy data={off_or_copy} />
                             :
                             ""

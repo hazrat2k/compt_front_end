@@ -15,7 +15,7 @@ export default function PersoneelDash(){
     const pd_navigate = useNavigate();
     const { state } = useLocation();
 
-    const loan_personnel = ["ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AO_FUND", "AD_FUND", "DP_COMPT", "COMPT", "DC_AUDIT", "ACCONT", "AD_FUND", "COMPT", "ACCONT", "AO_CASH", "ACCONT"];
+    const loan_personnel = ["accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ad_fund", "compt", "accntt_fund", "accntt_cash", "accntt_fund"];
 
     const [pd_select, setPd_select] = useState("null");
 
@@ -26,41 +26,18 @@ export default function PersoneelDash(){
 
     const pd_data = state["data"];
 
-
-    const pd_buet_id = pd_data["buet_id"];
-    const pd_pers_nam = pd_data["name"];
-    const pd_desig = pd_data["designation"];
-    const pd_off_dept = pd_data["office"];
+    const pd_userName = pd_data["USERNAME"];
+    const pd_buet_id = pd_data["EMPLOYEE_ID"];
+    const pd_pers_nam = pd_data["EMPLOYEE_NAME"];
+    const pd_desig = pd_data["DESIGNATION"];
+    const pd_off_dept = pd_data["OFFICE"];
 
     const pd_pend_loan_display = [];
     const pd_process_loan_display = [];
 
-    const [pd_pend_loan_data, setPd_pend_loan_data] = useState([]);
+    const [pd_pend_loan_data, setPd_pend_loan_data]  = useState([]);
+
     const [pd_sanc_loan_data, setPd_sanc_loan_data] = useState([]);
-
-
-    useEffect( () => {
-        const fetch_pending_loan_data = async () =>{
-            try{
-                const res = await axios.get("http://localhost:8800/processing_loan_info");
-                setPd_pend_loan_data(res.data);
-
-            }catch(err){
-                console.log(err);
-            }
-
-            try{
-                const sanc_res = await axios.get("http://localhost:8800/sanction_loan");
-                setPd_sanc_loan_data(sanc_res.data);
-
-            }catch(err){
-                console.log(err);
-            }
-
-
-        }
-        fetch_pending_loan_data();
-    }, []);
 
 
     const dateFormation = ( date ) => {
@@ -70,7 +47,7 @@ export default function PersoneelDash(){
 
     const onLoanIdClick = (e, data) => {
         e.preventDefault();
-        data["sendFrom"] = pd_data["designation"];
+        data["sendFrom"] = pd_data["USERNAME"];
         pd_navigate("/personnel_dashboard/pending_loan_details", {state : {data : data}});
 
     };
@@ -93,57 +70,56 @@ export default function PersoneelDash(){
 
     for(let i=0;i<pd_pend_loan_data.length;i++){
 
-        if(pd_pend_loan_data[i]["LOAN_TYPE"] == pd_select){
-            var temp_status = Number(pd_pend_loan_data[i]["APP_STATUS"]);
+        var temp_status = Number(pd_pend_loan_data[i]["APP_POS"]);
         
-            if(pd_desig === loan_personnel[temp_status]){
-                pending_loan_status = true;
+        if(pd_userName === loan_personnel[temp_status]){
+            pending_loan_status = true;
 
-                pd_pend_loan_display.push(
-                    <div className="pd_section_row">
-                        <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
-                    </div>
-                );
+            pd_pend_loan_display.push(
+                <div className="pd_section_row">
+                    <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["EMPLOYEE_NAME"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APP_DATE"])}</div></div>
+                </div>
+            );
 
-            }else{
-                processing_loan_status = true;
-                
-                pd_process_loan_display.push(
-                    <div className="pd_section_row">
-                        <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["APPLICANT_NAME"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE_DEPT"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
-                        <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APPLICATION_DATE"])}</div></div>
-                    </div>
-                );
-            }
-            }
+        }else{
+            processing_loan_status = true;
+            
+            pd_process_loan_display.push(
+                <div className="pd_section_row">
+                    <div className="pd_section_col linked_col" onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_ID"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["EMPLOYEE_NAME"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["DESIGNATION"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["OFFICE"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{pd_pend_loan_data[i]["LOAN_TYPE"]}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{app_status(temp_status)}</div></div>
+                    <div className="pd_section_col"><div className="pd_section_col_value">{dateFormation(pd_pend_loan_data[i]["LOAN_APP_DATE"])}</div></div>
+                </div>
+            );
+        }
 
     }
 
     for(let i=0;i<pd_sanc_loan_data.length;i++){
 
-        if(pd_pend_loan_data[i]["LOAN_TYPE"] == pd_select){
-            if(pd_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
-                sanction_loan_status = true;
-                break;
-            }
-            if(pd_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
-                bill_loan_status = true;
-                break;
-            }
+        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
+            sanction_loan_status = true;
+            break;
+        }
+
+        if(pd_sanc_loan_data[i]["SANC_STATUS"] == "BILL"){
+            bill_loan_status = true;
+            break;
         }
         
     }
+
+    
 
     const pdSectionItem = (label, value) => {
         return(
@@ -154,6 +130,39 @@ export default function PersoneelDash(){
             </div>
         );
     };
+
+    const onLoanSelect = async (e) => {
+        e.preventDefault();
+
+        var selected_type = e.target.value;
+
+        setPd_select(selected_type);
+
+        if(selected_type != "null"){
+
+            const uploadValue = {
+                "LOAN_TYPE" : selected_type
+            }
+
+            try{
+                const res = await axios.post("http://localhost:8800/processing_loan_info", uploadValue);
+                setPd_pend_loan_data(res.data);
+    
+            }catch(err){
+                console.log(err);
+            }
+
+            try{
+                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadValue);
+                setPd_sanc_loan_data(sanc_res.data);
+
+            }catch(err){
+                console.log(err);
+            }
+        }
+
+    
+    }
 
 
     const onSanctionClick = (e) => {
@@ -193,7 +202,7 @@ export default function PersoneelDash(){
                     </div>
                 </div>
 
-                <select className="pd_select" onChange={(e) => {setPd_select(e.target.value)}}>
+                <select className="pd_select" onChange={onLoanSelect}>
                     <option value="null">Select a Loan Type......</option>
                     <option value="HOUSE BUILDING LOAN">HOUSE BUILDING LOAN</option>
                     <option value="CONSUMER LOAN">CONSUMER LOAN</option>
@@ -208,7 +217,7 @@ export default function PersoneelDash(){
                     :
                     <>
                         {
-                            pd_desig === "ACCONT" ?
+                            pd_userName === "accntt_fund" ?
                             <div className="pd_section">
                                 <div className="pd_section_label">
                                     Preview Copy :

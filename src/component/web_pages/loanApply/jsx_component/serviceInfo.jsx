@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import "../css_component/serviceInfo.css";
+import moment from 'moment';
 
 import PiDataField from './piDataField';
 
-function ServiceInfo(props){
+export default function ServiceInfo(props){
 
     var service_data = props.service_data;
 
     var serv_type = false;
-    if(service_data["APPOINTMENT_TYPE"] === "Permanent"){
+    if(service_data["APPOINTMENT_TYPE"].toUpperCase() == "PERMANENT"){
         serv_type = true;
     }
 
@@ -49,31 +50,8 @@ function ServiceInfo(props){
     }
 
 
-    var birth_date = new Date(service_data["DATE_OF_BIRTH"]);
 
-    var dobYear = birth_date.getFullYear();
-    var dobMonth = birth_date.getMonth();
-    var dobDay = birth_date.getDate();
-
-
-    if(service_data["TEACHERORNOT"]=="1"){
-        dobYear += 65; 
-    }else{
-        dobYear += 60; 
-    }
-
-    var date_of_birth = String(dobYear)+"-";
-    if(dobMonth < 10){
-        date_of_birth += "0";
-    }
-    date_of_birth += String(dobMonth+1)+"-";
-    if(dobDay < 10){
-        date_of_birth += "0";
-    }
-    date_of_birth += String(dobDay);
-
-
-    function servCheckBoxHandle(e){
+    const servCheckBoxHandle = (e) => {
         const {name} = e.target;
         var tempServBox = [...servCheckBox];
         var tempServ = tempServBox[name];
@@ -87,12 +65,13 @@ function ServiceInfo(props){
     }
 
     var servData = {};
-    servData["IDNO"] = service_data["IDNO"];
-    servData["SERV_TYPE"] = serv_type;
+    servData["EMPLOYEE_ID"] = service_data["EMPLOYEE_ID"];
     servData["DATE_FIRST_JOIN"] = service_data["DATE_FIRST_JOIN"];
     servData["SERV_PERIOD"] = yearDuration+" YEARS, "+monthDuration+" MONTHS, "+dateDuration+" DAYS";
-    servData["TIME_OF_RETIREMENT"] = date_of_birth;
+    servData["DATE_OF_RETIREMENT"] = service_data["DATE_OF_RETIREMENT"];
     servData["APPOINTMENT_TYPE"] = service_data["APPOINTMENT_TYPE"].toUpperCase();
+
+    console.log(servData);
 
     props.setServData(servData);
 
@@ -111,7 +90,7 @@ function ServiceInfo(props){
                     dataType="text"
                     validData="" 
                     label="ক) বুয়েট আই.ডি. নং : " 
-                    value={servData["IDNO"]}
+                    value={servData["EMPLOYEE_ID"]}
                     placeholder="যেমন: T201614032"
                 />
 
@@ -141,7 +120,7 @@ function ServiceInfo(props){
                     dataType="text"
                     validData="" 
                     label="গ) বিশ্ববিদ্যালয়ে যোগদানের তারিখ : " 
-                    value={service_data["DATE_FIRST_JOIN"]}
+                    value={moment(new Date(servData["DATE_FIRST_JOIN"])).format("DD MMM YYYY")}
                     placeholder="যেমন: ২৬/০৫/২০১০"
                 />
 
@@ -161,7 +140,7 @@ function ServiceInfo(props){
                     dataType="text"
                     validData="" 
                     label="ঙ) চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর): " 
-                    value={date_of_birth}
+                    value={moment(new Date(servData["DATE_OF_RETIREMENT"])).format("DD MMM YYYY")}
                     placeholder="যেমন: ৩০/০৭/২০৫১"
                 />
 
@@ -187,5 +166,3 @@ function ServiceInfo(props){
         </div>
     )
 }
-
-export default ServiceInfo
