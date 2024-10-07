@@ -23,7 +23,7 @@ export default function PersonnelLogin(){
     const onButtonClick = async (e) => {
         e.preventDefault();
 
-        if ('' === user) {
+        if('' === user) {
             setUserError('***Please enter your username');
             return;
         }else{
@@ -31,7 +31,7 @@ export default function PersonnelLogin(){
         }
     
     
-        if ('' === password) {
+        if('' === password) {
             setPasswordError('***Please enter a password');
             return;
         }else{
@@ -44,7 +44,6 @@ export default function PersonnelLogin(){
             "USERNAME": user
         }
 
-
         try{
             const res = await axios.post("http://localhost:8800/personeel_login", uploadData);
             personeelData = res.data;
@@ -53,10 +52,18 @@ export default function PersonnelLogin(){
             console.log(err);
         }
 
-        if (password == personeelData[0]["PASSWORD"]) {
-            data_found = true;
-            perLoginNavigate("/personnel_dashboard", {state : {data : personeelData[0]}})
+        if(personeelData.length == 0){
+            setMatchError("***Database Error");
+            return;
+        }else{
+            setMatchError("");
         }
+
+        if((personeelData.length > 0) && (password == personeelData[0]["PASSWORD"])){
+            data_found = true;
+            perLoginNavigate("/personnel_dashboard", {state : {data : personeelData[0], loan_type: "null"}})
+        }
+
 
         if(!data_found){
             setMatchError("***Invalid username and/or password. Try Again!!!");

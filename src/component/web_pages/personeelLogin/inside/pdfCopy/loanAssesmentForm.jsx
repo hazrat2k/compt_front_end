@@ -16,13 +16,15 @@ const styles = StyleSheet.create({
     },
 
     pageLabel:{
+        textTransform: "capitalize",
         textAlign: "center",
         fontFamily: "English",
         fontSize: "18pt",
         fontWeight: "bold",
         marginBottom: "5pt",
         color: "black",
-        marginTop: "3pt"
+        marginTop: "3pt",
+        
     },
 
 });
@@ -66,7 +68,8 @@ const style_logo = StyleSheet.create({
     logo_text_2:{
         fontSize: "15pt",
         fontFamily: "English",
-        textAlign: "center"
+        textAlign: "center",
+        
     },
 });
 
@@ -78,7 +81,7 @@ const style_laf = StyleSheet.create({
         flexDirection: "column",
         fontFamily: "English",
         marginTop: "2%",
-        marginLeft: "5%"
+        marginLeft: "10%"
     },
 
     assessment_section:{
@@ -107,6 +110,12 @@ const style_laf = StyleSheet.create({
         width: "100%",
     },
 
+    section_personal_items:{
+        display: "flex",
+        flexDirection: "column",
+        width: "75%",
+    },
+
     section_items_div:{
         display: "flex",
         flexDirection: "column",
@@ -131,7 +140,7 @@ const style_laf = StyleSheet.create({
     },
 
     section_item_label:{
-        width: "35%",
+        width: "40%",
         marginRight: "5pt",
     },
 
@@ -142,6 +151,7 @@ const style_laf = StyleSheet.create({
     section_item_value:{
         fontSize: "10pt",
         fontFamily: "English",
+        width: "60%",
     },
 
     write_signature:{
@@ -195,11 +205,14 @@ export default function LoanAssesmentForm(props){
     const [lafUrl, setLafUrl] = useState("");
 
     const laf_loan_id = laf_data["loan_id"];
+    const laf_app_date = laf_data["loan_app_date"]
     const laf_loan_type = laf_data["loan_type"];
     const laf_buet_id = laf_data["buet_id"];
     const laf_applicant_name = laf_data["applicant_name"];
     const laf_designation = laf_data["designation"];
     const laf_office_dept = laf_data["office_dept"];
+
+    const pdf_laf_loan_type = laf_loan_type.toLowerCase();
 
     var laf_dob = laf_data["dob"];
 
@@ -288,7 +301,7 @@ export default function LoanAssesmentForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={styles.pageLabel}>
-                            {laf_loan_type} Assesment Form
+                            {pdf_laf_loan_type} Assesment Form
                         </Text>
                     </View>
 
@@ -303,16 +316,15 @@ export default function LoanAssesmentForm(props){
                             A) Personal Information : 
                         </Text>
 
-                        <View style={style_laf.section_items}>
-                            <View style={style_laf.section_items_div}>
-                                {sectionItem("1", "Loan ID", laf_loan_id)}
-                                {sectionItem("2", "Loan Type", laf_loan_type)}
-                                {sectionItem("3", "BUET ID", laf_buet_id)}
-                                {sectionItem("4", "Applicant Name", laf_applicant_name)}
-                                {sectionItem("5", "Designation", laf_designation)}
-                                {sectionItem("6", "Office/Dept.", laf_office_dept)}
-                                {sectionItem("7", "Date of Birth", laf_dob)}
-                            </View>
+                        <View style={style_laf.section_personal_items}>
+                            {sectionItem("1", "Loan ID", laf_loan_id)}
+                            {sectionItem("2", "Loan Application Date", laf_app_date)}
+                            {sectionItem("3", "Loan Type", laf_loan_type)}
+                            {sectionItem("4", "BUET ID", laf_buet_id)}
+                            {sectionItem("5", "Applicant Name", laf_applicant_name)}
+                            {sectionItem("6", "Designation", laf_designation)}
+                            {sectionItem("7", "Office/Dept.", laf_office_dept)}
+                            {sectionItem("8", "Date of Birth", laf_dob)}
                             
                         </View>
 
@@ -435,7 +447,7 @@ export default function LoanAssesmentForm(props){
                                 {sectionItem("14", "SBL Whole Sale Loan", nf.format(laf_sblws_loan_ins_amnt))}
                             </View>
                         </View>
-                        {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", nf.format(laf_tot_loan_ins_amnt))}
+                        {sectionItem("15", "Total Installment Amount of Loan (11.+12.+13.+14.)", nf.format(laf_tot_loan_ins_amnt))}
 
                     </View>
 
@@ -497,8 +509,6 @@ export default function LoanAssesmentForm(props){
 
         </Document>
 
-
-
     );
 
     const downloadURI = (uri, name) => {
@@ -520,9 +530,12 @@ export default function LoanAssesmentForm(props){
 
 
     return(
+
         // <PDFViewer style={styles.viewer}>
         //     <MyForm />
         // </PDFViewer>
+
+
         <>
 
             <BlobProvider document={MyForm}>

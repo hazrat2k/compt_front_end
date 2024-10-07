@@ -201,6 +201,14 @@
 	cursor: pointer;
 }
 
+.container:hover{
+    .bars,
+    .bars::before,
+    .bars::after{
+        background: crimson;
+    }
+}
+
 
 .bars{
 	background: var(--green);
@@ -221,7 +229,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	right: -200vw;
+	right: 0;
+    opacity: 0;
 }
 
 .nav_items{

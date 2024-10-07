@@ -91,6 +91,16 @@ const style_field = StyleSheet.create({
         // justifyContent:"center"
     },
 
+    firstField:{
+        display: "flex",
+        flexDirection: "row",
+        width: "90%",
+        justifyContent: "space-between",
+        paddingLeft: "20pt",
+        paddingRight: "20pt",
+        marginBottom: "5pt"
+    },
+
     preBasicFieldwithPic:{
         display: "flex",
         flexDirection: "row",
@@ -204,6 +214,12 @@ const style_data = StyleSheet.create({
         alignItems: "center",
     },
 
+    preDataOther:{
+        fontSize: "11pt",
+        color: "black",
+        fontFamily: "English",
+    },
+
     preDataLabel:{
         fontFamily: "English Bold",
         fontSize: "11pt",
@@ -216,6 +232,7 @@ const style_data = StyleSheet.create({
         fontSize: "11pt",
         paddingLeft: "15pt",
         paddingRight: "15pt",
+        color: "black"
     },
 
     preDataValue:{
@@ -241,7 +258,6 @@ const style_table = StyleSheet.create({
         textAlign: "center",
     },
 
-
     double_column:{
         display: "flex",
         flexDirection: "row",
@@ -256,8 +272,6 @@ const style_table = StyleSheet.create({
         width: "5%",
         fontFamily: "English Bold",
         fontSize: "10pt",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent: "center",
         alignContent: "center",
@@ -269,8 +283,6 @@ const style_table = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
     },
@@ -281,8 +293,6 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "center",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
     },
@@ -293,8 +303,6 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "center",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
     },
@@ -305,8 +313,6 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
 
@@ -318,8 +324,6 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
 
@@ -330,9 +334,6 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         textAlign: "left",
-        paddingLeft: "10pt",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
     },
@@ -342,9 +343,6 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         textAlign: "center",
-        paddingLeft: "10pt",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent:"center",
 
@@ -354,13 +352,9 @@ const style_table = StyleSheet.create({
         width: "13%",
         fontFamily: "English",
         fontSize: "9pt",
-        paddingLeft: "10pt",
-        padding: "1pt 5pt 1pt 5pt",
-        border: "0px",
         margin: "2pt",
         justifyContent: "center",
     },
-
 
 });
 
@@ -377,7 +371,6 @@ const PreviewData = (props) => {
             <Text style={style_data.preDataValue}>
                 {props.name}
             </Text>
-
         </View>
     );
     
@@ -388,13 +381,21 @@ export default function Application(props){
 
     const applicationNavigate = useNavigate();
 
+    const new_date = new Date();
+
+    const loan_id = new_date.valueOf();
+
     const [url, setURL] = useState("");
 
-    const app_data = props.applicationData;
+    var app_data = props.applicationData;
+
+    app_data["LOAN_ID"] = loan_id;
+
+    app_data["LOAN_APP_DATE"] = new_date;
 
     let nf = new Intl.NumberFormat('en-US');
 
-    const pdfPersoInfo = [["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+    const pdfPersoInfo = [["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "i)"],
                             ["Father's / Husband's Name", "Mother's Name", "Nominee's Name", "Relationship with Nominee",
                             "Present Address", "Permanant Address", "Date of Birth", "Applicant's NID", "Nominee's NID"],
                             [app_data["FATHERS_NAME"], app_data["MOTHERS_NAME"], app_data["NOMINEES_NAME"], app_data["NOMINEES_RELSHIP"], app_data["ADDRESS"], app_data["ADDRESS"], 
@@ -410,11 +411,13 @@ export default function Application(props){
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}> <Text>{pdfPersoInfo[0][i]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfPersoInfo[1][i]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfPersoInfo[2][i]}</Text></View>
                 </View>
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}> <Text>{pdfPersoInfo[0][i+1]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfPersoInfo[1][i+1]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfPersoInfo[2][i+1]}</Text></View>
                 </View>
             </View>
@@ -428,6 +431,7 @@ export default function Application(props){
             <View style={style_table.row}>
                 <View style={style_table.index_column}> <Text>{pdfPersoInfo[0][i]}</Text></View>
                 <View style={style_table.salary_label_column}><Text>{pdfPersoInfo[1][i]}</Text></View>
+                <View style={style_table.loan_index_column}><Text>:</Text></View>
                 <View style={style_table.value_column}><Text>{pdfPersoInfo[2][i]}</Text></View>
             </View>
 
@@ -440,11 +444,13 @@ export default function Application(props){
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}> <Text>{pdfPersoInfo[0][i]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfPersoInfo[1][i]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfPersoInfo[2][i]}</Text></View>
                 </View>
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}> <Text>{pdfPersoInfo[0][i+1]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfPersoInfo[1][i+1]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfPersoInfo[2][i+1]}</Text></View>
                 </View>
             </View>
@@ -453,7 +459,7 @@ export default function Application(props){
     }
 
 
-    const pdfServInfo = [["a", "b", "c", "d", "e"],
+    const pdfServInfo = [["a)", "b)", "c)", "d)", "e)"],
                             ["BUET ID No.", "Service of University", "Joining Date to University", "Total Service Period in this University", "Service Completion Date (Teacher's Age 65 Years, Officer's / Staff's Age 60 years)"],
                             [app_data["EMPLOYEE_ID"], app_data["APPOINTMENT_TYPE"], 
                             moment(new Date(app_data["DATE_FIRST_JOIN"])).format("DD MMM YYYY"), 
@@ -470,11 +476,13 @@ export default function Application(props){
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}><Text>{pdfServInfo[0][i]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfServInfo[1][i]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfServInfo[2][i]}</Text></View>
                 </View> 
                 <View style={style_table.double_column}>
                     <View style={style_table.loan_index_column}><Text>{pdfServInfo[0][i+1]}</Text></View>
                     <View style={style_table.personal_label_column}><Text>{pdfServInfo[1][i+1]}</Text></View>
+                    <View style={style_table.loan_index_column}><Text>:</Text></View>
                     <View style={style_table.value_column}><Text>{pdfServInfo[2][i+1]}</Text></View>
                 </View> 
             </View>
@@ -488,6 +496,7 @@ export default function Application(props){
             <View style={style_table.row}>
                 <View style={style_table.index_column}><Text>{pdfServInfo[0][i]}</Text></View>
                 <View style={style_table.personal_label_column}><Text>{pdfServInfo[1][i]}</Text></View>
+                <View style={style_table.loan_index_column}><Text>:</Text></View>
                 <View style={style_table.value_column}><Text>{pdfServInfo[2][i]}</Text></View>
             </View>
         );
@@ -620,11 +629,42 @@ export default function Application(props){
                             Comptroller Office
                         </Text>
 
+                        
+
                         <Text style={styles.pageLabel}>
                             Application for Loan
                         </Text>
                     </View>
 
+                </View>
+
+                <View style={style_field.firstField}>
+
+                    <View style={style_data.preData}>
+                        <Text style={[style_data.preDataOther, style_field.preBold]}>
+                            Loan Application ID
+                        </Text>
+                        <Text style={style_data.preDataColon}>
+                            :
+                        </Text>
+                        <Text style={style_data.preDataOther}>
+                            {app_data["LOAN_ID"]}
+                        </Text>
+                    </View>
+                    
+                    <View style={style_data.preData}>
+                        <Text style={[style_data.preDataOther, style_field.preBold]}>
+                            Date
+                        </Text>
+                        <Text style={style_data.preDataColon}>
+                            :
+                        </Text>
+                        <Text style={style_data.preDataOther}>
+                            {moment(new Date(app_data["LOAN_APP_DATE"])).format("DD MMM YYYY")}
+                        </Text>
+                    </View>
+                    
+                    
                 </View>
 
 
@@ -878,8 +918,8 @@ export default function Application(props){
         link.click();
     }
 
-    const onClickSubmit = async e => {
-        e.preventDefault();
+    const onClickSubmit = async () => {
+
         if (!url) {
             return;
         }
@@ -922,7 +962,6 @@ export default function Application(props){
                 <button className='preAppNormalButton' onClick={onClickSubmit} >
                     জমা দিন
                 </button> 
-                
                 
             </div>
 

@@ -181,10 +181,14 @@ const style_sig = StyleSheet.create({
 
 
 
-export default function SanctionCopyForm(){
+export default function SanctionCopyForm(props){
 
     const [sc_sanc_loan_data, setSc_sanc_loan_data] = useState([]);
     const sc_sanc_loan_display = useState([]);
+
+    const sc_loan_type = props.loan_type;
+
+    const scf_selected_loan = props.sanctionedLoan;
 
     const [scUrl, setScUrl] = useState("");
 
@@ -207,6 +211,12 @@ export default function SanctionCopyForm(){
             cursor: laf_hover ? "pointer" : "default",
             transition: "all ease 0.3s"
         },
+
+        alert_message:{
+            textAlign: "center",
+            color: "gray",
+            fontSize: "20pt",
+        },
     });
 
     var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
@@ -227,8 +237,12 @@ export default function SanctionCopyForm(){
 
     useEffect( () => {
         const fetch_sanction_loan_data = async () =>{
+            const uploadLoanType = {
+                "LOAN_TYPE" : sc_loan_type
+            }
+
             try{
-                const sanc_res = await axios.get("http://localhost:8800/sanction_loan");
+                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
                 setSc_sanc_loan_data(sanc_res.data);
 
             }catch(err){
@@ -289,7 +303,7 @@ export default function SanctionCopyForm(){
     var sanction_total = 0;
 
     for(let i=0;i<sc_sanc_loan_data.length;i++){
-        if(sc_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
+        if((sc_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS") && scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]){
             sc_sanc_loan_display.push(
                 <View style={style_sc.sc_table_row}>
                     <View style={[style_sc.sc_table_col, style_sc.sl_col]}> 
@@ -298,12 +312,12 @@ export default function SanctionCopyForm(){
                     <View style={[style_sc.sc_table_col, style_sc.loan_id_col]}> 
                         <Text style={style_sc.sc_table_cell}>{sc_sanc_loan_data[i]["LOAN_ID"]}</Text>
                     </View>
-                    {sc_table_col(sc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                    {sc_table_col(sc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
+                    {sc_table_col(sc_sanc_loan_data[i]["OFFICE"], "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                    {sc_table_col(sc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                    {sc_table_col(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                     {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
                     {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]),"small_col")}
                     {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]),"small_col")}
@@ -314,7 +328,7 @@ export default function SanctionCopyForm(){
                     {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
                     {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
                     {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["ACCOUNT_NO"], "small_col")}
+                    {sc_table_col(sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"], "small_col")}
                     {sc_table_col(" ", "small_col")}
                     {sc_table_col(" ", "small_col")}
                 </View>
@@ -351,7 +365,7 @@ export default function SanctionCopyForm(){
 
         <Document>
 
-            <Page size="A4" orientation="landscape">
+            <Page size="A4" orientation="landscape" style={{paddingLeft: "5pt", paddingRight: "5pt"}}>
                 <View style={{marginTop:"10pt"}}></View>
 
                 <View style={style_logo.logo}>
@@ -384,7 +398,7 @@ export default function SanctionCopyForm(){
                         </View>
                         {sc_table_col("NAME", "large_col")}
                         {sc_table_col("DESIGNATION", "large_col")}
-                        {sc_table_col("OFFICE/ DEPT.", "small_col")}
+                        {sc_table_col("OFFICE", "small_col")}
                         {sc_table_col("CATEGORY", "small_col")}
                         {sc_table_col("BIRTH DATE", "small_col")}
                         {sc_table_col("JOINING DATE", "small_col")}
@@ -495,9 +509,17 @@ export default function SanctionCopyForm(){
                 }}
             </BlobProvider>
 
-            <div style={style_butt.download_butt} onClick={onSCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
-                Download
-            </div>
+            {
+                 (count == 0) ?
+                  <div style={style_butt.alert_message}>
+                       Select at least one loan to download
+                  </div>
+                  :
+                  <div style={style_butt.download_butt} onClick={onSCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
+                        Download
+                  </div>
+            }
+            
 
         </>
 

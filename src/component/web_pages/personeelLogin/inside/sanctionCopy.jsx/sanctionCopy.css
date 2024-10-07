@@ -64,5 +64,9 @@
     text-transform: uppercase;
 }
 
+.sc_checkbox{
+    opacity: 0;
+}
+
 
 

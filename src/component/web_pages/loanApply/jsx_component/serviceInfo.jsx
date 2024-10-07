@@ -71,8 +71,6 @@ export default function ServiceInfo(props){
     servData["DATE_OF_RETIREMENT"] = service_data["DATE_OF_RETIREMENT"];
     servData["APPOINTMENT_TYPE"] = service_data["APPOINTMENT_TYPE"].toUpperCase();
 
-    console.log(servData);
-
     props.setServData(servData);
 
 

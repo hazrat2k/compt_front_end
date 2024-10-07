@@ -16,13 +16,15 @@ function Login(){
     var emp_data = [];
     var real_dob = "";
 
+    var pay_data = []
+
     const loginNavigate = useNavigate();
 
     const [buetId, setBuetId] = useState("");
     const [dob, setDob] = useState("");
     const [error_display,setError_Display] = useState([]);
 
-    function handleInputChange(event){
+    const handleInputChange = (event) => {
         const name = event.target.name;
         if (name === "buetId"){
             setBuetId(event.target.value);
@@ -119,12 +121,26 @@ function Login(){
         try{
             const res = await axios.post("http://localhost:8800/application_login", uploadData);
             emp_data = res.data;
+
+            const uploadPay = {
+                "EMPLOYEEID": emp_data[0]["EMPLOYEEID"]
+            }
+
+            const pay_res = await axios.post("http://localhost:8800/pay_valid", uploadPay);
+            pay_data = pay_res.data;
+
             
         }catch(err){
             console.log(err);
         }
 
+
         real_dob = moment(new Date(emp_data[0]["DATE_OF_BIRTH"])).format("YYYY-MM-DD");
+
+        if(pay_data.length == 0){
+            error_message("You are currently not an employee of BUET");
+            return;
+        }
 
         if(dob === real_dob){
             data_found = true;
@@ -132,6 +148,8 @@ function Login(){
                 loginNavigate('/application/1', { state: {info: emp_data[0], used: "no"} });
             }
         }
+
+        
         
 
         if(!data_found){

@@ -15,13 +15,15 @@ export default function PreviewApplication(){
 
     var previewData = state["info"];
 
+    let nf = new Intl.NumberFormat('en-US');
+
     const preAppPhoto = previewData["PROFILE_PIC"];
     const preAppApplicantName = previewData["EMPLOYEE_NAME"];
     const preAppDesignation = previewData["DESIGNATION"];
     const preAppOfficeDept = previewData["OFFICE"];
     const preAppAccountNo = "44040"+previewData["BANK_ACCOUNT_NO"];
     const preAppLoanType = previewData["LOAN_TYPE"];
-    const preAppLoanAmnt = previewData["LOAN_AMNT"];
+    const preAppLoanAmnt = nf.format(previewData["LOAN_AMNT"]);
     const preAppLoanReas = previewData["REASON_FOR_LOAN"];
 
     const preAppPersoInfo = [["ক", "খ", "গ", "ঘ", "ঙ", "চ", "ছ", "জ", "ঝ"],
@@ -100,7 +102,7 @@ export default function PreviewApplication(){
 
     const salTable = [];
 
-    for(let i=0;i<5;i++){
+    for(let i=0;i<1;i++){
         salTable.push(
             <tbody>
                 <tr>
@@ -114,10 +116,26 @@ export default function PreviewApplication(){
         );
     }
 
+    for(let i=1;i<5;i++){
+        salTable.push(
+            <tbody>
+                <tr>
+                    <th className='tableIndexCol'>{preAppSalInfo[0][i]}</th>
+                    <th className='tableLabelCol'>{preAppSalInfo[1][i]}</th>
+                    <th className='tableValueCol'>{nf.format(preAppSalInfo[2][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppSalInfo[3][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppSalInfo[4][i])}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    
+
 
     const loanTable = [];
 
-    for(let i=0;i<9;i++){
+    for(let i=0;i<1;i++){
         loanTable.push(
             <tbody>
                 <tr>
@@ -128,6 +146,23 @@ export default function PreviewApplication(){
                     <th className='tableValueCol'>{preAppLoanInfo[4][i]}</th>
                     <th className='tableValueCol'>{preAppLoanInfo[5][i]}</th>
                     <th className='tableValueCol'>{preAppLoanInfo[6][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+
+    for(let i=1;i<9;i++){
+        loanTable.push(
+            <tbody>
+                <tr>
+                    <th className='tableIndexCol'>{preAppLoanInfo[0][i]}</th>
+                    <th className='tableLabelCol'>{preAppLoanInfo[1][i]}</th>
+                    <th className='tableValueCol'>{nf.format(preAppLoanInfo[2][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppLoanInfo[3][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppLoanInfo[4][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppLoanInfo[5][i])}</th>
+                    <th className='tableValueCol'>{nf.format(preAppLoanInfo[6][i])}</th>
                 </tr>
             </tbody>
         );

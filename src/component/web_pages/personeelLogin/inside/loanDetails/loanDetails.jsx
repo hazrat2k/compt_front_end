@@ -113,6 +113,7 @@ export default function LoanDetails(){
 
     var ld_value = {}                          
     ld_value["loan_id"] = ld_data["LOAN_ID"];
+    ld_value["loan_app_date"] = dateFormation(ld_data["LOAN_APP_DATE"]);
     ld_value["salary_id"] = ld_data["EMPLOYEEID"];
     ld_value["loan_type"] = ld_data["LOAN_TYPE"];
     ld_value["buet_id"] = ld_data["EMPLOYEE_ID"];
@@ -121,6 +122,9 @@ export default function LoanDetails(){
     ld_value["account_no"] = ld_data["ACCOUNT_NO"];
     ld_value["category"] = ld_data["CATEGORY"];
     ld_value["office_dept"] = ld_data["OFFICE"];
+    ld_value["account_no"] = ld_data["BANK_ACCOUNT_NO"];
+
+    const ld_loan_type = ld_value["loan_type"].toLowerCase();
 
     var temp_status = Number(ld_data["APP_POS"]);
 
@@ -247,15 +251,21 @@ export default function LoanDetails(){
     ld_value["tot_loan_ins_amnt"] = ld_value["hb_loan_ins_amnt"] + ld_value["consu_loan_ins_amnt"] + ld_value["lap_loan_ins_amnt"] + ld_value["sblws_loan_ins_amnt"];
 
 
-    ld_value["75_pens"] = ld_value["pens_gra"] * 0.75;
+    ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
     
     ld_value["60_basic_sal"] = ld_value["basic_salary"] * 0.6;
 
     var calc_mon = 0;
 
+    var rounding_figure = 10000;
+
     var available_ins_amount = ld_value["60_basic_sal"] - ld_value["tot_loan_ins_amnt"];
 
-    var temp_prop_amnt = ld_value["app_amnt"];
+    var temp_prop_amnt = ld_value["app_amnt"] > ld_value["75_pens"] ? ld_value["75_pens"] : ld_value["app_amnt"];
+
+    temp_prop_amnt = Math.floor(temp_prop_amnt / rounding_figure); 
+
+    temp_prop_amnt *= rounding_figure;
 
     var temp_inst_amnt = ld_value["app_amnt"];
 
@@ -298,17 +308,19 @@ export default function LoanDetails(){
 
         // console.log("temp_inst_amnt : "+temp_inst_amnt);
 
+
+
         while(temp_inst_amnt > available_ins_amount){
             temp_inst_amnt = Math.ceil(((2 * temp_prop_amnt) * (1200 + calc_mon * interest_rate))/(calc_mon * (2400 - interest_rate + calc_mon * interest_rate)));
-            temp_prop_amnt = temp_prop_amnt - 10000;
+            temp_prop_amnt = temp_prop_amnt - rounding_figure;
         }
 
-        // console.log("amount : "+(temp_prop_amnt+10000)+", installment : "+temp_inst_amnt);
+        // console.log("amount : "+(temp_prop_amnt+rounding_figure)+", installment : "+temp_inst_amnt);
 
     }
 
     if(temp_prop_amnt != 0){
-        ld_value["prop_amnt"] = temp_prop_amnt + 10000;
+        ld_value["prop_amnt"] = temp_prop_amnt + rounding_figure;
     }
 
     ld_value["tot_no_ins"] = calc_mon;
@@ -345,19 +357,19 @@ export default function LoanDetails(){
         );
     };
 
+    console.log(ld_pl_remarks);
+
     for(let i=0;i<ld_pl_remarks.length;i++){
-        if(ld_data["LOAN_ID"] === ld_pl_remarks[i]["LOAN_ID"]){
 
-            for(let j=0;j<temp_status;j++){
-                if(ld_pl_remarks[i][j+"_"] !== null){
+        for(let j=0;j<temp_status;j++){
+            if(ld_pl_remarks[i][j+"_"] !== null){
 
-                    ld_remarks_display.push(remarksItem(j, ld_pl_remarks[i][j+"_"]));
-                
-                }
+                ld_remarks_display.push(remarksItem(j, ld_pl_remarks[i][j+"_"]));
+            
             }
-
-            break;
         }
+
+        break;
     }
 
 
@@ -430,9 +442,9 @@ export default function LoanDetails(){
 
 
         try{
-            await axios.put("http://localhost:8800/processing_loan_remarks/", updateRemarksData);
+            await axios.put("http://localhost:8800/processing_loan_remarks_update", updateRemarksData);
             
-            //ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data}});
+            ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data, loan_type: ld_value["loan_type"]}});
 
         }catch(err){
             console.log(err);
@@ -464,7 +476,7 @@ export default function LoanDetails(){
 
             <div className="loan_assessment_form">
 
-                <div className="page_label">Loan Assessment Form</div>
+                <div className="page_label">{ld_loan_type} Assessment Form</div>
 
                 <div className="assessment_section personal_information">
                     <div className="section_label">
@@ -475,17 +487,18 @@ export default function LoanDetails(){
                     <div className="section_items">
                         <div className="section_items_div">
                             {sectionItem("1", "Loan ID", ld_value["loan_id"])}
-                            {sectionItem("2", "Loan Type", ld_value["loan_type"])}
-                            {sectionItem("3", "BUET ID", ld_value["buet_id"])}
-                            {sectionItem("4", "Applicant Name", ld_value["applicant_name"])}
-                            {sectionItem("5", "Designation", ld_value["designation"])}
-                            {sectionItem("6", "Office/Dept.", ld_value["office_dept"])}
-                            {sectionItem("7", "Date of Birth", ld_value["dob"])}
+                            {sectionItem("2", "Loan Application Date", ld_value["loan_app_date"])}
+                            {sectionItem("3", "Loan Type", ld_value["loan_type"])}
+                            {sectionItem("4", "BUET ID", ld_value["buet_id"])}
+                            {sectionItem("5", "Applicant Name", ld_value["applicant_name"])}
+                            {sectionItem("6", "Designation", ld_value["designation"])}
+                            {sectionItem("7", "Office/Dept.", ld_value["office_dept"])}
+                            {sectionItem("8", "Date of Birth", ld_value["dob"])}
                             {
                                 ld_user ? 
                                 ""
                                 :
-                                sectionItem("8", "Application Status", temp_status_t)
+                                sectionItem("9", "Application Status", temp_status_t)
                             }
 
                         </div>
@@ -571,7 +584,7 @@ export default function LoanDetails(){
                         </div>
                         
                     </div>
-                    {sectionItem("15", "Total Installment Amount of Loan(11.+12.+13.+14.)", nf.format(ld_value["tot_loan_ins_amnt"]))}
+                    {sectionItem("15", "Total Installment Amount of Loan (11.+12.+13.+14.)", nf.format(ld_value["tot_loan_ins_amnt"]))}
 
 
                 </div>
@@ -666,7 +679,6 @@ export default function LoanDetails(){
 
                 }
 
-                {/* <OfficeOrderCopy data={off_or_copy} /> */}
 
 
             </div>

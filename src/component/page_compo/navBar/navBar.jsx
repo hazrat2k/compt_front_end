@@ -40,7 +40,8 @@ export default function NavBar(props){
         if (tl.reversed()) {
             tl.play();
         } else {
-            tl.to('.nav_items_with_close', { right: 0})
+            tl.to('.nav_items_with_close', { right: "-50vw"})
+                .to('.nav_items_with_close', { opacity: 1, right: 0})
                 .to('.nav_items_with_close', { height: height_ }, '-=.1')
                 .to('.navbar_item', { opacity: 1, pointerEvents: 'all', stagger: .2 }, '-=.8')
                 .to('.close', { opacity: 1, pointerEvents: 'all' }, "-=.8");

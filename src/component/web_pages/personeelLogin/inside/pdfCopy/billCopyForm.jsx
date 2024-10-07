@@ -544,10 +544,6 @@ export default function BillCopyForm(props){
         );
     }
 
-
-    
-
-
     const MyBillForm = () => (
 
         <Document>

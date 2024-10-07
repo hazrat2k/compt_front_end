@@ -38,8 +38,8 @@ export default function SalaryInfo(props){
                     <tr>
                         <td className='tableText'>{salText[i]}</td>
                         <td><div className='tableDataInput' > {nf.format(prevMonthSal[0][i])} </div> </td>
-                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[1][i])} </div> </td>
-                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[2][i])} </div> </td>
+                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[0][i])} </div> </td>
+                        <td><div className='tableDataInput' > {nf.format(prevMonthSal[0][i])} </div> </td>
                     </tr>
                 </tbody>
             );

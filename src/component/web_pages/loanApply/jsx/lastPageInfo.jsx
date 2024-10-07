@@ -33,13 +33,13 @@ function LastPageInfo(){
     };
 
 
-    function handleSignChange(e) {
+    const handleSignChange = (e) => {
         setSignFile(URL.createObjectURL(e.target.files[0]));
         setSignFileImg(e.target.files[0]);
     }
 
 
-    function validLastInfo(){
+    const validLastInfo = () => {
         if(signFile === signImg){
             const tem = [];
             tem.push(
@@ -55,7 +55,7 @@ function LastPageInfo(){
         return true;
     }
 
-    function onLastAuthenticate(button){
+    const onLastAuthenticate = (button) => {
 
         if(button == "first"){
             const file = state["file"];
