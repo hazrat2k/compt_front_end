@@ -15,16 +15,25 @@ export default function BillCopy(){
 
     const { state } = useLocation();
 
-    const loan_type = state["type"];
+    const bc_loan_type = state["type"];
+
+    const bc_sent_from = state["sentFrom"];
+
+    const bc_sanc_status = bc_sent_from == "accntt_fund" ? "BILL" : "BILLED";
+
+    const bc_app_pos = state["app_pos"];
+
+    const [selectedLoan, setSelectedLoan] = useState(state["billedLoan"]);
 
     var billStatus = false;
 
-
-    const [bc_sanc_loan_data, setbc_sanc_loan_data] = useState([]);
+    const [bc_sanc_loan_data, setBc_sanc_loan_data] = useState([]);
     const bc_sanc_loan_display = useState([]);
     const sal_sanc_loan_display = useState([]);
 
     const [selectedCategory, setSelectedCategory] = useState("null");
+
+    
 
     var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
     var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
@@ -46,9 +55,14 @@ export default function BillCopy(){
 
     useEffect( () => {
         const fetch_bill_loan_data = async () =>{
+            const uploadLoanType = {
+                "LOAN_TYPE" : bc_loan_type,
+                "SANC_STATUS": bc_sanc_status
+            }
+
             try{
-                const bill_res = await axios.get("http://localhost:8800/sanction_loan");
-                setbc_sanc_loan_data(bill_res.data);
+                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
+                setBc_sanc_loan_data(sanc_res.data);
 
             }catch(err){
                 console.log(err);
@@ -76,29 +90,43 @@ export default function BillCopy(){
         );
     }
 
+    const onCheckBoxChange = (e) =>{
 
+        const l_id = e.target.name;
+
+        var temp = {...selectedLoan};
+
+        temp[l_id] = !temp[l_id];
+        
+        setSelectedLoan(temp);
+
+    }
 
     var count = 0;
 
     var total_sanction = 0;
 
-    if(selectedCategory == "ALL"){
+
+
+    if(bc_sent_from == "accntt_fund"){
         count = 0;
         total_sanction = 0;
 
+        console.log(selectedLoan);
+
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
+            if(bc_sanc_loan_data[i]["CATEGORY"] == selectedCategory){
                 billStatus = true;
                 bc_sanc_loan_display.push(
                     <div className="bc_table_row">
+                        <input type="checkbox" name={bc_sanc_loan_data[i]["LOAN_ID"]} checked={selectedLoan[bc_sanc_loan_data[i]["LOAN_ID"]]} onChange={onCheckBoxChange} />
                         {bc_table_col(++count, "small_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
@@ -115,13 +143,13 @@ export default function BillCopy(){
                 );
                 sal_sanc_loan_display.push(
                     <div className="bc_table_row">
+                        <input type="checkbox" name={bc_sanc_loan_data[i]["LOAN_ID"]} checked={selectedLoan[bc_sanc_loan_data[i]["LOAN_ID"]]} onChange={onCheckBoxChange} />
                         {sal_table_col(count)}
-                        {sal_table_col(bc_sanc_loan_data[i]["BUET_ID"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["EMPLOYEE_ID"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"])}
                         {sal_table_col(bc_sanc_loan_data[i]["DESIGNATION"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["CATEGORY"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["ACCOUNT_NO"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["OFFICE"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["BANK_ACCOUNT_NO"])}
                         {sal_table_col(nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
     
                     </div>
@@ -130,62 +158,24 @@ export default function BillCopy(){
             }
         }
 
-        bc_sanc_loan_display.push(
-            <div className="bc_table_row">
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col("TOTAL", "small_col bc_bold")}
-                {bc_table_col(nf.format(total_sanction), "large_col sc_bold")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(nf.format(total_sanction - (count * 10)), "large_col sc_bold")}
-            </div>
-        );
 
-        sal_sanc_loan_display.push(
-            <div className="bc_table_row bc_bold">
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("TOTAL")}
-                {sal_table_col(nf.format(total_sanction - (count * 10)))}
-                
-            </div>
-        );
-
-
-    }else if(["A", "B", "C", "D"].includes(selectedCategory)){
+    }else{
         count = 0;
         total_sanction = 0;
 
+
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (bc_sanc_loan_data[i]["CATEGORY"] == selectedCategory)){
+            if(selectedLoan[bc_sanc_loan_data[i]["LOAN_ID"]]){
                 billStatus = true;
                 bc_sanc_loan_display.push(
                     <div className="bc_table_row">
                         {bc_table_col(++count, "small_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
@@ -204,11 +194,11 @@ export default function BillCopy(){
                 sal_sanc_loan_display.push(
                     <div className="bc_table_row">
                         {sal_table_col(count)}
-                        {sal_table_col(bc_sanc_loan_data[i]["BUET_ID"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["EMPLOYEE_ID"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"])}
                         {sal_table_col(bc_sanc_loan_data[i]["DESIGNATION"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"])}
-                        {sal_table_col(bc_sanc_loan_data[i]["ACCOUNT_NO"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["OFFICE"])}
+                        {sal_table_col(bc_sanc_loan_data[i]["BANK_ACCOUNT_NO"])}
                         {sal_table_col(nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
     
                     </div>
@@ -218,48 +208,49 @@ export default function BillCopy(){
             }
         }
 
-        bc_sanc_loan_display.push(
-            <div className="bc_table_row">
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col("TOTAL", "small_col bc_bold")}
-                {bc_table_col(nf.format(total_sanction), "large_col sc_bold")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(nf.format(total_sanction - (count * 10)), "large_col sc_bold")}
-            </div>
-        );
-
-        sal_sanc_loan_display.push(
-            <div className="bc_table_row">
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("")}
-                {sal_table_col("TOTAL")}
-                {sal_table_col(nf.format(total_sanction - (count * 10)))}
-                
-            </div>
-        );
+        
 
 
     }
 
-    
+    bc_sanc_loan_display.push(
+        <div className="bc_table_row">
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col("TOTAL", "small_col bc_bold")}
+            {bc_table_col(nf.format(total_sanction), "large_col sc_bold")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(nf.format(total_sanction - (count * 10)), "large_col sc_bold")}
+        </div>
+    );
 
+    sal_sanc_loan_display.push(
+        <div className="bc_table_row">
+            {sal_table_col("")}
+            {sal_table_col("")}
+            {sal_table_col("")}
+            {sal_table_col("")}
+            {sal_table_col("")}
+            {sal_table_col("TOTAL")}
+            {sal_table_col(nf.format(total_sanction - (count * 10)))}
+            
+        </div>
+    );
+
+    
 
     return(
         <>
@@ -267,73 +258,78 @@ export default function BillCopy(){
 
             <div className="bill_copy">
 
-                <select className="bc_select" onChange={(e) => {setSelectedCategory(e.target.value)}} >
-                    <option value="null">Select a Category......</option>
-                    <option value="ALL">ALL</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                </select>
+                {
+                    bc_sent_from == "accntt_fund" ?
+                        <select className="bc_select" onChange={(e) => {setSelectedCategory(e.target.value)}} >
+                            <option value="null">Select a Category......</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    :
+                        ""
+                }
+
+                
 
                 <div className="bc_page_title">Bill Copy</div>
 
                 {
-                    selectedCategory == "null" ?
-
-                    <div className="no_billing_loan">
-                        Select a Category to display
-                    </div>
-
-                    :
-
                     billStatus ?
-                    <>
-                        <div className="bc_table">
-                            <div className="bc_table_row bc_bold">
-                                {bc_table_col("SL NO", "small_col")}
-                                {bc_table_col("LOAN ID", "large_col")}
-                                {bc_table_col("NAME", "large_col")}
-                                {bc_table_col("DESIGNATION", "large_col")}
-                                {bc_table_col("OFFICE/ DEPT.", "small_col")}
-                                {
-                                    selectedCategory == "ALL" ?
-                                    bc_table_col("CATEGORY", "small_col")
-                                    :
+                        <>
+                            <div className="bc_table">
+                                <div className="bc_table_row bc_bold">
+                                    {
+                                        bc_sent_from == "accntt_fund" ?
+                                            <input className="sc_checkbox" type="checkbox" />
+                                        :
+                                            ""
+                                    }
+                                    {bc_table_col("SL NO", "small_col")}
+                                    {bc_table_col("LOAN ID", "large_col")}
+                                    {bc_table_col("NAME", "large_col")}
+                                    {bc_table_col("DESIGNATION", "large_col")}
+                                    {bc_table_col("OFFICE/ DEPT.", "small_col")}
+                                    {bc_table_col("BIRTH DATE", "small_col")}
+                                    {bc_table_col("JOINING DATE", "small_col")}
+                                    {bc_table_col("NET PAY", "small_col")}
+                                    {bc_table_col("APPLY AMOUNT", "small_col")}
+                                    {bc_table_col("ALLOW AMOUNT", "small_col")}
+                                    {bc_table_col("SANCTION AMOUNT", "large_col")}
+                                    {bc_table_col("RECOVERY AMOUNT", "large_col")}
+                                    {bc_table_col("INST NO", "small_col")}
+                                    {bc_table_col("INSTALL AMOUNT", "small_col")}
+                                    {bc_table_col(" ", "small_col")}
+                                    {bc_table_col("BILL AMOUNT", "small_col")}
+                                    {bc_table_col("REVENUE STAMP", "small_col")}
+                                    {bc_table_col("NET PAY", "small_col")}
+                                </div>
+                                {bc_sanc_loan_display}
+                            </div>
+
+                            <div className="bc_in_words">
+                                In Words :    
+                                <div className="bc_text">
+                                    {inWords(total_sanction - (count * 10))}
+                                </div>
+                                TK. Only
+                            </div>
+
+                            {
+
+                                bc_sent_from == "accntt_fund" ?
+                                    <BillCopyForm category={selectedCategory} loan_type={bc_loan_type} billedLoan={selectedLoan} sentFrom={bc_sent_from} />
+                                :
                                     ""
-                                }
-                                {bc_table_col("BIRTH DATE", "small_col")}
-                                {bc_table_col("JOINING DATE", "small_col")}
-                                {bc_table_col("NET PAY", "small_col")}
-                                {bc_table_col("APPLY AMOUNT", "small_col")}
-                                {bc_table_col("ALLOW AMOUNT", "small_col")}
-                                {bc_table_col("SANCTION AMOUNT", "large_col")}
-                                {bc_table_col("RECOVERY AMOUNT", "large_col")}
-                                {bc_table_col("INST NO", "small_col")}
-                                {bc_table_col("INSTALL AMOUNT", "small_col")}
-                                {bc_table_col(" ", "small_col")}
-                                {bc_table_col("BILL AMOUNT", "small_col")}
-                                {bc_table_col("REVENUE STAMP", "small_col")}
-                                {bc_table_col("NET PAY", "small_col")}
-                            </div>
-                            {bc_sanc_loan_display}
-                        </div>
+                                
+                            }
 
-                        <div className="bc_in_words">
-                            In Words :    
-                            <div className="bc_text">
-                                {inWords(total_sanction - (count * 10))}
-                            </div>
-                            TK. Only
-                        </div>
-
-                        <BillCopyForm category={selectedCategory} loan_type={loan_type}/>
-
-                    </>
+                        </>
                     :
-                    <div className="no_billing_loan">
-                        No bill copy is available for {selectedCategory} category
-                    </div>
+                        <div className="no_billing_loan">
+                            No bill copy is available for {selectedCategory} category
+                        </div>
 
                 }
 
@@ -341,63 +337,53 @@ export default function BillCopy(){
                 <div className="bc_page_title">Bank Copy</div>
 
                 {
-                    selectedCategory == "null" ?
 
-                    <div className="no_billing_loan">
-                        Select a Category to display
-                    </div>
+                        billStatus ?
+                            <>
+                                <div className="bc_table">
+                                    <div className="bc_table_row bc_bold">
+                                        {
+                                            bc_sent_from == "accntt_fund" ?
+                                                <input className="sc_checkbox" type="checkbox" />
+                                            :
+                                                ""
+                                        }
+                                        {sal_table_col("SERIAL NO")}
+                                        {sal_table_col("BUET ID")}
+                                        {sal_table_col("EMPLOYEE NAME")}
+                                        {sal_table_col("DESIGNATION")}
+                                        {sal_table_col("OFFICE/ DEPT.")}
+                                        {
+                                            selectedCategory == "ALL" ? 
+                                            sal_table_col("CATEGORY")
+                                            :
+                                            ""
+                                        }
+                                        {sal_table_col("ACCOUNT NO")}
+                                        {sal_table_col("NET PAY")}
+                                    </div>
+                                    {sal_sanc_loan_display}
+                                </div>
 
-                    :
+                                <div className="bc_in_words">
+                                    In Words :    
+                                    <div className="bc_text">
+                                        {inWords(total_sanction - (count * 10))}
+                                    </div>
+                                    TK. Only
+                                </div>
 
-                    billStatus ?
-                    <>
-                        <div className="bc_table">
-                            <div className="bc_table_row bc_bold">
-                                {sal_table_col("SERIAL NO")}
-                                {sal_table_col("BUET ID")}
-                                {sal_table_col("EMPLOYEE NAME")}
-                                {sal_table_col("DESIGNATION")}
-                                {sal_table_col("OFFICE/ DEPT.")}
-                                {
-                                    selectedCategory == "ALL" ? 
-                                    sal_table_col("CATEGORY")
-                                    :
-                                    ""
-                                }
-                                {sal_table_col("ACCOUNT NO")}
-                                {sal_table_col("NET PAY")}
+                                <BankCopyForm category={selectedCategory} loan_type={bc_loan_type} app_pos={bc_app_pos} billedLoan={selectedLoan} sentFrom={bc_sent_from}/>
+
+                            </>
+                        :
+                            <div className="no_billing_loan">
+                                No bank copy is available for {selectedCategory} category
                             </div>
-                            {sal_sanc_loan_display}
-                        </div>
-
-                        <div className="bc_in_words">
-                            In Words :    
-                            <div className="bc_text">
-                                {inWords(total_sanction - (count * 10))}
-                            </div>
-                            TK. Only
-                        </div>
-
-                        <BankCopyForm category={selectedCategory} loan_type={loan_type}/>
-
-                        
-
-                    </>
-                    :
-                    <div className="no_billing_loan">
-                        No bank copy is available for {selectedCategory} category
-                    </div>
 
                 }
 
-                
-                
-
             </div>
-
-            
-
-
 
             <Footer />
         </>

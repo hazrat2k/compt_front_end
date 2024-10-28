@@ -19,6 +19,12 @@ export default function SanctionCopy(){
 
     const sc_loan_type = state["type"];
 
+    const sc_sent_from = state["sentFrom"];
+
+    const sc_sanc_status = sc_sent_from == "accntt_fund" ? "IN PROCESS" : "SANCTIONED";
+
+    const sc_app_pos = state["app_pos"];
+
     const [selectedLoan, setSelectedLoan] = useState(state["sanctionedLoan"]);
 
     var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
@@ -43,7 +49,8 @@ export default function SanctionCopy(){
         const fetch_sanction_loan_data = async () =>{
 
             const uploadLoanType = {
-                "LOAN_TYPE" : sc_loan_type
+                "LOAN_TYPE" : sc_loan_type,
+                "SANC_STATUS" : sc_sanc_status
             }
 
             try{
@@ -58,6 +65,8 @@ export default function SanctionCopy(){
         fetch_sanction_loan_data();
     }, []);
 
+
+
     const onCheckBoxChange = (e) =>{
 
         const l_id = e.target.name;
@@ -65,8 +74,6 @@ export default function SanctionCopy(){
         var temp = {...selectedLoan};
 
         temp[l_id] = !temp[l_id];
-
-        console.log(temp);
         
         setSelectedLoan(temp);
 
@@ -86,55 +93,105 @@ export default function SanctionCopy(){
     var total_sanction = 0;
 
 
-    for(let i=0;i<sc_sanc_loan_data.length;i++){
-        if(sc_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
-
-            sc_sanc_loan_display.push(
-                <div className="sc_table_row">
-                    <input type="checkbox" name={sc_sanc_loan_data[i]["LOAN_ID"]} checked={selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]} onChange={onCheckBoxChange} />
-                    {sc_table_col(++count, "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["OFFICE"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col sc_bold")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"], "small_col")}
-                    {sc_table_col(" ", "small_col")}
-                    {sc_table_col(" ", "small_col")}
-                </div>
-            );
-
-            if(selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]){
-                total_sanction += Number(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]);
+    if(sc_sent_from == "accntt_fund"){
+        for(let i=0;i<sc_sanc_loan_data.length;i++){
+            if(sc_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS"){
+                sc_sanc_loan_display.push(
+                    <div className="sc_table_row">
+                        <input type="checkbox" name={sc_sanc_loan_data[i]["LOAN_ID"]} checked={selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]} onChange={onCheckBoxChange} />
+                        {sc_table_col(++count, "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col sc_bold")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"], "small_col")}
+                        {sc_table_col(" ", "small_col")}
+                        {sc_table_col(" ", "small_col")}
+                    </div>
+                );
+    
+                if(selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]){
+                    total_sanction += Number(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]);
+                }
             }
         }
-    }
+        sc_sanc_loan_display.push(
+            <div className="sc_table_row">
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col("TOTAL", "small_col")}
+                {sc_table_col(nf.format(total_sanction), "large_col sc_bold")}
+            </div>
+        );
+    }else{
+        
+        for(let i=0;i<sc_sanc_loan_data.length;i++){
 
-    sc_sanc_loan_display.push(
-        <div className="sc_table_row">
-            {sc_table_col(" ", "small_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col(" ", "small_col")}
-            {sc_table_col(" ", "small_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col(" ", "large_col")}
-            {sc_table_col("TOTAL", "small_col")}
-            {sc_table_col(nf.format(total_sanction), "large_col sc_bold")}
-        </div>
-    );
+            if(selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]){
+                sc_sanc_loan_display.push(
+                    <div className="sc_table_row">
+                        {sc_table_col(++count, "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col sc_bold")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
+                        {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
+                        {sc_table_col(sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"], "small_col")}
+                        {sc_table_col(" ", "small_col")}
+                        {sc_table_col(" ", "small_col")}
+                    </div>
+                );
+    
+                if(selectedLoan[sc_sanc_loan_data[i]["LOAN_ID"]]){
+                    total_sanction += Number(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]);
+                }
+            } 
+        }
+        sc_sanc_loan_display.push(
+            <div className="sc_table_row">
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "small_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col(" ", "large_col")}
+                {sc_table_col("TOTAL", "small_col")}
+                {sc_table_col(nf.format(total_sanction), "large_col sc_bold")}
+            </div>
+        );
+    }
 
 
     return(
@@ -142,11 +199,17 @@ export default function SanctionCopy(){
             <NavBar hide={{nav_mid: true}} />
 
             <div className="sanction_copy">
-                <div className="sc_page_title">Sanction Copy</div>
+                <div className="sc_page_title">{sc_loan_type.to} Sanction Copy</div>
 
                 <div className="sc_table">
                     <div className="sc_table_row sc_bold">
-                        <input className="sc_checkbox" type="checkbox" />
+                        {
+                            sc_sent_from == "accntt_fund" ?
+                                <input className="sc_checkbox" type="checkbox" />
+                            :
+                                ""
+                        }
+                        
                         {sc_table_col("SL NO", "small_col")}
                         {sc_table_col("LOAN ID", "large_col")}
                         {sc_table_col("NAME", "large_col")}
@@ -176,7 +239,8 @@ export default function SanctionCopy(){
                     </div>
                 </div>
 
-                <SanctionCopyForm loan_type={sc_loan_type} sanctionedLoan={selectedLoan} />
+                <SanctionCopyForm loan_type={sc_loan_type} app_pos={sc_app_pos} sanctionedLoan={selectedLoan} sentFrom={sc_sent_from} />
+                
 
             </div>
 

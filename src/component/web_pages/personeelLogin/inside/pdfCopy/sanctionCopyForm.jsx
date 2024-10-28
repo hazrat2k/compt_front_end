@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
+
 import { BlobProvider, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
 import logo_image from "../../../../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../../../../assets/fonts/pt-serif-latin-700-normal.ttf";
+
 
 
 Font.register({family: 'English Bold', fontWeight: 'normal', src: PT_Serif_Bold});
@@ -183,18 +186,59 @@ const style_sig = StyleSheet.create({
 
 export default function SanctionCopyForm(props){
 
+    const scf_navigate = useNavigate();
+
     const [sc_sanc_loan_data, setSc_sanc_loan_data] = useState([]);
     const sc_sanc_loan_display = useState([]);
 
-    const sc_loan_type = props.loan_type;
+    const [scf_remarks, setScf_remarks] = useState("");
+    const [scf_remarks_error_text, setScf_remarks_error_text] = useState("");
+    const [scf_remarks_error, setScf_remarks_error] = useState(false);
+
+    const [scf_pers_data, setScf_pers_data] = useState([]);
+
+    const scf_loan_type = props.loan_type;
 
     const scf_selected_loan = props.sanctionedLoan;
 
+    const scf_sent_from = props.sentFrom;
+
+    const scf_sanc_status = scf_sent_from == "accntt_fund" ? "IN PROCESS" : "SANCTIONED";
+
+    var scf_app_pos = props.app_pos;
+
     const [scUrl, setScUrl] = useState("");
+
+    const [for_hover, setFor_hover] = useState(false);
 
     const [laf_hover, setLaf_hover] = useState(false);
 
     const style_butt = StyleSheet.create({
+
+        sc_button:{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+        },
+
+        forward_butt:{
+            width: for_hover ? "150pt" : "120pt",
+            height: "auto",
+            fontFamily: "PT Serif",
+            fontWeight: "bold",
+            padding: "5pt 15pt 5pt 15pt",
+            alignSelf: "center",
+            textAlign: "center",
+            border: for_hover ? "2px solid white" : "2px solid #3f8ba8",
+            borderRadius: "20pt",
+            backgroundColor: for_hover ? "#3f8ba8" : "white",
+            color: for_hover ? "white" : "#3f8ba8",
+            fontSize: for_hover ? "20pt" : "15pt",
+            cursor: for_hover ? "pointer" : "default",
+            transition: "all ease 0.3s"
+        },
+
         download_butt:{
             width: laf_hover ? "150pt" : "120pt",
             height: "auto",
@@ -217,6 +261,8 @@ export default function SanctionCopyForm(props){
             color: "gray",
             fontSize: "20pt",
         },
+
+        
     });
 
     var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
@@ -238,16 +284,26 @@ export default function SanctionCopyForm(props){
     useEffect( () => {
         const fetch_sanction_loan_data = async () =>{
             const uploadLoanType = {
-                "LOAN_TYPE" : sc_loan_type
+                "LOAN_TYPE" : scf_loan_type,
+                "SANC_STATUS" : scf_sanc_status
             }
 
             try{
                 const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
                 setSc_sanc_loan_data(sanc_res.data);
 
+                var uploadData = {
+                    "USERNAME" : scf_sent_from
+                }
+        
+                const scf_data_res = await axios.post("http://localhost:8800/personeel_login", uploadData);
+                setScf_pers_data(scf_data_res.data);
+
             }catch(err){
                 console.log(err);
             }
+
+
 
 
         }
@@ -301,9 +357,13 @@ export default function SanctionCopyForm(props){
 
     var count = 0;
     var sanction_total = 0;
+    var sanctioned_loan_ids = "";
 
     for(let i=0;i<sc_sanc_loan_data.length;i++){
-        if((sc_sanc_loan_data[i]["SANC_STATUS"] == "IN PROCESS") && scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]){
+        if(scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]){
+
+            sanctioned_loan_ids += sc_sanc_loan_data[i]["LOAN_ID"] + ",";
+
             sc_sanc_loan_display.push(
                 <View style={style_sc.sc_table_row}>
                     <View style={[style_sc.sc_table_col, style_sc.sl_col]}> 
@@ -340,6 +400,7 @@ export default function SanctionCopyForm(props){
         }
     }
 
+    sanctioned_loan_ids = sanctioned_loan_ids.slice(0, sanctioned_loan_ids.length-1);
 
     sc_sanc_loan_display.push(
         <View style={style_sc.sc_table_row}>
@@ -359,6 +420,11 @@ export default function SanctionCopyForm(props){
             
         </View>
     );
+
+    var scf_personnel_data = [];
+    if(scf_pers_data.length != 0){
+        scf_personnel_data = scf_pers_data[0];
+    }
 
 
     const MySanctionForm = (
@@ -381,7 +447,7 @@ export default function SanctionCopyForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={styles.pageLabel}>
-                            LOAN FOR SANCTION
+                            {scf_loan_type} FOR SANCTION
                         </Text>
                     </View>
 
@@ -496,6 +562,110 @@ export default function SanctionCopyForm(props){
         downloadURI(scUrl, 'sanction_copy.pdf');
     }
 
+    const onScForwardClick = async () => {
+
+        if(count==0){
+            setScf_remarks_error(true);
+            setScf_remarks_error_text("***Select at least one loan to forward");
+            return;
+        }else{
+            setScf_remarks_error(false);
+        }
+
+
+        if(scf_remarks == ""){
+            setScf_remarks_error(true);
+            setScf_remarks_error_text("***Remarks must be written to forward");
+            return;
+        }else{
+            setScf_remarks_error(false);
+        }
+
+
+        const new_date = new Date();
+
+        if(scf_sent_from == "accntt_fund"){
+
+            scf_app_pos = 6;
+
+            const upload_sanctioned_loan = {
+                "LOAN_ID": sanctioned_loan_ids,
+                "LOAN_TYPE": scf_loan_type,
+                "APP_POS": 7,
+                "SANC_DATE": new_date,
+                "SANCTION_STATUS": "SANCTIONED"
+            };
+
+            try{
+                await axios.post("http://localhost:8800/sanctioning_loan", upload_sanctioned_loan);
+    
+            }catch(err){
+                console.log(err);
+            }
+
+            try{
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : sanctioned_loan_ids, "status" : "SANCTIONED"});
+    
+            }catch(err){
+                console.log(err);
+            }
+
+        }else if(scf_sent_from == "dc_audit"){
+            try{
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : sanctioned_loan_ids, "status" : "OFF_ORD"});
+    
+            }catch(err){
+                console.log(err);
+            }
+
+            const updateSancedData = {
+                "LOAN_ID": sanctioned_loan_ids,
+                "APP_POS": scf_app_pos,
+                "SANCTION_STATUS": "OFF_ORD"
+                
+            };
+    
+            try{
+                await axios.put("http://localhost:8800/sanctioned", updateSancedData);
+    
+            }catch(err){
+                console.log(err);
+            }
+        }else{
+
+            const updateSancedData = {
+                "LOAN_ID": sanctioned_loan_ids,
+                "APP_POS": scf_app_pos,
+                "SANCTION_STATUS": "SANCTIONED"
+            };
+    
+            try{
+                await axios.put("http://localhost:8800/sanctioned", updateSancedData);
+    
+            }catch(err){
+                console.log(err);
+            }
+
+        }
+
+
+        const updateRemarksData = {
+            "LOAN_ID": sanctioned_loan_ids,
+            "REMARKER": scf_app_pos,
+            "REMARKS": scf_remarks,
+        };
+
+        try{
+            await axios.put("http://localhost:8800/processing_loan_remarks_update", updateRemarksData);
+
+            scf_navigate("/personnel_dashboard", {state : {data : scf_personnel_data, loan_type: scf_loan_type}});
+
+        }catch(err){
+            console.log(err);
+        }
+
+    }
+
     return(
 
         // <PDFViewer style={styles.viewer}>
@@ -503,22 +673,60 @@ export default function SanctionCopyForm(props){
         // </PDFViewer>
         <>
 
-            <BlobProvider document={MySanctionForm}>
-                {({ blob, url, loading, error }) => {
-                    setScUrl(url);
-                }}
-            </BlobProvider>
+            {
+                scf_sent_from == "accntt_fund" ?
+                <BlobProvider document={MySanctionForm}>
+                    {({ blob, url, loading, error }) => {
+                        setScUrl(url);
+                    }}
+                </BlobProvider>
+                :
+                ""
+            }
 
             {
-                 (count == 0) ?
-                  <div style={style_butt.alert_message}>
-                       Select at least one loan to download
-                  </div>
-                  :
-                  <div style={style_butt.download_butt} onClick={onSCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
-                        Download
-                  </div>
+
+                scf_sent_from == "accntt_fund" ? 
+
+                    (count == 0) ?
+                        <div style={style_butt.alert_message}>
+                            Select at least one loan to download
+                        </div>
+                    :
+                        <div style={style_butt.download_butt} onClick={onSCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
+                            Download
+                        </div>
+                            
+                :
+                    ""
             }
+
+
+                <div className="assessment_section remarks">
+                    <div className="section_label">Remarks :</div>
+
+                    {
+                        scf_remarks_error ?
+                        <div className="remarks_input" style={{color: "red"}}>
+                            {scf_remarks_error_text}
+                        </div>
+                
+                        : ""    
+                    }
+                    
+                    <div className="remarks_items">
+                        <div className="remarks_input_item">
+                            <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={scf_remarks} onChange={(e) => {setScf_remarks(e.target.value)}} />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style={style_butt.sc_button}>
+                    <div style={style_butt.forward_butt} onClick={onScForwardClick} onMouseEnter={() => setFor_hover(true)} onMouseLeave={() => setFor_hover(false)}>
+                        Forward
+                    </div>
+                </div>
             
 
         </>

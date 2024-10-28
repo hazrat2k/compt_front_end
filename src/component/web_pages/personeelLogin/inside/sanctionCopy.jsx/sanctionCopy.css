@@ -58,6 +58,7 @@
     padding: 1rem 2rem;
 }
 
+
 .sc_text{
     font-weight: bold;
     font-size: small;
@@ -66,6 +67,12 @@
 
 .sc_checkbox{
     opacity: 0;
+}
+
+.alert_message{
+    text-align: center;
+    color: gray;
+    font-size: 20pt;
 }
 
 

@@ -231,7 +231,13 @@ export default function BillCopyForm(props){
 
     const sel_cat = props.category;
 
-    const bic_loan_type = props.loan_type;
+    const bcf_loan_type = props.loan_type;
+
+    const bcf_selected_loan = props.billedLoan;
+
+    const bcf_sentFrom = props.sentFrom;
+
+    const bcf_sanc_status = bcf_sentFrom == "accntt_fund" ? "BILL" : "BILLED";
 
     const [bc_sanc_loan_data, setBc_sanc_loan_data] = useState([]);
     const bc_sanc_loan_display = useState([]);
@@ -260,6 +266,11 @@ export default function BillCopyForm(props){
             marginBottom: "10pt",
             transition: "all ease 0.3s"
         },
+        alert_message:{
+            textAlign: "center",
+            color: "gray",
+            fontSize: "20pt",
+        },
     });
 
     var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
@@ -280,8 +291,14 @@ export default function BillCopyForm(props){
 
     useEffect( () => {
         const fetch_sanction_loan_data = async () =>{
+
+            const uploadLoanType = {
+                "LOAN_TYPE" : bcf_loan_type,
+                "SANC_STATUS" : bcf_sanc_status
+            }
+
             try{
-                const sanc_res = await axios.get("http://localhost:8800/sanction_loan");
+                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
                 setBc_sanc_loan_data(sanc_res.data);
 
             }catch(err){
@@ -335,7 +352,7 @@ export default function BillCopyForm(props){
         count = 0;
         sanction_total = 0;
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == bic_loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
+            if((bcf_selected_loan[bc_sanc_loan_data[i]["LOAN_ID"]]) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
     
                 bc_sanc_loan_display.push(
                     <View style={style_bc.bc_table_row}>
@@ -345,12 +362,12 @@ export default function BillCopyForm(props){
                         <View style={[style_bc.bc_table_col, style_bc.loan_id_col]}> 
                             <Text style={style_bc.bc_table_cell}>{bc_sanc_loan_data[i]["LOAN_ID"]}</Text>
                         </View>
-                        {bc_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
@@ -370,15 +387,15 @@ export default function BillCopyForm(props){
                 s_sanc_loan_display.push(
                     <View style={style_bc.bc_table_row}>
                         {s_table_col(count, "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["SALARY_ID"], "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["BUET_ID"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEEID"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEE_ID"], "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
                         {s_table_col(bc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                         {s_table_col(nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
                         {s_table_col(nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
@@ -443,7 +460,7 @@ export default function BillCopyForm(props){
         count = 0;
         sanction_total = 0;
         for(let i=0;i<bc_sanc_loan_data.length;i++){
-            if((bc_sanc_loan_data[i]["LOAN_TYPE"] == bic_loan_type) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (bc_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
+            if((bcf_selected_loan[bc_sanc_loan_data[i]["LOAN_ID"]]) && (bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (bc_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
     
                 bc_sanc_loan_display.push(
                     <View style={style_bc.bc_table_row}>
@@ -453,11 +470,11 @@ export default function BillCopyForm(props){
                         <View style={[style_bc.bc_table_col, style_bc.loan_id_col]}> 
                             <Text style={style_bc.bc_table_cell}>{bc_sanc_loan_data[i]["LOAN_ID"]}</Text>
                         </View>
-                        {bc_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {bc_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "small_col")}
-                        {bc_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
+                        {bc_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]), "small_col")}
                         {bc_table_col(nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]), "small_col")}
@@ -477,14 +494,14 @@ export default function BillCopyForm(props){
                 s_sanc_loan_display.push(
                     <View style={style_bc.bc_table_row}>
                         {s_table_col(count, "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["SALARY_ID"], "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["BUET_ID"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEEID"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEE_ID"], "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["APPLICANT_NAME"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["OFFICE_DEPT"], "small_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["BIRTH_DATE"], "large_col")}
-                        {s_table_col(bc_sanc_loan_data[i]["JOINING_DATE"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["DATE_OF_BIRTH"], "large_col")}
+                        {s_table_col(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "large_col")}
                         {s_table_col(nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]), "large_col")}
                         {s_table_col(bc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
                         {s_table_col(nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
@@ -544,7 +561,7 @@ export default function BillCopyForm(props){
         );
     }
 
-    const MyBillForm = () => (
+    const MyBillForm = (
 
         <Document>
 
@@ -565,7 +582,7 @@ export default function BillCopyForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={[styles.pageLabel, style_bc.bc_bold]}>
-                            {bic_loan_type} BILL COPY
+                            {bcf_loan_type} BILL COPY
                         </Text>
 
                         <Text style={style_bc.bc_text}>
@@ -782,7 +799,7 @@ export default function BillCopyForm(props){
 
     );
 
-    const MySalaryBillForm = () => (
+    const MySalaryBillForm = (
 
         <Document>
 
@@ -803,7 +820,7 @@ export default function BillCopyForm(props){
                             COMPTROLLER OFFICE
                         </Text>
                         <Text style={[styles.pageLabel, style_bc.bc_bold]}>
-                            {bic_loan_type} SALARY BILL COPY
+                            {bcf_loan_type} SALARY BILL COPY
                         </Text>
 
                         <Text style={style_bc.bc_text}>
@@ -1004,10 +1021,20 @@ export default function BillCopyForm(props){
                 }}
             </BlobProvider>
             
+            {
+                count == 0 ?
+                    <div style={style_butt.alert_message}>
+                        Select at least one loan to forward or download
+                    </div>
+                :
+                    <div style={style_butt.download_butt} onClick={onBCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
+                        Download Bill Copy
+                    </div>
+            }
 
-            <div style={style_butt.download_butt} onClick={onBCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
-                Download Bill Copy
-            </div>
+            
+
+            
 
         </>
 

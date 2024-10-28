@@ -85,6 +85,29 @@
 }
 
 
+.bc_forward{
+    width: 100pt;
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    border: 2px solid var(--green);
+    border-radius: 2rem;
+    background-color: white;
+    color: var(--green);
+    font-size: large;
+    font-weight: bold;
+    align-self: center;
+}
+
+.bc_forward:hover{
+    width: 120pt;
+    border: 2px solid white;
+    background-color: var(--green);
+    color: white;
+    cursor: pointer;
+    font-size: x-large;
+    transition: all 0.3s ease;
+}
+
 
 
 

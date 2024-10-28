@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
 import { BlobProvider, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
 import logo_image from "../../../../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../../../../assets/fonts/pt-serif-latin-700-normal.ttf";
+
 
 
 Font.register({family: 'English Bold', fontWeight: 'normal', src: PT_Serif_Bold});
@@ -171,14 +173,25 @@ const style_sal = StyleSheet.create({
 });
 
 
-
-
-
 export default function BankCopyForm(props){
+
+    const bac_navigate = useNavigate();
 
     const sel_cat = props.category;
     const bac_loan_type = props.loan_type;
-    const [download_Error, setDownload_Error] = useState("");
+    var bac_app_pos = props.app_pos;
+    const bac_billedLoan = props.billedLoan;
+    const bac_sentFrom = props.sentFrom;
+
+    const bac_sanc_status = bac_sentFrom == "accntt_fund" ? "BILL" : "BILLED";
+
+    var bac_loan_ids = "";
+
+    const [bac_remarks, setBac_remarks] = useState("");
+    const [bac_remarks_error_text, setBac_remarks_error_text] = useState("");
+    const [bac_remarks_error, setBac_remarks_error] = useState(false);
+
+    const [bac_pers_data, setBac_pers_data] = useState([]);
 
     const [sal_sanc_loan_data, setSal_sanc_loan_data] = useState([]);
     const sal_sanc_loan_display = useState([]);
@@ -187,9 +200,35 @@ export default function BankCopyForm(props){
 
     const [laf_hover, setLaf_hover] = useState(false);
 
+    const [for_hover, setFor_hover] = useState(false);
+
     const style_butt = StyleSheet.create({
+        sc_button:{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+        },
+
+        forward_butt:{
+            width: for_hover ? "150pt" : "120pt",
+            height: "auto",
+            fontFamily: "PT Serif",
+            fontWeight: "bold",
+            padding: "5pt 15pt 5pt 15pt",
+            alignSelf: "center",
+            textAlign: "center",
+            border: for_hover ? "2px solid white" : "2px solid #3f8ba8",
+            borderRadius: "20pt",
+            backgroundColor: for_hover ? "#3f8ba8" : "white",
+            color: for_hover ? "white" : "#3f8ba8",
+            fontSize: for_hover ? "20pt" : "15pt",
+            cursor: for_hover ? "pointer" : "default",
+            transition: "all ease 0.3s"
+        },
+
         download_butt:{
-            width: laf_hover ? "250pt" : "220pt",
+            width: laf_hover ? "250pt" : "200pt",
             height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
@@ -202,8 +241,13 @@ export default function BankCopyForm(props){
             color: laf_hover ? "white" : "#3f8ba8",
             fontSize: laf_hover ? "20pt" : "15pt",
             cursor: laf_hover ? "pointer" : "default",
-            marginBottom: "10pt",
             transition: "all ease 0.3s"
+        },
+
+        alert_message:{
+            textAlign: "center",
+            color: "gray",
+            fontSize: "20pt",
         },
     });
 
@@ -225,9 +269,21 @@ export default function BankCopyForm(props){
 
     useEffect( () => {
         const fetch_sanction_loan_data = async () =>{
+            const uploadLoanType = {
+                "LOAN_TYPE" : bac_loan_type,
+                "SANC_STATUS" : bac_sanc_status
+            }
+
             try{
-                const sanc_res = await axios.get("http://localhost:8800/sanction_loan");
+                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
                 setSal_sanc_loan_data(sanc_res.data);
+
+                var uploadData = {
+                    "USERNAME" : bac_sentFrom
+                }
+        
+                const bac_data_res = await axios.post("http://localhost:8800/personeel_login", uploadData);
+                setBac_pers_data(bac_data_res.data);
 
             }catch(err){
                 console.log(err);
@@ -254,28 +310,24 @@ export default function BankCopyForm(props){
     var count = 0;
     var sanction_total = 0;
 
-    if(sel_cat == "ALL"){
-        count = 0;
-        sanction_total = 0;
+    if(bac_sentFrom == "accntt_fund"){
         for(let i=0;i<sal_sanc_loan_data.length;i++){
             
-            if((sal_sanc_loan_data[i]["LOAN_TYPE"] == bac_loan_type) && (sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL")){
+            if((bac_billedLoan[sal_sanc_loan_data[i]["LOAN_ID"]]) && (sal_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
     
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
                         {sal_table_col(++count)}
-                        {sal_table_col(sal_sanc_loan_data[i]["BUET_ID"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["APPLICANT_NAME"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["EMPLOYEE_ID"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["EMPLOYEE_NAME"])}
                         {sal_table_col(sal_sanc_loan_data[i]["DESIGNATION"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["OFFICE_DEPT"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["CATEGORY"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["ACCOUNT_NO"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["OFFICE"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["BANK_ACCOUNT_NO"])}
                         {sal_table_col(nf.format(sal_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
 
                     </View>
                 );
                 sanction_total += Number(sal_sanc_loan_data[i]["SANCTION_AMOUNT"]);
-    
     
             }
         }
@@ -287,27 +339,25 @@ export default function BankCopyForm(props){
                 {sal_table_col("")}
                 {sal_table_col("")}
                 {sal_table_col("")}
-                {sal_table_col("")}
                 {sal_table_col("TOTAL")}
                 {sal_table_col(nf.format(sanction_total - (count * 10)))}
-                
             </View>
         );
 
-    }else if(["A", "B", "C", "D"].includes(sel_cat)){
-        count = 0;
-        sanction_total = 0;
+    }else{
         for(let i=0;i<sal_sanc_loan_data.length;i++){
-            if((sal_sanc_loan_data[i]["LOAN_TYPE"] == bac_loan_type) && (sal_sanc_loan_data[i]["SANC_STATUS"] == "BILL") && (sal_sanc_loan_data[i]["CATEGORY"] == sel_cat)){
-    
+            if((bac_billedLoan[sal_sanc_loan_data[i]["LOAN_ID"]])){
+                
+                bac_loan_ids += sal_sanc_loan_data[i]["LOAN_ID"] + ",";
+                
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
                         {sal_table_col(++count)}
-                        {sal_table_col(sal_sanc_loan_data[i]["BUET_ID"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["APPLICANT_NAME"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["EMPLOYEE_ID"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["EMPLOYEE_NAME"])}
                         {sal_table_col(sal_sanc_loan_data[i]["DESIGNATION"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["OFFICE_DEPT"])}
-                        {sal_table_col(sal_sanc_loan_data[i]["ACCOUNT_NO"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["OFFICE"])}
+                        {sal_table_col(sal_sanc_loan_data[i]["BANK_ACCOUNT_NO"])}
                         {sal_table_col(nf.format(sal_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10))}
     
                     </View>
@@ -317,6 +367,8 @@ export default function BankCopyForm(props){
     
             }
         }
+
+        bac_loan_ids = bac_loan_ids.slice(0, bac_loan_ids.length-1);
     
         sal_sanc_loan_display.push(
             <View style={[style_sal.sal_table_row, style_sal.sal_bold]}>
@@ -332,10 +384,8 @@ export default function BankCopyForm(props){
     }
 
 
-    
 
-
-    const MyBankForm = () => (
+    const MyBankForm = (
 
         <Document>
 
@@ -503,14 +553,117 @@ export default function BankCopyForm(props){
             return;
         }
 
-        // if([["null", "ALL"].includes(sel_cat)]){
-        //     setDownload_Error("Select Right Category to Download");
-        //     return;
-        // }else{
-        //     setDownload_Error("");
-        // }
-
         downloadURI(salUrl, 'bank_copy.pdf');
+    }
+
+    var bac_personnel_data = [];
+    if(bac_pers_data.length != 0){
+        bac_personnel_data = bac_pers_data[0];
+    }
+
+    const onBacForwardClick = async () => {
+
+        if(bac_sentFrom == "accntt_fund"){
+            if(count==0){
+                setBac_remarks_error(true);
+                setBac_remarks_error_text("***Select at least one loan to forward");
+                return;
+            }else{
+                setBac_remarks_error(false);
+            }
+        }
+
+        if(bac_remarks == ""){
+            setBac_remarks_error(true);
+            setBac_remarks_error_text("***Remarks must be written to forward");
+            return;
+        }else{
+            setBac_remarks_error(false);
+        }
+
+
+        const new_date = new Date();
+
+        if(bac_sentFrom == "accntt_fund"){
+
+            bac_app_pos = 15;
+
+            const upload_billed_loan = {
+                "LOAN_ID": bac_loan_ids,
+                "LOAN_TYPE": bac_loan_type,
+                "APP_POS": 16,
+                "BILL_DATE": new_date,
+                "BILL_STATUS": "BILLED"
+            };
+
+            try{
+                await axios.post("http://localhost:8800/bill_register", upload_billed_loan);
+    
+            }catch(err){
+                console.log(err);
+            }
+
+            try{
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : bac_loan_ids, "status" : "BILLED"});
+    
+            }catch(err){
+                console.log(err);
+            }
+
+        }else if(bac_sentFrom == "dc_audit"){
+            try{
+                await axios.put("http://localhost:8800/sanction", {"loan_id" : bac_loan_ids, "status" : "CASH"});
+    
+            }catch(err){
+                console.log(err);
+            }
+
+            const updateBilledData = {
+                "LOAN_ID": bac_loan_ids,
+                "APP_POS": bac_app_pos,
+                "BILL_STATUS": "CASH"
+                
+            };
+    
+            try{
+                await axios.put("http://localhost:8800/billed", updateBilledData);
+    
+            }catch(err){
+                console.log(err);
+            }
+        }else{
+
+            const updateBilledData = {
+                "LOAN_ID": bac_loan_ids,
+                "APP_POS": bac_app_pos,
+                "BILL_STATUS": "BILLED"
+            };
+    
+            try{
+                await axios.put("http://localhost:8800/billed", updateBilledData);
+    
+            }catch(err){
+                console.log(err);
+            }
+
+        }
+
+        const updateRemarksData = {
+            "LOAN_ID": bac_loan_ids,
+            "REMARKER": bac_app_pos,
+            "REMARKS": bac_remarks,
+        };
+
+        try{
+            await axios.put("http://localhost:8800/processing_loan_remarks_update", updateRemarksData);
+
+            bac_navigate("/personnel_dashboard", {state : {data : bac_personnel_data, loan_type: bac_loan_type}});
+
+        }catch(err){
+            console.log(err);
+        }
+
+        
     }
 
     return(
@@ -527,14 +680,50 @@ export default function BankCopyForm(props){
                 }}
             </BlobProvider>
 
-            <div style={style_sal.no_billing_loan}>
-                {download_Error}
+            {
+
+                bac_sentFrom == "accntt_fund" ? 
+
+                    (count == 0) ?
+                        <div style={style_butt.alert_message}>
+                            Select at least one loan to forward or download
+                        </div>
+                    :
+                        <div style={style_butt.download_butt} onClick={onSALDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
+                            Download Bank Copy
+                        </div>
+                :
+                    ""
+
+            }
+
+            <div className="assessment_section remarks">
+                <div className="section_label">Remarks :</div>
+
+                {
+                    bac_remarks_error ?
+                    <div className="remarks_input" style={{color: "red"}}>
+                        {bac_remarks_error_text}
+                    </div>
+            
+                    : ""    
+                }
+                
+                <div className="remarks_items">
+                    <div className="remarks_input_item">
+                        <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={bac_remarks} onChange={(e) => {setBac_remarks(e.target.value)}} />
+                    </div>
+                </div>
+
+            </div>
+
+            <div style={style_butt.sc_button}>
+                <div style={style_butt.forward_butt} onClick={onBacForwardClick} onMouseEnter={() => setFor_hover(true)} onMouseLeave={() => setFor_hover(false)}>
+                    Forward
+                </div>
             </div>
             
 
-            <div style={style_butt.download_butt} onClick={onSALDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
-                Download Bank Copy
-            </div>
 
         </>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+
 import axios from "axios";
 import moment from "moment";
 
@@ -17,8 +18,9 @@ export default function LoanDetails(){
 
     const ld_data = state["data"];
 
-    const loan_personnel = ["accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ad_fund", "compt", "accntt_fund", "accntt_cash", "accntt_fund"];
-    
+    const loan_personnel = ["accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_fund", "ad_fund", "compt", "accntt_fund", "ao_fund", "ad_fund", "dp_compt", "compt", "dc_audit", "accntt_cash", "accntt_fund"];
+ 
+
     const [ld_pers_data, setLd_pers_data] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
     const [ld_pl_prev_loan_1, setLd_pl_prev_loan_1] = useState([]);
@@ -54,6 +56,7 @@ export default function LoanDetails(){
         }
     
         fetch_data();
+
     }, []);
 
     const dateFormation = ( date ) => {
@@ -99,8 +102,6 @@ export default function LoanDetails(){
     
     
     };
-
-    
 
     const [ld_remarks, setLd_remarks] = useState("");
     const [ld_remarks_error, setLd_remarks_error] = useState(false);
@@ -198,9 +199,6 @@ export default function LoanDetails(){
     const ld_comment_display = [];
 
     const ld_remarks_display = [];
-
-    
-
 
     var ld_gra_rate = 0;
 
@@ -357,8 +355,6 @@ export default function LoanDetails(){
         );
     };
 
-    console.log(ld_pl_remarks);
-
     for(let i=0;i<ld_pl_remarks.length;i++){
 
         for(let j=0;j<temp_status;j++){
@@ -377,8 +373,16 @@ export default function LoanDetails(){
     if(ld_pers_data.length != 0){
         ld_personnel_data = ld_pers_data[0];
     }
-    
 
+    // window.addEventListener('popstate', (event) => {
+
+    //     // stop the browser from changing the URL and requesting the new document
+    //     event.preventDefault();
+    //     // push an entry into the browser history stack and change the URL
+    //     window.history.pushState({}, undefined, "/contact");
+
+    //     //ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data, loan_type: ld_value["loan_type"]}});
+    // });
 
     const onForwardClick = async e =>{
         e.preventDefault();
@@ -403,20 +407,6 @@ export default function LoanDetails(){
             }catch(err){
                 console.log(err);
             }
-
-        }
-
-        if(ld_user && 
-            (ld_data["sendFrom"] == "dc_audit") && 
-            temp_status > 6 ){
-
-            try{
-                await axios.put("http://localhost:8800/sanction", {"loan_id" : ld_value["loan_id"], "status" : "OFF_ORD"});
-    
-            }catch(err){
-                console.log(err);
-            }
-
         }
 
         if(ld_user && 
@@ -637,7 +627,7 @@ export default function LoanDetails(){
                         {ld_remarks_display}
 
                         {
-                            ld_user ?
+                            ld_user && ((temp_status < 6) || ((temp_status > 11) && (temp_status < 15))) ?
                             <div className="remarks_input_item">
                                 <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={ld_remarks} onChange={(e) => {setLd_remarks(e.target.value)}} />
                             </div>
@@ -654,7 +644,7 @@ export default function LoanDetails(){
 
 
                 {
-                    ld_user ? 
+                    ld_user && ((temp_status < 6) || ((temp_status > 11) && (temp_status < 15))) ? 
                     <div className="ld_button">
                         <div className="ld_forward" onClick={onForwardClick}>
                             Forward
