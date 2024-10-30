@@ -70,21 +70,13 @@ export default function Login() {
         return { year: yearDuration, month: monthDuration, day: dateDuration };
     };
 
-    const error_message = (str) => {
-        setL_err_text_color(!l_err_text_color);
-        var e_t_c = "red";
-        if (l_err_text_color) e_t_c = "black";
-
-        const temp = [];
-        temp.push();
-        setError_Display(temp);
-    };
-
-    const checkValidation = () => {
-        const duration = duration_calculation(real_dob);
+    const checkValidation = (employ_data) => {
+        const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
 
         if (duration["year"] < 10) {
-            error_message(
+            setL_error(true);
+            setL_err_text_color(!l_err_text_color);
+            setL_error_text(
                 "Service period needs to be more than 10 years. Yours is " +
                     duration["year"] +
                     " years, " +
@@ -94,21 +86,26 @@ export default function Login() {
                     " days"
             );
             return false;
+        } else {
+            setL_error(false);
         }
 
         const retirementDate = new Date(emp_data[0]["DATE_OF_RETIREMENT"]);
         const currentDate = new Date();
 
         if (retirementDate < currentDate) {
-            error_message("You are already retired.");
+            setL_error(true);
+            setL_err_text_color(!l_err_text_color);
+            setL_error_text("You are already retired.");
             return false;
+        } else {
+            setL_error(false);
         }
 
         return true;
     };
 
     const authenticate = async (e) => {
-        
         if (buetId == "") {
             setL_error(true);
             setL_err_text_color(!l_err_text_color);
@@ -124,7 +121,6 @@ export default function Login() {
             setL_error_text("Date of Birth is empty!!!");
             return;
         } else {
-            setDob(new Date(dob).toLocaleDateString("en-US"));
             setL_error(false);
         }
 
@@ -132,7 +128,7 @@ export default function Login() {
 
         const uploadData = {
             BUETID: buetId,
-            DATE_OF_BIRTH: dob,
+            DATE_OF_BIRTH: new Date(dob).toLocaleDateString("en-US"),
         };
 
         try {
@@ -140,52 +136,47 @@ export default function Login() {
                 "http://localhost:8800/application_login",
                 uploadData
             );
-            console.log(res);
-            console.log(res.data);
-            
 
-            // if (emp_data.length == 0) {
-            //     error_message(
-            //         "Invalid BUET ID and/or password \n Try Again!!!"
-            //     );
-            //     return;
-            // }
+            emp_data = res.data;
 
-            // const uploadPay = {
-            //     EMPLOYEEID: emp_data[0]["EMPLOYEEID"],
-            // };
+            if (emp_data.length == 0) {
+                setL_error(true);
+                setL_err_text_color(!l_err_text_color);
+                setL_error_text(
+                    "Invalid BUET ID and/or password \n Try Again!!!"
+                );
+                return;
+            } else {
+                setL_error(false);
+            }
 
-            // const pay_res = await axios.post(
-            //     "http://localhost:8800/pay_valid",
-            //     uploadPay
-            // );
-            // pay_data = pay_res.data;
+            const uploadPay = {
+                EMPLOYEEID: emp_data[0]["EMPLOYEEID"],
+            };
+
+            const pay_res = await axios.post(
+                "http://localhost:8800/pay_valid",
+                uploadPay
+            );
+            pay_data = pay_res.data;
         } catch (err) {
             console.log(err);
         }
 
-        // real_dob = moment(new Date(emp_data[0]["DATE_OF_BIRTH"])).format(
-        //     "YYYY-MM-DD"
-        // );
+        if (pay_data.length == 0) {
+            setL_error(true);
+            setL_err_text_color(!l_err_text_color);
+            setL_error_text("You are currently not an employee of BUET");
+            return;
+        } else {
+            setL_error(false);
+        }
 
-        // if (pay_data.length == 0) {
-        //     error_message("You are currently not an employee of BUET");
-        //     return;
-        // }
-
-        // if (dob === real_dob) {
-        //     data_found = true;
-        //     if (checkValidation()) {
-        //         loginNavigate("/application/1", {
-        //             state: { info: emp_data[0], used: "no" },
-        //         });
-        //     }
-        // }
-
-        // if (!data_found) {
-        //     error_message("Invalid BUET ID and/or password \n Try Again!!!");
-        //     return;
-        // }
+        if (checkValidation(emp_data[0])) {
+            loginNavigate("/application/1", {
+                state: { info: emp_data[0], used: "no" },
+            });
+        }
     };
 
     return (
@@ -239,7 +230,7 @@ export default function Login() {
                                         style={{
                                             color: l_err_text_color
                                                 ? "red"
-                                                : "orange",
+                                                : "crimson",
                                         }}
                                     >
                                         {l_error_text}
