@@ -1,175 +1,91 @@
-import React from "react"
-import { Routes, Route } from 'react-router';
+import React from "react";
+import { Routes, Route } from "react-router";
 
-import Welcome from "./component/web_pages/welcome/welcome";
+import Welcome from "./pages/welcome/welcome";
 
-import PersonnelLogin from "./component/web_pages/personeelLogin/personnelLogin";
-import PersonnelDash from "./component/web_pages/personeelLogin/inside/personeelDash/personeelDash";
-import LoanDetails from "./component/web_pages/personeelLogin/inside/loanDetails/loanDetails";
-import SanctionCopy from "./component/web_pages/personeelLogin/inside/sanctionCopy.jsx/sanctionCopy";
-import BillCopy from "./component/web_pages/personeelLogin/inside/billCopy/billCopy";
+import PersonnelLogin from "./pages/personnelLogin/personnelLogin";
+import PersonnelDash from "./pages/personeelDash/personeelDash";
+import LoanDetails from "./pages/loanDetails/loanDetails";
+import SanctionCopy from "./pages/sanctionCopy/sanctionCopy";
+import BillCopy from "./pages/billCopy/billCopy";
 
-import Login from './component/web_pages/loanApply/jsx/login';
-import BasicInfo from './component/web_pages/loanApply/jsx/basicInfo';
-import PersonalInfo from './component/web_pages/loanApply/jsx/personalInfo';
-import SalServInfo from './component/web_pages/loanApply/jsx/salServInfo';
-import LoanInfo from './component/web_pages/loanApply/jsx/loanInfo';
-import LastPageInfo from './component/web_pages/loanApply/jsx/lastPageInfo';
-import PreviewApplication from './component/web_pages/loanApply/jsx/previewApplication';
+import Login from "./pages/login/login";
+import BasicInfo from "./pages/basicInfo/basicInfo";
+import PersonalInfo from "./pages/personalInfo/personalInfo";
+import SalServInfo from "./pages/salServInfo/salServInfo";
+import LoanInfo from "./pages/loanInfo/loanInfo";
+import LastPageInfo from "./pages/lastPageInfo/lastPageInfo";
+import PreviewApplication from "./pages/previewApplication/previewApplication";
 
-import AboutUs from "./component/web_pages/aboutUs/aboutUs";
-import Administration from "./component/web_pages/administration/administration";
-import Services from "./component/web_pages/services/services";
-import Sections from "./component/web_pages/sections/sections";
-import Downloads from "./component/web_pages/downloads/downloads";
-import Notices from "./component/web_pages/notices/notices";
-import Contact from "./component/web_pages/contact/contact";
-
-
-
+import AboutUs from "./pages/aboutUs/aboutUs";
+import Administration from "./pages/administration/administration";
+import Services from "./pages/services/services";
+import Sections from "./pages/sections/sections";
+import Downloads from "./pages/downloads/downloads";
+import Notices from "./pages/notices/notices";
+import Contact from "./pages/contact/contact";
 
 export default function App() {
+    return (
+        <>
+            <Routes>
+                <Route index element={<Welcome />} />
 
-return (
-    <>
+                <Route path="/" element={<Welcome />} />
 
-        <Routes>
+                <Route path="/login" element={<PersonnelLogin />} />
 
-            <Route index element={<Welcome />} />
+                <Route
+                    path="/personnel_dashboard"
+                    element={<PersonnelDash />}
+                />
 
-            <Route 
-                path="/" 
-                element={ <Welcome /> }
-            />
+                <Route
+                    path="/personnel_dashboard/pending_loan_details"
+                    element={<LoanDetails />}
+                />
 
+                <Route
+                    path="/personnel_dashboard/sanction_copy"
+                    element={<SanctionCopy />}
+                />
 
+                <Route
+                    path="/personnel_dashboard/bill_copy"
+                    element={<BillCopy />}
+                />
 
+                <Route path="/loanApplication" element={<Login />} />
 
+                <Route path="/application/1" element={<BasicInfo />} />
 
-            <Route 
-                path="/login" 
-                element={ <PersonnelLogin /> }
-            />
+                <Route path="/application/2" element={<PersonalInfo />} />
 
-            <Route
-                path="/personnel_dashboard" 
-                element={ <PersonnelDash /> }     
-            />
+                <Route path="/application/3" element={<SalServInfo />} />
 
-            <Route 
-                path="/personnel_dashboard/pending_loan_details" 
-                element={ <LoanDetails /> }
-            />
+                <Route path="/application/4" element={<LoanInfo />} />
 
-            <Route 
-                path="/personnel_dashboard/sanction_copy" 
-                element={ <SanctionCopy /> }
-            />
+                <Route path="/application/5" element={<LastPageInfo />} />
 
-            <Route 
-                path="/personnel_dashboard/bill_copy" 
-                element={ <BillCopy /> }
-            />
+                <Route
+                    path="/application/preview"
+                    element={<PreviewApplication />}
+                />
 
+                <Route path="/aboutus" element={<AboutUs />} />
 
+                <Route path="/administration" element={<Administration />} />
 
+                <Route path="/services" element={<Services />} />
 
+                <Route path="/sections" element={<Sections />} />
 
+                <Route path="/downloads" element={<Downloads />} />
 
+                <Route path="/notices" element={<Notices />} />
 
-
-            <Route 
-                path="/loanApplication" 
-                element={ <Login /> }
-            />
-
-            <Route 
-                path="/application/1" 
-                element={ <BasicInfo /> }
-                
-            />
-
-            <Route 
-                path="/application/2" 
-                element={ <PersonalInfo /> }
-
-            />
-
-            <Route 
-                path="/application/3" 
-                element={ <SalServInfo /> }
-
-            />
-
-            <Route 
-                path="/application/4" 
-                element={ <LoanInfo /> }
-
-            />
-
-
-            <Route 
-                path="/application/5" 
-                element={ <LastPageInfo /> }
-
-            />
-
-            <Route 
-                path="/application/preview" 
-                element={ <PreviewApplication /> }
-
-            />
-
-
-
-
-
-
-
-
-            <Route 
-                path="/aboutus" 
-                element={ <AboutUs /> }
-            />
-
-            <Route 
-                path="/administration" 
-                element={ <Administration /> }
-            />
-
-            <Route 
-                path="/services" 
-                element={ <Services /> }
-            />
-
-            <Route 
-                path="/sections" 
-                element={ <Sections /> }
-            />
-
-            <Route 
-                path="/downloads" 
-                element={ <Downloads /> }
-            />
-
-            <Route 
-                path="/notices" 
-                element={ <Notices /> }
-            />
-
-            <Route 
-                path="/contact" 
-                element={ <Contact /> }
-            />
- 
-
-
-        </Routes>
-        
-    
-
-    </>
-);
-
+                <Route path="/contact" element={<Contact />} />
+            </Routes>
+        </>
+    );
 }
-
