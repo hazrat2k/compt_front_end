@@ -1,0 +1,79 @@
+.ed_body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+    margin-top: 30px;
+}
+
+.ed_label {
+    font-size: xx-large;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ed_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.ed_double_items {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.ed_sec_label {
+    font-size: x-large;
+    text-align: left;
+    font-weight: bold;
+    align-self: start;
+}
+
+.ed_button {
+    font-size: 1.1rem;
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+    border-radius: 2rem;
+    border: 2px solid;
+    font-weight: bold;
+    color: var(--green);
+    background-color: white;
+    border-color: var(--green);
+}
+
+.ed_button:hover {
+    color: white;
+    background-color: var(--green);
+    border-color: white;
+    cursor: pointer;
+}
+
+.edShowError{
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+}
+
+.dia_body{
+    padding: 0px 20px 20px 20px;
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+}
+
+.dia_sec_label{
+    text-align: left;
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 10px;
+}
+
+
+span{
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+}

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
+import loanPersonnel from "../../stores/const/loanPersonnel";
+import AppStatus from "../../utils/functions/appStatus";
+
 import axios from "axios";
 import moment from "moment";
 
@@ -16,32 +19,6 @@ export default function LoanDetails() {
     const { state } = useLocation();
 
     const ld_data = state["data"];
-
-    const loan_personnel = [
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_fund",
-        "ad_fund",
-        "compt",
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_cash",
-        "accntt_fund",
-    ];
 
     const [ld_pers_data, setLd_pers_data] = useState([]);
     const [ld_pl_sal, setLd_pl_sal] = useState([]);
@@ -157,25 +134,9 @@ export default function LoanDetails() {
 
     var temp_status = Number(ld_data["APP_POS"]);
 
-    const ld_user = ld_data["sendFrom"] === loan_personnel[temp_status];
+    const ld_user = ld_data["sendFrom"] === loanPersonnel[temp_status];
 
-    const app_status = (value) => {
-        var ret_val = "";
-
-        if (value <= 5) {
-            ret_val = "Loan Assesment (" + loan_personnel[value] + ")";
-        } else if (value > 5 && value <= 11) {
-            ret_val = "Sanction (" + loan_personnel[value] + ")";
-        } else if (value > 11 && value <= 14) {
-            ret_val = "Office Order (" + loan_personnel[value] + ")";
-        } else if (value > 14) {
-            ret_val = "Bill (" + loan_personnel[value] + ")";
-        }
-
-        return ret_val;
-    };
-
-    var temp_status_t = app_status(temp_status);
+    var temp_status_t = AppStatus(temp_status);
 
     var ld_processing = true;
 
@@ -391,7 +352,7 @@ export default function LoanDetails() {
         return (
             <div className="remarks_item">
                 <div className="remarks_item_label sec_item_def">
-                    {app_status(label)}
+                    {AppStatus(label)}
                 </div>
                 <div className="section_item_colon sec_item_def">:</div>
                 <div className="section_item_value">{value}</div>

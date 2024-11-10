@@ -1,30 +1,37 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./logo.css";
 import { useNavigate } from "react-router";
 
-
-export default function Logo(){
-
+export default function Logo() {
     const [hovering, setHovering] = useState(false);
 
     const loginNavigate = useNavigate();
-    
 
-
-    return(
+    return (
         <>
-            <div className="nv_logo_with_text" onMouseEnter={() => setHovering(true)}
-                                            onMouseLeave={() => setHovering(false)}
-                                            onClick={() => {loginNavigate("/");}}>
-                <div className="nv_logo_img">
-
-                    <svg className="nv_logo_image" version="1.0" xmlns="http://www.w3.org/2000/svg"
-                        width="500.000000pt" height="500.000000pt" viewBox="0 0 500.000000 500.000000"
-                        preserveAspectRatio="xMidYMid meet">
-
-                        <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-                            fill={hovering ? "#3f8ba8" : "#dc143c"} stroke={hovering ? "#3f8ba8" : "#dc143c"}>
-                                <path d="M2434 4923 c-18 -3 -25 -22 -49 -119 -15 -63 -31 -116 -34 -118 -3
+            <a href="/" style={{textDecoration: 'none'}}>
+                <div
+                    className="nv_logo_with_text"
+                    onMouseEnter={() => setHovering(true)}
+                    onMouseLeave={() => setHovering(false)}
+                >
+                    <div className="nv_logo_img">
+                        <svg
+                            className="nv_logo_image"
+                            version="1.0"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="500.000000pt"
+                            height="500.000000pt"
+                            viewBox="0 0 500.000000 500.000000"
+                            preserveAspectRatio="xMidYMid meet"
+                        >
+                            <g
+                                transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+                                fill={hovering ? "#3f8ba8" : "#dc143c"}
+                                stroke={hovering ? "#3f8ba8" : "#dc143c"}
+                            >
+                                <path
+                                    d="M2434 4923 c-18 -3 -25 -22 -49 -119 -15 -63 -31 -116 -34 -118 -3
                                 -2 -36 -7 -72 -10 l-65 -7 -54 110 c-60 124 -54 120 -160 98 -53 -12 -55 -13
                                 -62 -52 -4 -22 -7 -77 -7 -122 -1 -93 1 -90 -89 -116 l-53 -16 -57 75 c-31 42
                                 -64 87 -72 100 -18 29 -19 29 -83 0 -29 -13 -62 -26 -74 -30 -18 -6 -21 -13
@@ -215,8 +222,10 @@ export default function Logo(){
                                 m-180 -190 l0 -80 -52 0 c-29 0 -63 -3 -75 -6 -23 -6 -23 -5 -23 80 l0 86 75
                                 0 75 0 0 -80z m182 14 c1 -36 0 -68 -3 -70 -3 -1 -35 -6 -70 -10 l-65 -6 0 76
                                 0 76 67 0 67 0 4 -66z m188 21 l0 -44 -57 -16 c-32 -9 -64 -18 -70 -20 -7 -3
-                                -13 -1 -14 3 0 4 -1 33 -2 65 l-2 57 73 0 72 0 0 -45z"/>
-                                <path d="M2842 2398 c-7 -7 -12 -18 -12 -25 0 -11 -190 -13 -1020 -13 l-1020
+                                -13 -1 -14 3 0 4 -1 33 -2 65 l-2 57 73 0 72 0 0 -45z"
+                                />
+                                <path
+                                    d="M2842 2398 c-7 -7 -12 -18 -12 -25 0 -11 -190 -13 -1020 -13 l-1020
                                 0 -1 -85 c0 -47 -1 -128 -1 -180 0 -52 1 -135 1 -185 l1 -90 1015 0 1015 0 10
                                 -25 10 -25 282 0 c156 0 288 4 294 8 6 4 13 15 17 25 6 16 33 17 382 17 l375
                                 0 1 88 c1 78 1 337 -1 420 l0 32 -373 0 -374 0 -11 25 -12 25 -283 0 c-207 0
@@ -267,30 +276,30 @@ export default function Logo(){
                                 0 0 -65 0 -65 -355 0 -355 0 0 55 c0 30 -1 58 -2 63 -2 4 20 8 49 10 31 2 56
                                 9 64 19 12 13 16 10 33 -26 11 -22 26 -43 33 -46z m-507 -10 l0 -65 -120 0
                                 -120 0 0 65 0 65 120 0 120 0 0 -65z m285 33 c3 -18 4 -44 1 -58 -2 -14 -5
-                                -28 -5 -32 -1 -5 -53 -8 -116 -8 l-115 0 0 65 0 65 115 0 114 0 6 -32z"/>
-
-                        </g>
-
-                    </svg>
-                
-                </div>
-                
-                <div className="nv_logo_text">
-                    <div className="nv_logo_text_1" style={{color: hovering ? "#3f8ba8" : "#dc143c"}} >
-                        COMPTROLLER OFFICE
+                                -28 -5 -32 -1 -5 -53 -8 -116 -8 l-115 0 0 65 0 65 115 0 114 0 6 -32z"
+                                />
+                            </g>
+                        </svg>
                     </div>
 
-                    <div className="nv_logo_text_2" style={{color: hovering ? "#3f8ba8" : "#dc143c"}}>
-                        Bangladesh University of Engineering and Technology (BUET)
-                    </div>
+                    <div className="nv_logo_text">
+                        <div
+                            className="nv_logo_text_1"
+                            style={{ color: hovering ? "#3f8ba8" : "#dc143c" }}
+                        >
+                            COMPTROLLER OFFICE
+                        </div>
 
+                        <div
+                            className="nv_logo_text_2"
+                            style={{ color: hovering ? "#3f8ba8" : "#dc143c" }}
+                        >
+                            Bangladesh University of Engineering and Technology
+                            (BUET)
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
+            </a>
         </>
     );
-
 }
-
-
-

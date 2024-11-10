@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import moment from "moment";
+import loanPersonnel from "../../stores/const/loanPersonnel";
+import AppStatus from "../../utils/functions/appStatus";
 
 import "./personeelDash.css";
 
@@ -14,32 +16,6 @@ export default function PersoneelDash() {
     const { state } = useLocation();
 
     const pd_data = state["data"];
-
-    const loan_personnel = [
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_fund",
-        "ad_fund",
-        "compt",
-        "accntt_fund",
-        "ao_fund",
-        "ad_fund",
-        "dp_compt",
-        "compt",
-        "dc_audit",
-        "accntt_cash",
-        "accntt_fund",
-    ];
 
     var sanction_loan_id = {};
 
@@ -264,26 +240,10 @@ export default function PersoneelDash() {
         });
     };
 
-    const app_status = (value) => {
-        var ret_val = "";
-
-        if (value <= 5) {
-            ret_val = "Loan Assesment (" + loan_personnel[value] + ")";
-        } else if (value > 5 && value <= 11) {
-            ret_val = "Sanction (" + loan_personnel[value] + ")";
-        } else if (value > 11 && value <= 14) {
-            ret_val = "Office Order (" + loan_personnel[value] + ")";
-        } else if (value > 14) {
-            ret_val = "Bill (" + loan_personnel[value] + ")";
-        }
-
-        return ret_val;
-    };
-
     for (let i = 0; i < pd_pend_loan_data.length; i++) {
         var temp_status = Number(pd_pend_loan_data[i]["APP_POS"]);
 
-        if (pd_userName === loan_personnel[temp_status]) {
+        if (pd_userName === loanPersonnel[temp_status]) {
             pending_loan_status = true;
 
             pd_pend_loan_display.push(
@@ -318,7 +278,7 @@ export default function PersoneelDash() {
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
-                            {app_status(temp_status)}
+                            {AppStatus(temp_status)}
                         </div>
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
@@ -330,6 +290,7 @@ export default function PersoneelDash() {
                     </div>
                 </div>
             );
+
         } else {
             processing_loan_status = true;
 
@@ -365,7 +326,7 @@ export default function PersoneelDash() {
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
-                            {app_status(temp_status)}
+                            {AppStatus(temp_status)}
                         </div>
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
@@ -398,7 +359,7 @@ export default function PersoneelDash() {
     for (let i = 0; i < pd_sanced_loan_data.length; i++) {
         var sanced_status = pd_sanced_loan_data[i]["APP_POS"];
 
-        if (pd_userName === loan_personnel[sanced_status]) {
+        if (pd_userName === loanPersonnel[sanced_status]) {
             sanctioned_loan_status = true;
             pd_sanced_loan_display.push(
                 <div className="pd_section_row">
@@ -419,7 +380,7 @@ export default function PersoneelDash() {
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
-                            {app_status(sanced_status)}
+                            {AppStatus(sanced_status)}
                         </div>
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
@@ -435,7 +396,7 @@ export default function PersoneelDash() {
     for (let i = 0; i < pd_billed_loan_data.length; i++) {
         var billed_status = pd_billed_loan_data[i]["APP_POS"];
 
-        if (pd_userName === loan_personnel[billed_status]) {
+        if (pd_userName === loanPersonnel[billed_status]) {
             billed_loan_status = true;
             pd_billed_loan_display.push(
                 <div className="pd_section_row">
@@ -456,7 +417,7 @@ export default function PersoneelDash() {
                     </div>
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
-                            {app_status(billed_status)}
+                            {AppStatus(billed_status)}
                         </div>
                     </div>
                     <div className="pd_section_col pd_section_col_wid">

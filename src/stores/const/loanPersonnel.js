@@ -1,0 +1,27 @@
+const loanPersonnel = [
+    "accntt_fund",
+    "ao_fund",
+    "ad_fund",
+    "dp_compt",
+    "compt",
+    "dc_audit",
+    "accntt_fund",
+    "ao_fund",
+    "ad_fund",
+    "dp_compt",
+    "compt",
+    "dc_audit",
+    "accntt_fund",
+    "ad_fund",
+    "compt",
+    "accntt_fund",
+    "ao_fund",
+    "ad_fund",
+    "dp_compt",
+    "compt",
+    "dc_audit",
+    "accntt_cash",
+    "accntt_fund",
+];
+
+export default loanPersonnel;

@@ -261,6 +261,10 @@
     align-items: center;
 }
 
+.pa_bold{
+    font-weight: bold;
+}
+
 .preBasicField{
     display: flex;
     flex-direction: column;

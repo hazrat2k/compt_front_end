@@ -3,11 +3,12 @@ import { useNavigate, useLocation } from "react-router";
 
 import "./basicInfo.css";
 
-import imgfile from "../../assets/images/uploadImg.png";
+import NavBar from "../../component/page_compo/navBar/navBar";
+import Footer from "../../component/page_compo/footer/footer";
+
+import ToTitleCase from "../../utils/functions/toTitleCase";
 import DataField from "../../component/loan_apply/dataField/dataField";
-import DataCheckBoxField from "../../component/loan_apply/dataCheckBoxField/dataCheckBoxField";
-import Logo from "../../component/loan_apply/logo/logo";
-import axios from "axios";
+import loanReasons from "../../stores/const/loanReasons";
 
 export default function BasicInfo() {
     const basicNavigate = useNavigate();
@@ -21,39 +22,24 @@ export default function BasicInfo() {
     }
 
     if (state["used"] === "no") {
-        basic_data["PROFILE_PIC"] = imgfile;
-        basic_data["PROFILE_PHOTO"] = imgfile;
-        basic_data["LOAN_TYPE"] = "";
+        basic_data["LOAN_TYPE"] = state["loan_type"];
         basic_data["LOAN_AMNT"] = "";
         basic_data["REASON_FOR_LOAN"] = "";
     }
 
-    const profilePicRef = useRef(null);
     const applicantNameRef = useRef(null);
     const designationRef = useRef(null);
     const officeDepartmentRef = useRef(null);
     const accountNoRef = useRef(null);
-    const loanTypeRef = useRef(null);
     const loanAmountRef = useRef(null);
     const reasonForLoanRef = useRef(null);
 
-    const [proPicFile, setProPicFile] = useState(basic_data["PROFILE_PIC"]);
-    const [proPhoto, setProPhoto] = useState(basic_data["PROFILE_PHOTO"]);
-    const [proPicFileError, setProPicFileError] = useState([]);
+    const applicantName = basic_data["EMPLOYEE_NAME"];
 
-    const [applicantName, setApplicantName] = useState(
-        basic_data["EMPLOYEE_NAME"]
-    );
-    const [designation, setDesignation] = useState(basic_data["DESIGNATION"]);
-    const [officeDepartment, setOfficeDepartment] = useState(
-        basic_data["OFFICE"]
-    );
-    const [accountNo, setAccountNo] = useState(
-        "44040" + basic_data["BANK_ACCOUNT_NO"]
-    );
-
-    const [loanType, setLoanType] = useState(basic_data["LOAN_TYPE"]);
-    const [loanTypeError, setLoanTypeError] = useState("");
+    const designation = basic_data["DESIGNATION"];
+    const officeDepartment = basic_data["OFFICE"];
+    const accountNo = basic_data["BANK_ACCOUNT_NO"];
+    const loanType = basic_data["LOAN_TYPE"];
 
     const [loanAmount, setLoanAmount] = useState(basic_data["LOAN_AMNT"]);
     const [loanAmountError, setLoanAmountError] = useState("");
@@ -63,11 +49,6 @@ export default function BasicInfo() {
     );
     const [reasonForLoanError, setReasonForLoanError] = useState("");
 
-    function handleChange(e) {
-        setProPicFile(URL.createObjectURL(e.target.files[0]));
-        setProPhoto(e.target.files[0]);
-    }
-
     const scrollToSection = (elementRef) => {
         window.scrollTo({
             top: elementRef.current.offsetTop,
@@ -76,39 +57,29 @@ export default function BasicInfo() {
     };
 
     const validBasicInfo = () => {
-        if (proPicFile === imgfile) {
-            const tem = [];
-            tem.push(
-                <span className="profilePictureErrorText">
-                    আবেদনকারীর ছবি দিন***
-                </span>
-            );
-            setProPicFileError(tem);
-            scrollToSection(profilePicRef);
-            return false;
-        } else {
-            setProPicFileError([]);
-        }
+        // if (loanType === "") {
+        //     setLoanTypeError("আবেদনকৃত ঋণের ধরণ নির্বাচন করুন***");
+        //     scrollToSection(loanTypeRef);
+        //     return false;
+        // } else {
+        //     setLoanTypeError("");
+        // }
 
-        if (loanType === "") {
-            setLoanTypeError("আবেদনকৃত ঋণের ধরণ নির্বাচন করুন***");
-            scrollToSection(loanTypeRef);
-            return false;
-        } else {
-            setLoanTypeError("");
-        }
-
-        if (loanAmount === "") {
+        if (loanAmount == "") {
             setLoanAmountError("আবেদনকৃত ঋণের পরিমাণ লিখুন***");
-            scrollToSection(loanAmountRef);
+            scrollToSection(officeDepartmentRef);
+            return false;
+        } else if (Number(loanAmount) <= 0) {
+            setLoanAmountError("আবেদনকৃত ঋণের পরিমাণ ধনাত্মক হতে হবে***");
+            scrollToSection(officeDepartmentRef);
             return false;
         } else {
             setLoanAmountError("");
         }
 
-        if (reasonForLoan === "") {
+        if (reasonForLoan == undefined || reasonForLoan == "") {
             setReasonForLoanError("আবেদনকৃত ঋণ গ্রহণের কারণ লিখুন***");
-            scrollToSection(reasonForLoanRef);
+            scrollToSection(accountNoRef);
             return false;
         } else {
             setReasonForLoanError("");
@@ -117,153 +88,104 @@ export default function BasicInfo() {
         return true;
     };
 
-    async function onBasicAuthenticate(e) {
+    const onBasicAuthenticate = async (e) => {
         e.preventDefault();
 
         if (validBasicInfo()) {
-            basic_data["PROFILE_PIC"] = proPicFile;
-            basic_data["PROFILE_PHOTO"] = proPhoto;
             basic_data["LOAN_TYPE"] = loanType;
             basic_data["LOAN_AMNT"] = loanAmount;
-            basic_data["REASON_FOR_LOAN"] = reasonForLoan;
+
+            if (state["used"] === "no") {
+                basic_data["REASON_FOR_LOAN"] = reasonForLoan["title"];
+            } else if (
+                reasonForLoan["title"] !== undefined &&
+                basic_data["REASON_FOR_LOAN"] != reasonForLoan["title"]
+            ) {
+                basic_data["REASON_FOR_LOAN"] = reasonForLoan["title"];
+            }
 
             basicNavigate("/application/2", {
                 state: { info: basic_data, used: state_used },
             });
         }
-    }
+    };
 
     return (
         <div>
-            <div className="basic_logo">
-                <Logo />
-            </div>
-            <div className="basicField">
-                <div ref={profilePicRef} className="profileImg">
-                    <img className="proImgFile" src={proPicFile} />
-                    <span className="profilePictureText">আবেদনকারীর ছবি*</span>
-                    {proPicFileError}
-                    <input
-                        className="profileImgFile"
-                        type="file"
-                        onChange={handleChange}
-                    />
+            <NavBar hide={{ nav_mid: true }} />
+
+            <div className="basicFieldBody">
+                <div className="basic_label">
+                    {ToTitleCase(loanType)} Application Form
                 </div>
 
-                <DataField
-                    id="applicantName"
-                    refer={applicantNameRef}
-                    dataType="text"
-                    validData=""
-                    label="১. আবেদনকারীর নাম* : "
-                    value={applicantName}
-                    setValue={(data) => {
-                        setApplicantName(data);
-                    }}
-                    placeholder="i.e. Abu Hashem Mohammad"
-                />
+                <div className="basicField">
+                    <DataField
+                        refer={applicantNameRef}
+                        type="data"
+                        label="১. আবেদনকারীর নাম "
+                        value={applicantName}
+                    />
 
-                <DataField
-                    id="designation"
-                    refer={designationRef}
-                    dataType="text"
-                    validData=""
-                    label="২. পদবী* : "
-                    value={designation}
-                    setValue={(data) => {
-                        setDesignation(data);
-                    }}
-                    placeholder="i.e. Lecturer"
-                />
+                    <DataField
+                        refer={designationRef}
+                        type="data"
+                        label="২. পদবী "
+                        value={designation}
+                    />
 
-                <DataField
-                    id="officeDepartment"
-                    refer={officeDepartmentRef}
-                    dataType="text"
-                    validData=""
-                    label="৩. অফিস/বিভাগ* : "
-                    value={officeDepartment}
-                    setValue={(data) => {
-                        setOfficeDepartment(data);
-                    }}
-                    placeholder="i.e. Chemistry"
-                />
+                    <DataField
+                        refer={officeDepartmentRef}
+                        type="data"
+                        label="৩. অফিস/বিভাগ "
+                        value={officeDepartment}
+                    />
 
-                <DataField
-                    id="accountNo"
-                    refer={accountNoRef}
-                    dataType="text"
-                    validData=""
-                    label="৪. সোনালী ব্যাংক, বুয়েট শাখায় পরিচালিত হিসাব নম্বর* : "
-                    value={accountNo}
-                    setValue={(data) => {
-                        setAccountNo(data);
-                    }}
-                    placeholder="যেমন: 44040********"
-                />
+                    <DataField
+                        refer={accountNoRef}
+                        type="data"
+                        label="৪. সোনালী ব্যাংক, বুয়েট শাখায় পরিচালিত হিসাব নম্বর "
+                        value={accountNo}
+                    />
 
-                <DataCheckBoxField
-                    id="loanType"
-                    refer={loanTypeRef}
-                    label="৫. যে ঋণের জন্যে আবেদন করা হয়েছে* : "
-                    items={[
-                        [
-                            "মোটরযান ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয় ঋণ",
-                            "ভোগ্যপণ্য ঋণ",
-                            "ল্যাপটপ ঋণ",
-                            "সোনালী ব্যাংকের গৃহ ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয় ঋণ",
-                            "সোনালী ব্যাংকের পারসোনাল/অন্যান্য (Any Purpose) ঋণ",
-                        ],
-                        [
-                            "HOUSE BUILDING LOAN",
-                            "CONSUMER LOAN",
-                            "LAPTOP LOAN",
-                            "SONALI HOUSE BUILDING LOAN",
-                            "SONALI ANY PURPOSE LOAN",
-                        ],
-                    ]}
-                    value={loanType}
-                    setValue={(data) => {
-                        setLoanType(data);
-                    }}
-                    validData={loanTypeError}
-                />
+                    <DataField
+                        refer={loanAmountRef}
+                        helperText={loanAmountError}
+                        type="input"
+                        dataType="number"
+                        label="৫. আবেদনকৃত ঋণের পরিমাণ "
+                        value={loanAmount}
+                        setValue={(data) => {
+                            setLoanAmount(data);
+                        }}
+                        placeholder="i.e. 100000"
+                    />
 
-                <DataField
-                    id="loanAmount"
-                    refer={loanAmountRef}
-                    dataType="text"
-                    validData={loanAmountError}
-                    label="৬. আবেদনকৃত ঋণের পরিমাণ* : "
-                    value={loanAmount}
-                    setValue={(data) => {
-                        setLoanAmount(data);
-                    }}
-                    placeholder="i.e. 100000"
-                />
-
-                <DataField
-                    id="reasonForLoan"
-                    refer={reasonForLoanRef}
-                    dataType="text"
-                    validData={reasonForLoanError}
-                    label="৭. আবেদনকৃত ঋণ গ্রহণের কারণ* : "
-                    value={reasonForLoan}
-                    setValue={(data) => {
-                        setReasonForLoan(data);
-                    }}
-                    placeholder="i.e. Consumer Product"
-                />
+                    <DataField
+                        refer={reasonForLoanRef}
+                        helperText={reasonForLoanError}
+                        type="suggestedInput"
+                        label="৬. আবেদনকৃত ঋণ গ্রহণের কারণ "
+                        value={reasonForLoan}
+                        options={loanReasons}
+                        setValue={(data) => {
+                            setReasonForLoan(data);
+                        }}
+                        placeholder="i.e. Building House"
+                    />
+                </div>
 
                 <div className="bisingleButton">
                     <button
                         className="binormalButton"
                         onClick={onBasicAuthenticate}
                     >
-                        পরবর্তী
+                        Next
                     </button>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }

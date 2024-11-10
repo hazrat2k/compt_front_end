@@ -4,16 +4,10 @@ import moment from "moment";
 
 import PiDataField from "../piDataField/piDataField";
 
+import DataField from "../dataField/dataField";
+
 export default function ServiceInfo(props) {
     var service_data = props.service_data;
-
-    var serv_type = false;
-    if (service_data["APPOINTMENT_TYPE"].toUpperCase() == "PERMANENT") {
-        serv_type = true;
-    }
-
-    const [servCheckBox, setServCheckBox] = useState([serv_type, !serv_type]);
-    const default_servCheckBox = [serv_type, !serv_type];
 
     const now = new Date();
     const first_join_date = new Date(service_data["DATE_FIRST_JOIN"]);
@@ -48,19 +42,6 @@ export default function ServiceInfo(props) {
         }
     }
 
-    const servCheckBoxHandle = (e) => {
-        const { name } = e.target;
-        var tempServBox = [...servCheckBox];
-        var tempServ = tempServBox[name];
-        if (!tempServ) {
-            tempServBox = [...default_servCheckBox];
-            tempServBox[name] = !tempServ;
-        } else {
-            tempServBox[name] = !tempServ;
-        }
-        setServCheckBox(tempServBox);
-    };
-
     var servData = {};
     servData["EMPLOYEE_ID"] = service_data["EMPLOYEE_ID"];
     servData["DATE_FIRST_JOIN"] = service_data["DATE_FIRST_JOIN"];
@@ -80,80 +61,42 @@ export default function ServiceInfo(props) {
     return (
         <div className="serviceInfo">
             <div className="serviceInfoLabel">
-                ৯. আবেদনকারীর চাকুরী সংক্রান্ত তথ্যাবলী :
+                ৮. আবেদনকারীর চাকুরী সংক্রান্ত তথ্যাবলী :
             </div>
 
             <div className="serviceField">
-                <PiDataField
-                    id="buetIdNo"
-                    dataType="text"
-                    validData=""
-                    label="ক) বুয়েট আই.ডি. নং : "
+                <DataField
+                    type="data"
+                    label="ক) বুয়েট আই.ডি. নং "
                     value={servData["EMPLOYEE_ID"]}
-                    placeholder="যেমন: T201614032"
                 />
 
-                <div className="siDataCheckBoxField" data-validate="">
-                    <div className="siDataCheckBoxLabel">
-                        খ) বিশ্ববিদ্যালয়ের চাকুরী :
-                    </div>
+                <DataField
+                    type="data"
+                    label="খ) বিশ্ববিদ্যালয়ের চাকুরী "
+                    value={servData["APPOINTMENT_TYPE"]}
+                />
 
-                    <div className="siCheckBox">
-                        <div className="siDataCheckBox">
-                            <input
-                                className="siDataCheckBoxInput"
-                                type="checkbox"
-                                onChange={servCheckBoxHandle}
-                                checked={servCheckBox[0]}
-                                name={0}
-                                value="স্থায়ী"
-                            />
-                            <span className="siDataCheckBoxValue">স্থায়ী</span>
-                        </div>
-
-                        <div className="siDataCheckBox">
-                            <input
-                                className="siDataCheckBoxInput"
-                                type="checkbox"
-                                onChange={servCheckBoxHandle}
-                                checked={servCheckBox[1]}
-                                name={1}
-                                value="অস্থায়ী"
-                            />
-                            <span className="siDataCheckBoxValue">অস্থায়ী</span>
-                        </div>
-                    </div>
-                </div>
-
-                <PiDataField
-                    id="uniJoinDate"
-                    dataType="text"
-                    validData=""
-                    label="গ) বিশ্ববিদ্যালয়ে যোগদানের তারিখ : "
+                <DataField
+                    type="data"
+                    label="গ) বিশ্ববিদ্যালয়ে যোগদানের তারিখ "
                     value={moment(new Date(servData["DATE_FIRST_JOIN"])).format(
                         "DD MMM YYYY"
                     )}
-                    placeholder="যেমন: ২৬/০৫/২০১০"
                 />
 
-                <PiDataField
-                    id="unSevicePeriod"
-                    dataType="text"
-                    validData=""
-                    label="ঘ) এই বিশ্ববিদ্যালয়ে মোট চাকুরীকাল : "
+                <DataField
+                    type="data"
+                    label="ঘ) এই বিশ্ববিদ্যালয়ে মোট চাকুরীকাল "
                     value={servData["SERV_PERIOD"]}
-                    placeholder="যেমন: ১১ বছর ৮ মাস ১৬ দিন"
                 />
 
-                <PiDataField
-                    id="uniRetiredDate"
-                    dataType="text"
-                    validData=""
-                    label="ঙ) চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর): "
+                <DataField
+                    type="data"
+                    label="ঙ) চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর) "
                     value={moment(
                         new Date(servData["DATE_OF_RETIREMENT"])
                     ).format("DD MMM YYYY")}
-                    placeholder="যেমন: ৩০/০৭/২০৫১"
                 />
             </div>
         </div>

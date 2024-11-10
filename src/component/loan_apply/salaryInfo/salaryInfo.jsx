@@ -1,6 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./salaryInfo.css";
-import axios from "axios";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+
+const createData = (month, basicSal, totalSal, totalDeduct, netSal) => {
+    return { month, basicSal, totalSal, totalDeduct, netSal };
+};
 
 export default function SalaryInfo(props) {
     const salary_data = props.salary_data;
@@ -47,35 +59,7 @@ export default function SalaryInfo(props) {
 
     if (prevMonthSal.length != 0) {
         prevMonthSal = prevMonthSal.map((row) => row).reverse();
-        for (let i = 0; i < 4; i++) {
-            salData.push(
-                <tbody>
-                    <tr>
-                        <td className="tableText">{salText[i]}</td>
-                        <td>
-                            <div className="tableDataInput">
-                                {" "}
-                                {nf.format(prevMonthSal[0][i])}{" "}
-                            </div>{" "}
-                        </td>
-                        <td>
-                            <div className="tableDataInput">
-                                {" "}
-                                {nf.format(prevMonthSal[0][i])}{" "}
-                            </div>{" "}
-                        </td>
-                        <td>
-                            <div className="tableDataInput">
-                                {" "}
-                                {nf.format(prevMonthSal[0][i])}{" "}
-                            </div>{" "}
-                        </td>
-                    </tr>
-                </tbody>
-            );
-        }
         var prevMonSal = [];
-
         var j = 0;
 
         for (let i = 2; i >= 0; i--) {
@@ -92,14 +76,29 @@ export default function SalaryInfo(props) {
 
     var prevSal = { PREV_MON_SAL: prevMonSal };
 
+
+    const rows = [];
+
+    for (let i = 0; i < prevMonSal.length; i++) {
+        rows.push(
+            createData(
+                prevMonSal[i][0],
+                prevMonSal[i][1],
+                prevMonSal[i][2],
+                prevMonSal[i][3],
+                prevMonSal[i][4]
+            )
+        );
+    }
+
     props.setSalData(prevSal);
 
     return (
         <div className="salaryInfo">
             <div className="salaryInfoLabel">
-                ১০. বেতন সংক্রান্ত তথ্যাবলী (বিগত তিন মাসের) :
+                ৯. বেতন সংক্রান্ত তথ্যাবলী (বিগত তিন মাসের) :
             </div>
-            <div className="fullTable">
+            {/* <div className="fullTable">
                 <table>
                     <thead>
                         <tr className="tableHead">
@@ -128,7 +127,63 @@ export default function SalaryInfo(props) {
 
                     {salData}
                 </table>
-            </div>
+            </div> */}
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center" className="sal_bold">
+                                মাস
+                            </TableCell>
+                            <TableCell align="center" className="sal_bold">
+                                মূল বেতন
+                            </TableCell>
+                            <TableCell align="center" className="sal_bold">
+                                মোট বেতন
+                            </TableCell>
+                            <TableCell align="center" className="sal_bold">
+                                মোট কর্তন
+                            </TableCell>
+                            <TableCell align="center" className="sal_bold">
+                                নীট বেতন
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow
+                                key={row.month}
+                                sx={{
+                                    "&:last-child td, &:last-child th": {
+                                        border: 0,
+                                    },
+                                }}
+                            >
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    align="center"
+                                    className="sal_bold"
+                                >
+                                    {row.month}
+                                </TableCell>
+                                <TableCell align="center" className="sal_reg">
+                                    {row.basicSal}
+                                </TableCell>
+                                <TableCell align="center" className="sal_reg">
+                                    {row.totalSal}
+                                </TableCell>
+                                <TableCell align="center" className="sal_reg">
+                                    {row.totalDeduct}
+                                </TableCell>
+                                <TableCell align="center" className="sal_reg">
+                                    {row.netSal}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 }

@@ -1,6 +1,5 @@
-
 @media screen and (max-width: 800px) {
-    .dataCheckBoxField{
+    .dataCheckBoxField {
         width: 80%;
         position: relative;
         border: 1px solid crimson;
@@ -8,106 +7,85 @@
         padding: 0.7rem;
         margin-bottom: 10px;
     }
-    
-    .dataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .dataCheckBoxLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.6rem;
         font-weight: bold;
         color: black;
     }
 
-    .dataCheckBoxValid{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+    .dataCheckBoxValid {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.4rem;
         font-weight: bold;
         color: red;
-    } 
-    
-    .dataCheckBox{
+    }
+
+    .dataCheckBox {
         margin-bottom: 1px;
         display: flex;
     }
-    
-    .dataCheckBoxInput{
+
+    .dataCheckBoxInput {
         height: 0.6rem;
         color: black;
-    
     }
-    
-    .dataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .dataCheckBoxValue {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.6rem;
         color: black;
         position: relative;
         margin-left: 0.4rem;
     }
-    
-
 }
-  
-
-
 
 @media screen and (min-width: 800px) {
-    .dataCheckBoxField{
+    .dataCheckBoxField {
         width: 60%;
         position: relative;
         border: 1px solid crimson;
         border-radius: 1rem;
         padding: 2rem;
         margin-bottom: 20px;
-        
-    }  
-    
-    .dataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+    }
+
+    .dataCheckBoxLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 1rem;
         font-weight: bold;
         color: black;
-    }  
+    }
 
-    .dataCheckBoxValid{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+    .dataCheckBoxValid {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.8rem;
         font-weight: bold;
         color: red;
-    }  
-    
-    .dataCheckBox{
+    }
+
+    .dataCheckBox {
         margin-bottom: 0.5rem;
         display: flex;
     }
-    
-    .dataCheckBoxInput{
+
+    .dataCheckBoxInput {
         height: 1rem;
         color: black;
-    
     }
-    
-    .dataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .dataCheckBoxValue {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 1rem;
         color: black;
         position: relative;
         margin-left: 0.5rem;
     }
-    
 }
 
-
-
-.dataCheckBoxLabelValid{
+.dataCheckBoxLabelValid {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1%;
 }
-
-
-
-
-
-
-
-
-
-

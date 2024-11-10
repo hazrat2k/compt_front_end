@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router";
 
 import "./lastPageInfo.css";
+import imgfile from "../../assets/images/uploadImg.png";
 import signImg from "../../assets/images/uploadImg.png";
 
 import Logo from "../../component/loan_apply/logo/logo";
@@ -17,14 +18,19 @@ export default function LastPageInfo() {
         state["used"] === "no" ||
         typeof last_data["SIGN_PIC"] === "undefined"
     ) {
+        last_data["PROFILE_PIC"] = imgfile;
         last_data["SIGN_PIC"] = signImg;
     }
 
+    const [proPicFile, setProPicFile] = useState(last_data["PROFILE_PIC"]);
+    const [proPhoto, setProPhoto] = useState(last_data["PROFILE_PHOTO"]);
+    const [proPicFileError, setProPicFileError] = useState([]);
+
     const [signFile, setSignFile] = useState(last_data["SIGN_PIC"]);
     const [signFileImg, setSignFileImg] = useState(last_data["SIGN_IMG"]);
-
     const [signFileError, setSignFileError] = useState([]);
 
+    const profilePicRef = useRef(null);
     const signPicRef = useRef(null);
 
     const scrollToSection = (elementRef) => {
@@ -34,12 +40,31 @@ export default function LastPageInfo() {
         });
     };
 
+    const handleChange = (e) => {
+        setProPicFile(URL.createObjectURL(e.target.files[0]));
+        setProPhoto(e.target.files[0]);
+    };
+
     const handleSignChange = (e) => {
         setSignFile(URL.createObjectURL(e.target.files[0]));
         setSignFileImg(e.target.files[0]);
     };
 
     const validLastInfo = () => {
+        if (proPicFile === imgfile) {
+            const tem = [];
+            tem.push(
+                <span className="profilePictureErrorText">
+                    আবেদনকারীর ছবি দিন***
+                </span>
+            );
+            setProPicFileError(tem);
+            scrollToSection(profilePicRef);
+            return false;
+        } else {
+            setProPicFileError([]);
+        }
+
         if (signFile === signImg) {
             const tem = [];
             tem.push(
@@ -68,6 +93,8 @@ export default function LastPageInfo() {
 
         if (button == "second") {
             if (validLastInfo()) {
+                last_data["PROFILE_PIC"] = proPicFile;
+                last_data["PROFILE_PHOTO"] = proPhoto;
                 last_data["SIGN_PIC"] = signFile;
                 last_data["SIGN_IMG"] = signFileImg;
                 const file = state["file"];
@@ -124,6 +151,17 @@ export default function LastPageInfo() {
                     </div>
                 </div>
 
+                <div ref={profilePicRef} className="profileImg">
+                    <img className="proImgFile" src={proPicFile} />
+                    <span className="profilePictureText">আবেদনকারীর ছবি*</span>
+                    {proPicFileError}
+                    <input
+                        className="profileImgFile"
+                        type="file"
+                        onChange={handleChange}
+                    />
+                </div>
+
                 <div className="signature" ref={signPicRef}>
                     <div className="signPic">
                         <img className="signImg" src={signFile} />
@@ -176,4 +214,3 @@ export default function LastPageInfo() {
         </div>
     );
 }
-

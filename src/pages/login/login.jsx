@@ -3,9 +3,25 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
+import NavBar from "../../component/page_compo/navBar/navBar";
+import Footer from "../../component/page_compo/footer/footer";
+
 import "./login.css";
 
 import Logo from "../../component/loan_apply/logo/logo";
+import ToTitleCase from "../../utils/functions/toTitleCase";
 
 export default function Login() {
     var emp_data = [];
@@ -15,23 +31,25 @@ export default function Login() {
 
     const loginNavigate = useNavigate();
 
+    const [log_loan_type, setLog_loan_type] = useState("");
+
+    const loan_type_check = [
+        "",
+        "CONSUMER LOAN",
+        "LAPTOP LOAN",
+        "SBL HOUSE BUILDING LOAN",
+        "SBL WHOLESALE LOAN",
+    ];
+
     const [buetId, setBuetId] = useState("");
-    const [dob, setDob] = useState("");
-    const [error_display, setError_Display] = useState([]);
+    const [buetIdHelperText, setBuetIdHelperText] = useState("");
+
+    const [dob, setDob] = useState(null);
+    const [dobHelperText, setDobHelperText] = useState("");
 
     const [l_error, setL_error] = useState(false);
     const [l_error_text, setL_error_text] = useState("");
     const [l_err_text_color, setL_err_text_color] = useState(true);
-
-    const handleInputChange = (event) => {
-        const name = event.target.name;
-        if (name === "buetId") {
-            setBuetId(event.target.value);
-        }
-        if (name === "dob") {
-            setDob(event.target.value);
-        }
-    };
 
     const duration_calculation = (date) => {
         const now = new Date();
@@ -71,26 +89,26 @@ export default function Login() {
     };
 
     const checkValidation = (employ_data) => {
-        const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
+        // const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
 
-        if (duration["year"] < 10) {
-            setL_error(true);
-            setL_err_text_color(!l_err_text_color);
-            setL_error_text(
-                "Service period needs to be more than 10 years. Yours is " +
-                    duration["year"] +
-                    " years, " +
-                    duration["month"] +
-                    " months, " +
-                    duration["day"] +
-                    " days"
-            );
-            return false;
-        } else {
-            setL_error(false);
-        }
+        // if (duration["year"] < 10) {
+        //     setL_error(true);
+        //     setL_err_text_color(!l_err_text_color);
+        //     setL_error_text(
+        //         "Service period needs to be more than 10 years. Yours is " +
+        //             duration["year"] +
+        //             " years, " +
+        //             duration["month"] +
+        //             " months, " +
+        //             duration["day"] +
+        //             " days"
+        //     );
+        //     return false;
+        // } else {
+        //     setL_error(false);
+        // }
 
-        const retirementDate = new Date(emp_data[0]["DATE_OF_RETIREMENT"]);
+        const retirementDate = new Date(employ_data["DATE_OF_RETIREMENT"]);
         const currentDate = new Date();
 
         if (retirementDate < currentDate) {
@@ -107,29 +125,37 @@ export default function Login() {
 
     const authenticate = async (e) => {
         if (buetId == "") {
-            setL_error(true);
-            setL_err_text_color(!l_err_text_color);
-            setL_error_text("BUET ID is empty!!!");
+            //BUET ID is empty or not
+            setBuetIdHelperText("***BUET ID must be filled.");
+            return;
+        } else if (buetId.length != 10) {
+            //BUET ID length is 10 or not
+            setBuetIdHelperText("***BUET ID is invalid.");
             return;
         } else {
-            setL_error(false);
+            setBuetIdHelperText("");
         }
 
-        if (dob == "") {
-            setL_error(true);
-            setL_err_text_color(!l_err_text_color);
-            setL_error_text("Date of Birth is empty!!!");
+        if (dob == null) {
+            //DOB is empty or not
+            setDobHelperText("***Date of Birth must be filled.");
+            return;
+        } else if (dob.$d == "Invalid Date") {
+            //DOB length is invalid or not
+            setDobHelperText("***Date of Birth is invalid.");
             return;
         } else {
-            setL_error(false);
+            setDobHelperText("");
         }
-
-        var data_found = false;
 
         const uploadData = {
             BUETID: buetId,
-            DATE_OF_BIRTH: new Date(dob).toLocaleDateString("en-US"),
+            DATE_OF_BIRTH: new Date(dob.$d).toLocaleDateString("en-US"),
         };
+
+        var loan_data = [];
+
+        var temp_l_t = ToTitleCase(log_loan_type);
 
         try {
             const res = await axios.post(
@@ -139,16 +165,29 @@ export default function Login() {
 
             emp_data = res.data;
 
+            // checking whether the input employee exists or not
             if (emp_data.length == 0) {
                 setL_error(true);
                 setL_err_text_color(!l_err_text_color);
                 setL_error_text(
-                    "Invalid BUET ID and/or password \n Try Again!!!"
+                    "BUET ID doesn't match with Date of Birth \n Try Again!!!"
                 );
                 return;
             } else {
                 setL_error(false);
             }
+
+            // const uploadLoan = {
+            //     EMPLOYEEID: emp_data[0]["EMPLOYEEID"],
+            //     LOAN_TYPE: temp_l_t,
+            // };
+
+            // const loan_res = await axios.post(
+            //     "http://localhost:8800/loan_with_type",
+            //     uploadLoan
+            // );
+
+            // loan_data = loan_res.data;
 
             const uploadPay = {
                 EMPLOYEEID: emp_data[0]["EMPLOYEEID"],
@@ -158,11 +197,23 @@ export default function Login() {
                 "http://localhost:8800/pay_valid",
                 uploadPay
             );
+
             pay_data = pay_res.data;
         } catch (err) {
             console.log(err);
         }
 
+        // // does have more selected loan or not
+        // if (loan_data.length != 0) {
+        //     setL_error(true);
+        //     setL_err_text_color(!l_err_text_color);
+        //     setL_error_text("You already have a " + temp_l_t + " running");
+        //     return;
+        // } else {
+        //     setL_error(false);
+        // }
+
+        //Getting last month payment or not
         if (pay_data.length == 0) {
             setL_error(true);
             setL_err_text_color(!l_err_text_color);
@@ -172,47 +223,112 @@ export default function Login() {
             setL_error(false);
         }
 
+        // whether service period is more than 10 years or not.
         if (checkValidation(emp_data[0])) {
-            loginNavigate("/application/1", {
-                state: { info: emp_data[0], used: "no" },
+            loginNavigate("/employeedash", {
+                state: {
+                    info: emp_data[0],
+                },
             });
         }
     };
 
+    const handleLoginLoanChange = (e) => {
+        setLog_loan_type(e.target.value);
+    };
+
     return (
         <div className="login_body">
-            <div className="login_logo">
-                <Logo />
-            </div>
-            <div>
-                <div className="login">
-                    <div className="login_label">Application Login</div>
+            <NavBar hide={{ nav_mid: true }} />
 
-                    <div className="login_form">
+            <div className="login_context">
+                <div className="login_label">Employee Login</div>
+
+                {/* <Box sx={{ minWidth: 120, fontFamily: "PT Serif" }}>
+                    <FormControl fullWidth>
+                        <InputLabel
+                            id="demo-simple-select-label"
+                            className="log_font"
+                        >
+                            Loan Type
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            className="log_font"
+                            value={log_loan_type}
+                            label="Loan Type"
+                            onChange={handleLoginLoanChange}
+                        >
+                            <MenuItem
+                                value="HOUSE BUILDING LOAN"
+                                className="log_font"
+                            >
+                                HOUSE BUILDING LOAN
+                            </MenuItem>
+                            <MenuItem
+                                value="CONSUMER LOAN"
+                                className="log_font"
+                            >
+                                CONSUMER LOAN
+                            </MenuItem>
+                            <MenuItem value="LAPTOP LOAN" className="log_font">
+                                LAPTOP LOAN
+                            </MenuItem>
+                            <MenuItem
+                                value="SBL HOUSE BUILDING LOAN"
+                                className="log_font"
+                            >
+                                SBL HOUSE BUILDING LOAN
+                            </MenuItem>
+                            <MenuItem
+                                value="SBL WHOLESALE LOAN"
+                                className="log_font"
+                            >
+                                SBL WHOLESALE LOAN
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box> */}
+
+                {/* {loan_type_check.includes(log_loan_type) ? (
+                    <div className="alert_msg">Select HOUSE BUILDING LOAN</div>
+                ) : (
+                    <div className="login">
                         <div className="login_form_items">
-                            <div className="login_text_area">
-                                <input
-                                    type="text"
-                                    id="buetId"
-                                    name="buetId"
-                                    placeholder="BUET ID"
-                                    className="login_text_input"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div className="login_text_area">
-                                <input
-                                    type="text"
-                                    id="dob"
-                                    name="dob"
-                                    placeholder="DOB"
-                                    onFocus={(e) => (e.target.type = "date")}
-                                    className="login_text_input"
-                                    min="1900-01-01"
-                                    max="2025-01-01"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
+                            <TextField
+                                error={buetIdHelperText != ""}
+                                id="outlined-basic"
+                                label="BUET ID"
+                                className="log_font"
+                                variant="outlined"
+                                value={buetId}
+                                onChange={(e) => setBuetId(e.target.value)}
+                                helperText={buetIdHelperText}
+                                style={{
+                                    width: "260px",
+                                    marginBottom: "5px",
+                                }}
+                            />
+
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={["DatePicker"]}>
+                                    <DatePicker
+                                        label="Date of Birth"
+                                        value={dob}
+                                        disableFuture
+                                        onChange={(newValue) =>
+                                            setDob(newValue)
+                                        }
+                                        slotProps={{
+                                            textField: {
+                                                error: dobHelperText != "",
+                                                helperText: dobHelperText,
+                                            },
+                                        }}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
 
                             <div className="login_text_area">
                                 <div
@@ -241,8 +357,72 @@ export default function Login() {
                             )}
                         </div>
                     </div>
+                )} */}
+
+                <div className="login">
+                    <div className="login_form_items">
+                        <TextField
+                            error={buetIdHelperText != ""}
+                            id="outlined-basic"
+                            label="BUET ID"
+                            className="log_font"
+                            variant="outlined"
+                            value={buetId}
+                            onChange={(e) => setBuetId(e.target.value)}
+                            helperText={buetIdHelperText}
+                            style={{
+                                width: "260px",
+                                marginBottom: "5px",
+                            }}
+                        />
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={["DatePicker"]}>
+                                <DatePicker
+                                    label="Date of Birth"
+                                    value={dob}
+                                    disableFuture
+                                    onChange={(newValue) => setDob(newValue)}
+                                    slotProps={{
+                                        textField: {
+                                            error: dobHelperText != "",
+                                            helperText: dobHelperText,
+                                        },
+                                    }}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
+
+                        <div className="login_text_area">
+                            <div
+                                className="login_btn not-selectable"
+                                onClick={authenticate}
+                            >
+                                LOGIN
+                            </div>
+                        </div>
+
+                        {l_error ? (
+                            <div className="login_text_area">
+                                <div
+                                    className="login_error_Text"
+                                    style={{
+                                        color: l_err_text_color
+                                            ? "red"
+                                            : "crimson",
+                                    }}
+                                >
+                                    {l_error_text}
+                                </div>
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                    </div>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }

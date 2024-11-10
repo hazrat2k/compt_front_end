@@ -4,6 +4,10 @@ import "./salServInfo.css";
 import Logo from "../../component/loan_apply/logo/logo";
 import axios from "axios";
 
+import NavBar from "../../component/page_compo/navBar/navBar";
+import Footer from "../../component/page_compo/footer/footer";
+
+import ToTitleCase from "../../utils/functions/toTitleCase";
 import ServiceInfo from "../../component/loan_apply/serviceInfo/serviceInfo";
 import SalaryInfo from "../../component/loan_apply/salaryInfo/salaryInfo";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
@@ -28,7 +32,7 @@ export default function SalServInfo() {
         const fetch_loan_data = async () => {
             try {
                 const res = await axios.post("http://localhost:8800/loan", {
-                    SALARY_ID: salServData["EMPLOYEEID"],
+                    EMPLOYEEID: salServData["EMPLOYEEID"],
                 });
                 setLoan_file(res.data);
 
@@ -67,11 +71,13 @@ export default function SalServInfo() {
 
     return (
         <div>
-            <div className="salServ_logo">
-                <Logo />
-            </div>
+            <NavBar hide={{ nav_mid: true }} />
 
             <div className="salServ_info">
+                <div className="basic_label">
+                    {ToTitleCase(salServData["LOAN_TYPE"])} Application Form
+                </div>
+
                 <ServiceInfo
                     service_data={state["info"]}
                     setServData={(data) => {
@@ -88,13 +94,15 @@ export default function SalServInfo() {
                 />
 
                 <DoubleButton
-                    firstButtonName="পূর্ববর্তী"
-                    secondButtonName="পরবর্তী"
+                    firstButtonName="Previous"
+                    secondButtonName="Next"
                     clickedButton={(clicked) => {
                         onSalServAuthenticate(clicked);
                     }}
                 />
             </div>
+
+            <Footer />
         </div>
     );
 }

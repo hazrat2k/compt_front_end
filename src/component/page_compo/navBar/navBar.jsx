@@ -1,60 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router";
-import { useMediaQuery } from 'react-responsive';
+import { useMediaQuery } from "react-responsive";
 import "./navBar.css";
 import Logo from "../logo/logo";
 
-export default function NavBar(props){
-
-
+export default function NavBar(props) {
     const navNavigate = useNavigate();
 
-    var tl = gsap.timeline({ defaults: { duration: 0.5, ease: 'expo.inOut' } });
-    var isMobile = useMediaQuery({query: '(max-width: 600px)'});
+    var tl = gsap.timeline({ defaults: { duration: 0.5, ease: "expo.inOut" } });
+    var isMobile = useMediaQuery({ query: "(max-width: 600px)" });
     var height_ = isMobile ? "40vh" : "80vh";
 
     var nav_mid_display = (
-
         <div className="navbar_middle_items">
-            <div className="nav_mid mem_login" onClick={() => {navNavigate("/login");}}>
-                Personnel Login
-            </div>
+            <a href="/login" style={{ textDecoration: "none" }}>
+                <div className="nav_mid mem_login">Personnel Login</div>
+            </a>
 
-            <div className="nav_mid loan_apply" onClick={() => {navNavigate("/loanApplication");}}>
-                Loan Application
-            </div>
+            <a href="/employeelogin" style={{ textDecoration: "none" }}>
+                <div className="nav_mid loan_apply">Employee Login</div>
+            </a>
         </div>
     );
 
-
-    if(props.hide !== undefined){
-        if(props.hide["nav_mid"]){
+    if (props.hide !== undefined) {
+        if (props.hide["nav_mid"]) {
             nav_mid_display = [];
         }
     }
-        
 
     const onNavOpen = () => {
-
         if (tl.reversed()) {
             tl.play();
         } else {
-            tl.to('.nav_items_with_close', { right: "-50vw"})
-                .to('.nav_items_with_close', { opacity: 1, right: 0})
-                .to('.nav_items_with_close', { height: height_ }, '-=.1')
-                .to('.navbar_item', { opacity: 1, pointerEvents: 'all', stagger: .2 }, '-=.8')
-                .to('.close', { opacity: 1, pointerEvents: 'all' }, "-=.8");
-                
+            tl.to(".nav_items_with_close", { right: "-50vw" })
+                .to(".nav_items_with_close", { opacity: 1, right: 0 })
+                .to(".nav_items_with_close", { height: height_ }, "-=.1")
+                .to(
+                    ".navbar_item",
+                    { opacity: 1, pointerEvents: "all", stagger: 0.2 },
+                    "-=.8"
+                )
+                .to(".close", { opacity: 1, pointerEvents: "all" }, "-=.8");
         }
-
     };
-
 
     const onNavClose = () => {
         tl.reverse();
     };
-
 
     const [padVal, setpadVal] = useState("5rem");
     const [height, setheight] = useState("9rem");
@@ -67,70 +61,103 @@ export default function NavBar(props){
         window.scrollTo(0, 0);
         window.addEventListener("scroll", listenScrollEvent);
         return () => {
-          window.removeEventListener("scroll", listenScrollEvent);
+            window.removeEventListener("scroll", listenScrollEvent);
         };
-      }, []);
+    }, []);
 
-    return(
-        <> 
-            <div className="logo_and_navbar" style={{height: height,paddingLeft: padVal, paddingRight: padVal, transition: "all 0.5s"}}>
+    return (
+        <>
+            <div
+                className="logo_and_navbar"
+                style={{
+                    height: height,
+                    paddingLeft: padVal,
+                    paddingRight: padVal,
+                    transition: "all 0.5s",
+                }}
+            >
                 <div className="logo_with_nav_mid">
-
                     <Logo />
                     {nav_mid_display}
-                    
                 </div>
 
-
                 <div className="navbar_items">
-
                     <div className="container" onClick={onNavOpen}>
                         <div className="bars"></div>
                     </div>
 
                     <div className="nav_items_with_close">
-                        <div className="close" onClick={onNavClose} >
+                        <div className="close" onClick={onNavClose}>
                             <div></div>
                         </div>
 
                         <div className="nav_items">
-                            <div className="navbar_item nav_about" onClick={() => {navNavigate("/aboutus")}}>
-                                About Us
-                            </div>
+                            <a
+                                href="/aboutus"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_about">
+                                    About Us
+                                </div>
+                            </a>
 
-                            <div className=" navbar_item nav_personnel" onClick={() => {navNavigate("/administration")}}>
-                                Administration
-                            </div>
+                            <a
+                                href="/administration"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className=" navbar_item nav_personnel">
+                                    Administration
+                                </div>
+                            </a>
 
-                            <div className="navbar_item nav_services" onClick={() => {navNavigate("/services")}}>
-                                Services
-                            </div>
+                            <a
+                                href="/services"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_services">
+                                    Services
+                                </div>
+                            </a>
 
-                            <div className="navbar_item nav_sections" onClick={() => {navNavigate("/sections")}}>
-                                Sections
-                            </div>
+                            <a
+                                href="/sections"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_sections">
+                                    Sections
+                                </div>
+                            </a>
 
-                            <div className="navbar_item nav_downloads" onClick={() => {navNavigate("/downloads")}}>
-                                Downloads
-                            </div>
+                            <a
+                                href="/downloads"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_downloads">
+                                    Downloads
+                                </div>
+                            </a>
 
-                            <div className="navbar_item nav_notices" onClick={() => {navNavigate("/notices")}}>
-                                Notices
-                            </div>
+                            <a
+                                href="/notices"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_notices">
+                                    Notices
+                                </div>
+                            </a>
 
-                            <div className="navbar_item nav_contact" onClick={() => {navNavigate("/contact")}}>
-                                Contact
-                            </div>
+                            <a
+                                href="/contact"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_contact">
+                                    Contact
+                                </div>
+                            </a>
                         </div>
                     </div>
-
-
-
-
                 </div>
-                
             </div>
         </>
-
     );
 }

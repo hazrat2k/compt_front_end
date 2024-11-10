@@ -1,145 +1,117 @@
-
-
- 
 @media screen and (max-width: 800px) {
-
-
-    .serviceInfo{
+    .serviceInfo {
         width: 80%;
-        border: 1px solid crimson;
-        border-radius: 1rem;
-        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-        margin-top: 2%;
         margin-bottom: 2%;
     }
 
-    .serviceField{
+    .serviceField {
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     }
 
-
-    .serviceInfoLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+    .serviceInfoLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.7rem;
         font-weight: bold;
         color: black;
         text-align: center;
     }
 
-    .siDataCheckBoxField{
+    .siDataCheckBoxField {
         display: flex;
         width: 100%;
         margin-bottom: 1%;
     }
-    
-    
-    .siDataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .siDataCheckBoxLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.6rem;
         color: black;
         width: 25%;
         margin-bottom: 10px;
     }
 
-
-    .siCheckBox{
+    .siCheckBox {
         margin-left: 1%;
         display: flex;
         align-items: center;
         align-content: center;
     }
 
-    .siDataCheckBox{
+    .siDataCheckBox {
         margin-right: 0.5rem;
         float: left;
     }
-    
-    .siDataCheckBoxInput{
+
+    .siDataCheckBoxInput {
         height: 0.8rem;
         width: 20px;
         color: black;
-    
     }
-    
-    .siDataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .siDataCheckBoxValue {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.6rem;
         color: black;
         position: relative;
     }
-
-
 }
 
-
-
-
 @media screen and (min-width: 800px) {
-
-    .serviceInfo{
+    .serviceInfo {
         width: 70%;
-        border: 1px solid crimson;
-        border-radius: 1rem;
-        padding: 1rem 1rem 1rem 1rem;
-        margin-top: 2%;
         margin-bottom: 2%;
-        
     }
 
-    .serviceField{
+    .serviceField {
         padding: 1rem 1rem 1rem 1rem;
     }
 
-
-    .serviceInfoLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
-        font-size: 1rem;
+    .serviceInfoLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+        font-size: 1.2rem;
         font-weight: bold;
         color: black;
         text-align: center;
+        margin-bottom: 2%;
     }
 
-    .siDataCheckBoxField{
+    .siDataCheckBoxField {
         display: flex;
         width: 100%;
         margin-bottom: 1%;
     }
-    
-    
-    .siDataCheckBoxLabel{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .siDataCheckBoxLabel {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.8rem;
         color: black;
         width: 25%;
         margin-bottom: 10px;
     }
 
-    .siCheckBox{
+    .siCheckBox {
         margin-left: 1%;
         display: flex;
         align-items: center;
         align-content: center;
     }
 
-
-    .siDataCheckBox{
+    .siDataCheckBox {
         margin-right: 0.5rem;
         float: left;
     }
-    
-    .siDataCheckBoxInput{
+
+    .siDataCheckBoxInput {
         height: 0.8rem;
         width: 20px;
         color: black;
-    
     }
-    
-    .siDataCheckBoxValue{
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+
+    .siDataCheckBoxValue {
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.8rem;
         color: black;
         position: relative;
         margin-left: 0.5rem;
     }
-
 }

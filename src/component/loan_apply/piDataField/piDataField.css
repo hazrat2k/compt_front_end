@@ -1,44 +1,37 @@
-
-
-
 @media screen and (max-width: 800px) {
-
-    .piDataField{
+    .piDataField {
         width: 100%;
         margin-bottom: 2%;
         display: flex;
     }
 
-
-    .piDataLabel{
-
+    .piDataLabel {
         width: 25%;
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         text-align: justify;
         font-size: 0.6rem;
         color: black;
         margin-right: 0.5rem;
     }
 
-    .piDataInputField{
+    .piDataInputField {
         display: flex;
         width: 75%;
         align-items: center;
         align-content: center;
     }
 
-
-    .piDataInput{
+    .piDataInput {
         height: 0.8rem;
         width: 100%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.6rem;
         color: #0c0c0c;
-        text-transform:uppercase;
+        text-transform: uppercase;
     }
 
-    .piDataClearBtn{
+    .piDataClearBtn {
         display: block;
         float: right;
         height: 1.2rem;
@@ -50,43 +43,41 @@
     }
 }
 
-
 @media screen and (min-width: 800px) {
-    .piDataField{
+    .piDataField {
         width: 100%;
         margin-bottom: 2%;
         display: flex;
         align-items: center;
     }
 
-
-    .piDataLabel{
+    .piDataLabel {
         width: 26%;
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         text-align: justify;
         font-size: 0.8rem;
         color: black;
         margin-right: 1rem;
     }
 
-    .piDataInputField{
+    .piDataInputField {
         display: flex;
         width: 75%;
         align-items: center;
         align-content: center;
     }
 
-    .piDataInput{
+    .piDataInput {
         height: 1.3rem;
         width: 100%;
         background: 0 0;
-        font-family: 'AdorshoLipi', Arial, PT Serif !important;
+        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.8rem;
         color: black;
-        text-transform:uppercase;
+        text-transform: uppercase;
     }
 
-    .piDataClearBtn{
+    .piDataClearBtn {
         display: block;
         float: right;
         font-size: 0.8rem;
@@ -96,5 +87,4 @@
         background-color: white;
         border-color: white;
     }
-
 }

@@ -1,26 +1,13 @@
 @media screen and (max-width: 800px) {
-    .login{    
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        justify-items: center;
-        grid-template-columns: 100%;
-    }
-
-    .login_label{
+    .login_label {
         text-align: center;
         font-size: 1.5rem;
         font-weight: bold;
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-    }
-    
-    
-    .login_form{
-        width: 70%;
-        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+        margin-bottom: 0.5rem;
     }
 
-    .login_btn{
+    .login_btn {
         margin-top: 5%;
         text-align: center;
         align-self: center;
@@ -34,7 +21,7 @@
         font-weight: bold;
     }
 
-    .login_btn:hover{
+    .login_btn:hover {
         margin-top: 5%;
         text-align: center;
         align-self: center;
@@ -48,8 +35,7 @@
         font-weight: bold;
     }
 
-
-    .login_error_Text{
+    .login_error_Text {
         height: 1rem;
         width: 100%;
         background: 0 0;
@@ -59,43 +45,28 @@
         text-align: center;
     }
 
-    .login_text_input{
+    .login_text_input {
         height: 1.2rem;
         width: 100%;
         background: 0 0;
         font-size: 0.8rem;
         color: #0c0c0c;
-        
     }
 }
 
-
 @media screen and (min-width: 800px) {
-    .login{
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        justify-items: center;
-        grid-template-columns: 100%;
-    }
-
-    .login_label{
+    .login_label {
         text-align: center;
         font-size: 2.5rem;
         font-weight: bold;
         padding: 1rem 1rem 1rem 1rem;
-    }
-    
-    
-    .login_form{
-        width: 40%;
-        padding: 1rem 1rem 1rem 1rem;
+        margin-bottom: 1rem;
     }
 
-    .login_btn{
+    .login_btn {
         margin-top: 5%;
         text-align: center;
-        padding: 1rem 2rem 1rem 2rem;
+        padding: 0.5rem 1.5rem 0.5rem 1.5rem;
         font-size: 1rem;
         color: crimson;
         border-radius: 2rem;
@@ -104,14 +75,14 @@
         font-weight: bold;
     }
 
-    .login_btn:hover{
+    .login_btn:hover {
         color: white;
         background-color: crimson;
         border-color: white;
         cursor: pointer;
     }
 
-    .login_error_Text{
+    .login_error_Text {
         height: 1.2rem;
         width: 100%;
         background: 0 0;
@@ -121,28 +92,42 @@
         text-align: center;
     }
 
-    .login_text_input{
+    .login_text_input {
         height: 1.5rem;
         width: 100%;
         background: 0 0;
         font-size: 1rem;
         color: #0c0c0c;
-        
     }
 }
 
-
-.login_form_items{
+.login_body {
     display: grid;
-    margin-bottom: 5%;
-    padding: 2rem 1rem 2rem 1rem;
-    border: 1px solid crimson;
-    border-radius: 20px;
-    align-items: center;
-    justify-items: center;
+    grid-template-columns: 100%;
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
 
-.login_text_area{
+.log_font{
+    font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
+}
+
+.login {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 100%;
+}
+
+.login_form_items {
+    display: grid;
+    margin-bottom: 5%;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+.login_text_area {
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     width: 90%;
     display: grid;
@@ -150,24 +135,31 @@
     justify-items: center;
 }
 
-
-.login_logo{
+.login_logo {
     float: left;
 }
 
-.login_body{
+.login_context{
     display: grid;
     grid-template-columns: 100%;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+}
 
+
+.alert_msg{
+    text-align: center;
+    color: gray;
+    font-size: x-large;
+    margin-top: 20px;
 }
 
 .not-selectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
-
-

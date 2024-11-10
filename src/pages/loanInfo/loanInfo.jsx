@@ -2,10 +2,43 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import axios from "axios";
 
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 import "./loanInfo.css";
+
+import NavBar from "../../component/page_compo/navBar/navBar";
+import Footer from "../../component/page_compo/footer/footer";
+
+import ToTitleCase from "../../utils/functions/toTitleCase";
 
 import Logo from "../../component/loan_apply/logo/logo";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
+
+const createData = (
+    serialNo,
+    loanName,
+    loanAmnt,
+    instAmnt,
+    totInstAmnt,
+    paidInstNo,
+    unpaidInstAmnt
+) => {
+    return {
+        serialNo,
+        loanName,
+        loanAmnt,
+        instAmnt,
+        totInstAmnt,
+        paidInstNo,
+        unpaidInstAmnt,
+    };
+};
 
 export default function LoanInfo() {
     const loanNavigate = useNavigate();
@@ -170,13 +203,31 @@ export default function LoanInfo() {
         );
     }
 
+    const rows = [];
+
+    for (let i = 0; i < loan_table_value.length; i++) {
+        rows.push(
+            createData(
+                table_data[i][0],
+                table_data[i][1],
+                loan_table_value[i][0],
+                loan_table_value[i][1],
+                loan_table_value[i][2],
+                loan_table_value[i][3],
+                loan_table_value[i][4],
+                loan_table_value[i][5],
+                loan_table_value[i][6]
+            )
+        );
+    }
+
     loan_table_value = loan_table_value[0].map((_, colIndex) =>
         loan_table_value.map((row) => row[colIndex])
     );
 
     loan_data["LOAN_DETAILS"] = loan_table_value;
 
-    function onLoanAuthenticate(button) {
+    const onLoanAuthenticate = (button) => {
         if (button == "first") {
             const file = state["file"];
             loanNavigate("/application/3", {
@@ -186,60 +237,153 @@ export default function LoanInfo() {
 
         if (button == "second") {
             const file = state["file"];
-            loanNavigate("/application/5", {
-                state: { info: loan_data, file: file, used: state_used },
+            loanNavigate("/application/preview", {
+                // state: { info: loan_data, file: file, used: state_used },
+                state: { info: loan_data, used: "yes" },
             });
         }
     }
+    
 
     return (
         <div>
-            <div className="loan_logo">
-                <Logo />
-            </div>
+            <NavBar hide={{ nav_mid: true }} />
+
             <div className="loan_info">
+                <div className="basic_label">
+                    {ToTitleCase(loan_data["LOAN_TYPE"])} Application Form
+                </div>
+
                 <div className="loanInfo">
                     <div className="loanInfoLabel">
-                        ১১. বিশ্ববিদ্যালয় ও সোনালী ব্যাংক হতে গৃহীত ঋণের
+                        ১০. বিশ্ববিদ্যালয় ও সোনালী ব্যাংক হতে গৃহীত ঋণের
                         তথ্যাবলী (কম্পট্রোলার অফিস কর্তৃক যাচাইকৃত) :
                     </div>
                     <div className="loanInfoTable">
-                        <table>
-                            <thead>
-                                <tr className="tableHead">
-                                    <th className="tableHeadText">ক্রমিক নং</th>
-                                    <th className="tableHeadText">ঋণের নাম</th>
-                                    <th className="tableHeadText">
-                                        ঋণের পরিমাণ
-                                    </th>
-                                    <th className="tableHeadText">
-                                        কিস্তির পরিমাণ
-                                    </th>
-                                    <th className="tableHeadText">
-                                        মোট কিস্তির সংখ্যা
-                                    </th>
-                                    <th className="tableHeadText">
-                                        পরিশোধিত কিস্তির সংখ্যা
-                                    </th>
-                                    <th className="tableHeadText">
-                                        অপরিশোধিত ঋণের পরিমাণ (সুদ সহ)
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            {jsx_table_data}
-                        </table>
+                        <TableContainer component={Paper}>
+                            <Table
+                                sx={{ minWidth: 650 }}
+                                aria-label="simple table"
+                            >
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            ক্রমিক নং
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            ঋণের নাম
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            ঋণের পরিমাণ
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            কিস্তির পরিমাণ
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            মোট কিস্তির সংখ্যা
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            পরিশোধিত কিস্তির সংখ্যা
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            অপরিশোধিত ঋণের পরিমাণ (সুদ সহ)
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.map((row) => (
+                                        <TableRow
+                                            key={row.serialNo}
+                                            sx={{
+                                                "&:last-child td, &:last-child th":
+                                                    {
+                                                        border: 0,
+                                                    },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                                align="center"
+                                                className="sal_bold"
+                                            >
+                                                {row.serialNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="justified"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanName}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanAmnt}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.instAmnt}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.totInstAmnt}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.paidInstNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.unpaidInstAmnt}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
                 </div>
 
                 <DoubleButton
-                    firstButtonName="পূর্ববর্তী"
-                    secondButtonName="পরবর্তী"
+                    firstButtonName="Previous"
+                    secondButtonName="Next"
                     clickedButton={(clicked) => {
                         onLoanAuthenticate(clicked);
                     }}
                 />
             </div>
+
+            <Footer />
         </div>
     );
 }

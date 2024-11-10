@@ -10,6 +10,7 @@ import SanctionCopy from "./pages/sanctionCopy/sanctionCopy";
 import BillCopy from "./pages/billCopy/billCopy";
 
 import Login from "./pages/login/login";
+import EmployeeDash from "./pages/employeeDash/employeeDash";
 import BasicInfo from "./pages/basicInfo/basicInfo";
 import PersonalInfo from "./pages/personalInfo/personalInfo";
 import SalServInfo from "./pages/salServInfo/salServInfo";
@@ -55,7 +56,9 @@ export default function App() {
                     element={<BillCopy />}
                 />
 
-                <Route path="/loanApplication" element={<Login />} />
+                <Route path="/employeelogin" element={<Login />} />
+
+                <Route path="/employeeDash" element={<EmployeeDash />} />
 
                 <Route path="/application/1" element={<BasicInfo />} />
 

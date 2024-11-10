@@ -19,6 +19,7 @@ import moment from "moment";
 import logo_image from "../../assets/images/logo.png";
 import checkBox_image from "../../assets/images/checkbox_image.png";
 
+import PT_Serif from "../../assets/fonts/PTSerif-Regular.ttf";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import Noto_Serif_Bengali from "../../assets/fonts/Noto_Serif_Bengali.ttf";
 import Noto_Serif_Bengali_Bold from "../../assets/fonts/Noto_Serif_Bengali_Bold.ttf";
@@ -165,6 +166,7 @@ const style_field = StyleSheet.create({
         fontSize: "12pt",
         fontWeight: "bold",
         textAlign: "justify",
+        marginTop: "8px"
     },
 
     preOtherFieldText: {
@@ -186,16 +188,21 @@ const style_field = StyleSheet.create({
 
 const style_pic = StyleSheet.create({
     preProPic: {
+        display: "flex",
+        flexDirection: "column",
         padding: "5pt",
+        height: "100px",
+        width: "100px",
+        border: "1px solid black",
+        justifyContent: "center",
+        alignSelf: "center"
     },
 
     preProPicImg: {
-        height: "100pt",
-        width: "100pt",
         textAlign: "center",
-        padding: "5pt",
-        position: "relative",
-        cursor: "pointer",
+        fontFamily: "English",
+        fontSize: "10px",
+        color: "gray",
     },
 
     preSignPic: {
@@ -204,6 +211,7 @@ const style_pic = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        marginTop: "10pt",
     },
 
     preSignPicImg: {
@@ -269,6 +277,16 @@ const style_table = StyleSheet.create({
         textAlign: "center",
     },
 
+    row_border: {
+        borderTop: "1px solid black",
+        borderLeft: "1px solid black",
+        borderRight: "1px solid black",
+    },
+
+    row_bot_border: {
+        borderBottom: "1px solid black",
+    },
+
     double_column: {
         display: "flex",
         flexDirection: "row",
@@ -276,14 +294,14 @@ const style_table = StyleSheet.create({
     },
 
     border_column: {
-        border: "1px solid black",
+        borderRight: "1px solid black",
     },
 
     index_column: {
         width: "5%",
         fontFamily: "English Bold",
         fontSize: "10pt",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
@@ -294,7 +312,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -304,7 +322,8 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "center",
-        margin: "2pt",
+        padding: "2pt",
+        paddingBottom: "2pt",
         justifyContent: "center",
     },
 
@@ -314,7 +333,7 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "center",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -324,7 +343,7 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -334,7 +353,7 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -343,7 +362,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         textAlign: "left",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -352,7 +371,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         textAlign: "center",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -360,7 +379,7 @@ const style_table = StyleSheet.create({
         width: "13%",
         fontFamily: "English",
         fontSize: "9pt",
-        margin: "2pt",
+        padding: "2pt",
         justifyContent: "center",
     },
 });
@@ -408,7 +427,7 @@ export default function Application(props) {
         backward_butt: {
             width: back_hover ? "150pt" : "120pt",
             height: "auto",
-            fontFamily: "AdorshoLipi",
+            fontFamily: "PT Serif",
             fontWeight: "bold",
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
@@ -425,7 +444,7 @@ export default function Application(props) {
         download_butt: {
             width: down_hover ? "150pt" : "120pt",
             height: "auto",
-            fontFamily: "AdorshoLipi",
+            fontFamily: "PT Serif",
             fontWeight: "bold",
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
@@ -447,7 +466,7 @@ export default function Application(props) {
     });
 
     const pdfPersoInfo = [
-        ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "i)"],
+        ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)"],
         [
             "Father's / Husband's Name",
             "Mother's Name",
@@ -456,7 +475,6 @@ export default function Application(props) {
             "Present Address",
             "Permanant Address",
             "Date of Birth",
-            "Applicant's NID",
             "Nominee's NID",
         ],
         [
@@ -467,7 +485,6 @@ export default function Application(props) {
             app_data["ADDRESS"],
             app_data["ADDRESS"],
             moment(new Date(app_data["DATE_OF_BIRTH"])).format("DD MMM YYYY"),
-            app_data["NID_NO"],
             app_data["NOMINEES_NID"],
         ],
     ];
@@ -511,7 +528,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 4; i < 7; i++) {
+    for (let i = 4; i < 6; i++) {
         pdf_pers_table.push(
             <View style={style_table.row}>
                 <View style={style_table.index_column}>
@@ -531,7 +548,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 7; i < 8; i++) {
+    for (let i = 6; i < 7; i++) {
         pdf_pers_table.push(
             <View style={style_table.row}>
                 <View style={style_table.double_column}>
@@ -661,7 +678,7 @@ export default function Application(props) {
 
     for (let i = 0; i < 1; i++) {
         pdf_sal_table.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.index_column,
@@ -681,8 +698,8 @@ export default function Application(props) {
                 <View
                     style={[
                         style_table.sal_value_column,
-                        style_table.border_column,
                         style_field.preBold,
+                        style_table.border_column,
                     ]}
                 >
                     <Text>{pdfSalInfo[2][i]}</Text>
@@ -690,18 +707,14 @@ export default function Application(props) {
                 <View
                     style={[
                         style_table.sal_value_column,
-                        style_table.border_column,
                         style_field.preBold,
+                        style_table.border_column,
                     ]}
                 >
                     <Text>{pdfSalInfo[3][i]}</Text>
                 </View>
                 <View
-                    style={[
-                        style_table.sal_value_column,
-                        style_table.border_column,
-                        style_field.preBold,
-                    ]}
+                    style={[style_table.sal_value_column, style_field.preBold]}
                 >
                     <Text>{pdfSalInfo[4][i]}</Text>
                 </View>
@@ -709,9 +722,9 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 4; i++) {
         pdf_sal_table.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.index_column,
@@ -744,12 +757,55 @@ export default function Application(props) {
                 >
                     <Text>{nf.format(pdfSalInfo[3][i])}</Text>
                 </View>
+                <View style={[style_table.sal_value_column]}>
+                    <Text>{nf.format(pdfSalInfo[4][i])}</Text>
+                </View>
+            </View>
+        );
+    }
+
+    for (let i = 4; i < 5; i++) {
+        pdf_sal_table.push(
+            <View
+                style={[
+                    style_table.row,
+                    style_table.row_border,
+                    style_table.row_bot_border,
+                ]}
+            >
+                <View
+                    style={[
+                        style_table.index_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{pdfSalInfo[0][i]}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.label_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{pdfSalInfo[1][i]}</Text>
+                </View>
                 <View
                     style={[
                         style_table.sal_value_column,
                         style_table.border_column,
                     ]}
                 >
+                    <Text>{nf.format(pdfSalInfo[2][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.sal_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfSalInfo[3][i])}</Text>
+                </View>
+                <View style={[style_table.sal_value_column]}>
                     <Text>{nf.format(pdfSalInfo[4][i])}</Text>
                 </View>
             </View>
@@ -788,7 +844,7 @@ export default function Application(props) {
 
     for (let i = 0; i < 1; i++) {
         pdf_loan_table.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.loan_index_column,
@@ -842,11 +898,7 @@ export default function Application(props) {
                     <Text>{pdfLoanInfo[5][i]}</Text>
                 </View>
                 <View
-                    style={[
-                        style_table.loan_value_column,
-                        style_table.border_column,
-                        style_field.preBold,
-                    ]}
+                    style={[style_table.loan_value_column, style_field.preBold]}
                 >
                     <Text>{pdfLoanInfo[6][i]}</Text>
                 </View>
@@ -854,9 +906,9 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < 2; i++) {
         pdf_loan_table.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.loan_index_column,
@@ -905,12 +957,71 @@ export default function Application(props) {
                 >
                     <Text>{nf.format(pdfLoanInfo[5][i])}</Text>
                 </View>
+                <View style={[style_table.loan_value_column]}>
+                    <Text>{nf.format(pdfLoanInfo[6][i])}</Text>
+                </View>
+            </View>
+        );
+    }
+
+    for (let i = 2; i < 3; i++) {
+        pdf_loan_table.push(
+            <View
+                style={[
+                    style_table.row,
+                    style_table.row_border,
+                    style_table.row_bot_border,
+                ]}
+            >
+                <View
+                    style={[
+                        style_table.loan_index_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[0][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.label_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{pdfLoanInfo[1][i]}</Text>
+                </View>
                 <View
                     style={[
                         style_table.loan_value_column,
                         style_table.border_column,
                     ]}
                 >
+                    <Text>{nf.format(pdfLoanInfo[2][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[3][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[4][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[5][i])}</Text>
+                </View>
+                <View style={[style_table.loan_value_column]}>
                     <Text>{nf.format(pdfLoanInfo[6][i])}</Text>
                 </View>
             </View>
@@ -919,7 +1030,7 @@ export default function Application(props) {
 
     for (let i = 0; i < 1; i++) {
         pdf_loan_table_2.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.loan_index_column,
@@ -973,11 +1084,7 @@ export default function Application(props) {
                     <Text>{pdfLoanInfo[5][i]}</Text>
                 </View>
                 <View
-                    style={[
-                        style_table.loan_value_column,
-                        style_table.border_column,
-                        style_field.preBold,
-                    ]}
+                    style={[style_table.loan_value_column, style_field.preBold]}
                 >
                     <Text>{pdfLoanInfo[6][i]}</Text>
                 </View>
@@ -985,9 +1092,9 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 3; i < 9; i++) {
+    for (let i = 3; i < 8; i++) {
         pdf_loan_table_2.push(
-            <View style={style_table.row}>
+            <View style={[style_table.row, style_table.row_border]}>
                 <View
                     style={[
                         style_table.loan_index_column,
@@ -1036,12 +1143,71 @@ export default function Application(props) {
                 >
                     <Text>{nf.format(pdfLoanInfo[5][i])}</Text>
                 </View>
+                <View style={[style_table.loan_value_column]}>
+                    <Text>{nf.format(pdfLoanInfo[6][i])}</Text>
+                </View>
+            </View>
+        );
+    }
+
+    for (let i = 8; i < 9; i++) {
+        pdf_loan_table_2.push(
+            <View
+                style={[
+                    style_table.row,
+                    style_table.row_border,
+                    style_table.row_bot_border,
+                ]}
+            >
+                <View
+                    style={[
+                        style_table.loan_index_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[0][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.label_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{pdfLoanInfo[1][i]}</Text>
+                </View>
                 <View
                     style={[
                         style_table.loan_value_column,
                         style_table.border_column,
                     ]}
                 >
+                    <Text>{nf.format(pdfLoanInfo[2][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[3][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[4][i])}</Text>
+                </View>
+                <View
+                    style={[
+                        style_table.loan_value_column,
+                        style_table.border_column,
+                    ]}
+                >
+                    <Text>{nf.format(pdfLoanInfo[5][i])}</Text>
+                </View>
+                <View style={[style_table.loan_value_column]}>
                     <Text>{nf.format(pdfLoanInfo[6][i])}</Text>
                 </View>
             </View>
@@ -1143,12 +1309,10 @@ export default function Application(props) {
                                 name={app_data["REASON_FOR_LOAN"]}
                             />
                         </View>
-
                         <View style={style_pic.preProPic}>
-                            <Image
-                                style={style_pic.preProPicImg}
-                                src={app_data["PROFILE_PIC"]}
-                            />
+                            <Text style={style_pic.preProPicImg}>
+                                Attach Passport Size Image
+                            </Text>
                         </View>
                     </View>
 
@@ -1202,7 +1366,12 @@ export default function Application(props) {
                         </Text>
 
                         <View style={style_table.table}>
-                            <View style={style_table.row}>
+                            <View
+                                style={[
+                                    style_table.row,
+                                    style_table.row_border,
+                                ]}
+                            >
                                 <View
                                     style={[
                                         style_table.loan_index_column,
@@ -1219,17 +1388,18 @@ export default function Application(props) {
                                 >
                                     <Text>Net Pension (One-off)</Text>
                                 </View>
-                                <View
-                                    style={[
-                                        style_table.last_column,
-                                        style_table.border_column,
-                                    ]}
-                                >
+                                <View style={[style_table.last_column]}>
                                     <Text> </Text>
                                 </View>
                             </View>
 
-                            <View style={style_table.row}>
+                            <View
+                                style={[
+                                    style_table.row,
+                                    style_table.row_border,
+                                    style_table.row_bot_border,
+                                ]}
+                            >
                                 <View
                                     style={[
                                         style_table.loan_index_column,
@@ -1246,12 +1416,7 @@ export default function Application(props) {
                                 >
                                     <Text></Text>
                                 </View>
-                                <View
-                                    style={[
-                                        style_table.last_column,
-                                        style_table.border_column,
-                                    ]}
-                                >
+                                <View style={[style_table.last_column]}>
                                     <Text> </Text>
                                 </View>
                             </View>
@@ -1275,10 +1440,9 @@ export default function Application(props) {
                     </View>
 
                     <View style={style_pic.preSignPic}>
-                        <Image
-                            style={style_pic.preSignPicImg}
-                            src={app_data["SIGN_PIC"]}
-                        />
+                        <Text style={style_pic.preSignPicText}>
+                            ---------------------------------
+                        </Text>
                         <Text style={style_pic.preSignPicText}>
                             {" "}
                             Applicant Signature
@@ -1468,7 +1632,7 @@ export default function Application(props) {
                     onMouseEnter={() => setBack_hover(true)}
                     onMouseLeave={() => setBack_hover(false)}
                 >
-                    সম্পাদন
+                    Edit
                 </div>
 
                 <div
@@ -1477,7 +1641,7 @@ export default function Application(props) {
                     onMouseEnter={() => setDown_hover(true)}
                     onMouseLeave={() => setDown_hover(false)}
                 >
-                    জমা দিন
+                    Submit
                 </div>
             </div>
         </>

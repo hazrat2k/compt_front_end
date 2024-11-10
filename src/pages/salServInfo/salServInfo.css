@@ -7,4 +7,5 @@
     display: grid;
     grid-template-columns: 100%;
     justify-items: center;
+    margin-top: 30px;
 }
