@@ -29,6 +29,7 @@ import AdorshoLipi from "../../assets/fonts/AdorshoLipi.ttf";
 import AdorshoLipi_Bold from "../../assets/fonts/AdorshoLipi_Bold.ttf";
 import SuttonyMJ from "../../assets/fonts/SuttonyMJ.ttf";
 import SuttonyMJ_Bold from "../../assets/fonts/SuttonyMJ_Bold.ttf";
+import { secondary } from "../../stores/const/colors";
 
 Font.register({
     family: "English",
@@ -482,10 +483,10 @@ export default function Application(props) {
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
             textAlign: "center",
-            border: back_hover ? "2px solid white" : "2px solid #3f8ba8",
+            border: "2px solid " + back_hover ? "white" : secondary,
             borderRadius: back_hover ? "50pt" : "20pt",
-            backgroundColor: back_hover ? "#3f8ba8" : "white",
-            color: back_hover ? "white" : "#3f8ba8",
+            backgroundColor: back_hover ? secondary : "white",
+            color: back_hover ? "white" : secondary,
             fontSize: back_hover ? "20pt" : "15pt",
             cursor: back_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
@@ -499,10 +500,10 @@ export default function Application(props) {
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
             textAlign: "center",
-            border: down_hover ? "2px solid white" : "2px solid #3f8ba8",
+            border: "2px solid " + down_hover ? "white" : secondary,
             borderRadius: down_hover ? "50pt" : "20pt",
-            backgroundColor: down_hover ? "#3f8ba8" : "white",
-            color: down_hover ? "white" : "#3f8ba8",
+            backgroundColor: down_hover ? secondary : "white",
+            color: down_hover ? "white" : secondary,
             fontSize: down_hover ? "20pt" : "15pt",
             cursor: down_hover ? "pointer" : "default",
             transition: "all ease 0.3s",

@@ -15,6 +15,7 @@ import {
 
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
+import { secondary } from "../../stores/const/colors";
 
 Font.register({
     family: "English Bold",
@@ -220,10 +221,10 @@ export default function BankCopyForm(props) {
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
             textAlign: "center",
-            border: for_hover ? "2px solid white" : "2px solid #3f8ba8",
+            border: "2px solid " + for_hover ? "white" : secondary,
             borderRadius: "20pt",
-            backgroundColor: for_hover ? "#3f8ba8" : "white",
-            color: for_hover ? "white" : "#3f8ba8",
+            backgroundColor: for_hover ? secondary : "white",
+            color: for_hover ? "white" : secondary,
             fontSize: for_hover ? "20pt" : "15pt",
             cursor: for_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
@@ -237,10 +238,10 @@ export default function BankCopyForm(props) {
             padding: "5pt 15pt 5pt 15pt",
             alignSelf: "center",
             textAlign: "center",
-            border: laf_hover ? "2px solid white" : "2px solid #3f8ba8",
+            border: "2px solid " + laf_hover ? "white" : secondary,
             borderRadius: "20pt",
-            backgroundColor: laf_hover ? "#3f8ba8" : "white",
-            color: laf_hover ? "white" : "#3f8ba8",
+            backgroundColor: laf_hover ? secondary : "white",
+            color: laf_hover ? "white" : secondary,
             fontSize: laf_hover ? "20pt" : "15pt",
             cursor: laf_hover ? "pointer" : "default",
             transition: "all ease 0.3s",

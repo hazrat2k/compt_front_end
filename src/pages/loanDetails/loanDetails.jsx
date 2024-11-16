@@ -469,6 +469,7 @@ export default function LoanDetails() {
     };
 
     const off_or_copy = {
+        loan_id: ld_value["loan_id"],
         name: ld_value["applicant_name"],
         desig: ld_value["designation"],
         off_dept: ld_value["office_dept"],

@@ -53,7 +53,7 @@
     cursor: pointer;
 }
 
-.edShowError{
+.edShowError {
     text-align: center;
     padding: 1rem;
     font-weight: bold;
@@ -61,19 +61,19 @@
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
 
-.dia_body{
+.dia_body {
     padding: 0px 20px 20px 20px;
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
 
-.dia_sec_label{
+.dia_sec_label {
     text-align: left;
     font-weight: bold;
     font-size: large;
     margin-bottom: 10px;
+    color: #1976d2;
 }
 
-
-span{
+span {
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
