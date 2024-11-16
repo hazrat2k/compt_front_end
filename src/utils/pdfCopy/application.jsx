@@ -16,6 +16,8 @@ import {
 import axios from "axios";
 import moment from "moment";
 
+import InWords from "../functions/inWords";
+
 import logo_image from "../../assets/images/logo.png";
 import checkBox_image from "../../assets/images/checkbox_image.png";
 
@@ -166,7 +168,7 @@ const style_field = StyleSheet.create({
         fontSize: "12pt",
         fontWeight: "bold",
         textAlign: "justify",
-        marginTop: "8px"
+        marginTop: "8px",
     },
 
     preOtherFieldText: {
@@ -195,7 +197,7 @@ const style_pic = StyleSheet.create({
         width: "100px",
         border: "1px solid black",
         justifyContent: "center",
-        alignSelf: "center"
+        alignSelf: "center",
     },
 
     preProPicImg: {
@@ -245,7 +247,7 @@ const style_data = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "11pt",
         textAlign: "justify",
-        width: "50%",
+        width: "35%",
     },
 
     preDataColon: {
@@ -291,6 +293,7 @@ const style_table = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         flexBasis: "50%",
+        alignItems: "center",
     },
 
     border_column: {
@@ -321,7 +324,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
-        textAlign: "center",
+        textAlign: "left",
         padding: "2pt",
         paddingBottom: "2pt",
         justifyContent: "center",
@@ -343,17 +346,15 @@ const style_table = StyleSheet.create({
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "2pt",
         justifyContent: "center",
     },
 
     salary_label_column: {
-        width: "25%",
+        width: "20%",
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
         textAlign: "left",
-        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -362,7 +363,6 @@ const style_table = StyleSheet.create({
         fontFamily: "English",
         fontSize: "9pt",
         textAlign: "left",
-        padding: "2pt",
         justifyContent: "center",
     },
 
@@ -381,6 +381,56 @@ const style_table = StyleSheet.create({
         fontSize: "9pt",
         padding: "2pt",
         justifyContent: "center",
+    },
+
+    double_index_column: {
+        width: "10%",
+        fontFamily: "English Bold",
+        fontSize: "10pt",
+        padding: "2pt",
+        justifyContent: "center",
+    },
+
+    single_index_column: {
+        width: "5%",
+    },
+
+    double_label_column: {
+        width: "30%",
+        fontFamily: "English Bold",
+        fontSize: "10pt",
+        fontWeight: "bold",
+        padding: "2pt",
+        textAlign: "left",
+    },
+
+    pers_single_label_column: {
+        width: "20%",
+    },
+
+    double_colon_column: {
+        width: "5%",
+        fontFamily: "English Bold",
+        fontSize: "10pt",
+        fontWeight: "bold",
+        padding: "2pt",
+        justifyContent: "center",
+    },
+
+    single_colon_column: {
+        width: "3%",
+    },
+
+    double_value_column: {
+        width: "55%",
+        fontFamily: "English",
+        fontSize: "10pt",
+        padding: "2pt",
+        textAlign: "left",
+    },
+
+    single_value_column: {
+        width: "75%",
     },
 });
 
@@ -495,32 +545,32 @@ export default function Application(props) {
         pdf_pers_table.push(
             <View style={style_table.row}>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         {" "}
                         <Text>{pdfPersoInfo[0][i]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfPersoInfo[1][i]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfPersoInfo[2][i]}</Text>
                     </View>
                 </View>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         {" "}
                         <Text>{pdfPersoInfo[0][i + 1]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfPersoInfo[1][i + 1]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfPersoInfo[2][i + 1]}</Text>
                     </View>
                 </View>
@@ -531,17 +581,37 @@ export default function Application(props) {
     for (let i = 4; i < 6; i++) {
         pdf_pers_table.push(
             <View style={style_table.row}>
-                <View style={style_table.index_column}>
+                <View
+                    style={[
+                        style_table.double_index_column,
+                        style_table.single_index_column,
+                    ]}
+                >
                     {" "}
                     <Text>{pdfPersoInfo[0][i]}</Text>
                 </View>
-                <View style={style_table.salary_label_column}>
+                <View
+                    style={[
+                        style_table.double_label_column,
+                        style_table.pers_single_label_column,
+                    ]}
+                >
                     <Text>{pdfPersoInfo[1][i]}</Text>
                 </View>
-                <View style={style_table.loan_index_column}>
+                <View
+                    style={[
+                        style_table.double_colon_column,
+                        style_table.single_colon_column,
+                    ]}
+                >
                     <Text>:</Text>
                 </View>
-                <View style={style_table.value_column}>
+                <View
+                    style={[
+                        style_table.double_value_column,
+                        style_table.single_value_column,
+                    ]}
+                >
                     <Text>{pdfPersoInfo[2][i]}</Text>
                 </View>
             </View>
@@ -552,32 +622,32 @@ export default function Application(props) {
         pdf_pers_table.push(
             <View style={style_table.row}>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         {" "}
                         <Text>{pdfPersoInfo[0][i]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfPersoInfo[1][i]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfPersoInfo[2][i]}</Text>
                     </View>
                 </View>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         {" "}
                         <Text>{pdfPersoInfo[0][i + 1]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfPersoInfo[1][i + 1]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfPersoInfo[2][i + 1]}</Text>
                     </View>
                 </View>
@@ -589,10 +659,10 @@ export default function Application(props) {
         ["a)", "b)", "c)", "d)", "e)"],
         [
             "BUET ID No.",
-            "Service of University",
-            "Joining Date to University",
-            "Total Service Period in this University",
-            "Service Completion Date (Teacher's Age 65 Years, Officer's / Staff's Age 60 years)",
+            "Service Type",
+            "Joining Date",
+            "Total Service Period",
+            "Retirement Date (Approx.)",
         ],
         [
             app_data["EMPLOYEE_ID"],
@@ -611,30 +681,30 @@ export default function Application(props) {
         pdf_serv_table.push(
             <View style={style_table.row}>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         <Text>{pdfServInfo[0][i]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfServInfo[1][i]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfServInfo[2][i]}</Text>
                     </View>
                 </View>
                 <View style={style_table.double_column}>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_index_column}>
                         <Text>{pdfServInfo[0][i + 1]}</Text>
                     </View>
-                    <View style={style_table.personal_label_column}>
+                    <View style={style_table.double_label_column}>
                         <Text>{pdfServInfo[1][i + 1]}</Text>
                     </View>
-                    <View style={style_table.loan_index_column}>
+                    <View style={style_table.double_colon_column}>
                         <Text>:</Text>
                     </View>
-                    <View style={style_table.value_column}>
+                    <View style={style_table.double_value_column}>
                         <Text>{pdfServInfo[2][i + 1]}</Text>
                     </View>
                 </View>
@@ -645,16 +715,31 @@ export default function Application(props) {
     for (let i = 4; i < 5; i++) {
         pdf_serv_table.push(
             <View style={style_table.row}>
-                <View style={style_table.index_column}>
+                <View
+                    style={[
+                        style_table.double_index_column,
+                        style_table.single_index_column,
+                    ]}
+                >
                     <Text>{pdfServInfo[0][i]}</Text>
                 </View>
-                <View style={style_table.personal_label_column}>
+                <View style={[style_table.double_label_column]}>
                     <Text>{pdfServInfo[1][i]}</Text>
                 </View>
-                <View style={style_table.loan_index_column}>
+                <View
+                    style={[
+                        style_table.double_colon_column,
+                        style_table.single_colon_column,
+                    ]}
+                >
                     <Text>:</Text>
                 </View>
-                <View style={style_table.value_column}>
+                <View
+                    style={[
+                        style_table.double_value_column,
+                        style_table.single_value_column,
+                    ]}
+                >
                     <Text>{pdfServInfo[2][i]}</Text>
                 </View>
             </View>
@@ -816,11 +901,13 @@ export default function Application(props) {
         ["Serial No.", "01", "02", "03", "04", "05", "06", "07", "08"],
         [
             "Type of Loan",
-            "Vehicle Buying / House Building / Repairment / Land Buying",
+            // "Vehicle Buying / House Building / Repairment / Land Buying",
+            "House Building Loan",
             "Consumer Loan",
             "Laptop Loan",
             "Personal or Other or Any Purpose Loan under Sonali Bank Whole-Sale Loan",
-            "Vehicle Buying / House Building / Repairment / Land Buying under Sonali Bank Whole-Sale Loan",
+            // "Vehicle Buying / House Building / Repairment / Land Buying under Sonali Bank Whole-Sale Loan",
+            "House Building / Land Buying under Sonali Bank Whole-Sale Loan",
             "House Building Loan Taken under Banking System of Teacher/Officer/Staff of BUET",
             "Others",
             "Total",
@@ -906,7 +993,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 1; i < 2; i++) {
+    for (let i = 1; i < 5; i++) {
         pdf_loan_table.push(
             <View style={[style_table.row, style_table.row_border]}>
                 <View
@@ -964,7 +1051,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 2; i < 3; i++) {
+    for (let i = 5; i < 6; i++) {
         pdf_loan_table.push(
             <View
                 style={[
@@ -1092,7 +1179,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 3; i < 8; i++) {
+    for (let i = 6; i < 8; i++) {
         pdf_loan_table_2.push(
             <View style={[style_table.row, style_table.row_border]}>
                 <View
@@ -1290,8 +1377,8 @@ export default function Application(props) {
                             />
 
                             <PreviewData
-                                label="4. Account No. of Sonali Bank, BUET Branch"
-                                name={"44040" + app_data["BANK_ACCOUNT_NO"]}
+                                label="4. Account No."
+                                name={app_data["BANK_ACCOUNT_NO"]}
                             />
 
                             <PreviewData
@@ -1301,7 +1388,12 @@ export default function Application(props) {
 
                             <PreviewData
                                 label="6. Amount of Loan"
-                                name={nf.format(app_data["LOAN_AMNT"])}
+                                name={
+                                    nf.format(app_data["LOAN_AMNT"]) +
+                                    " ( " +
+                                    InWords(app_data["LOAN_AMNT"]) +
+                                    ")"
+                                }
                             />
 
                             <PreviewData
@@ -1478,7 +1570,7 @@ export default function Application(props) {
                             />
 
                             <Text style={style_field.preOtherFieldText}>
-                                It is attested that applicant can directly use
+                                It is certified that applicant can directly use
                                 laptop in educational activities and is
                                 recommended to give on availability.
                             </Text>
@@ -1505,7 +1597,7 @@ export default function Application(props) {
                                 style_field.preBold,
                             ]}
                         >
-                            It is attested that, documents provided by applicant
+                            It is certified that documents provided by applicant
                             is correct.
                         </Text>
                     </View>
@@ -1607,7 +1699,12 @@ export default function Application(props) {
 
         try {
             await axios.post("http://localhost:8800/loan_register", app_data);
-            applicationNavigate("/");
+            // applicationNavigate("/");
+            applicationNavigate("/employeedash", {
+                state: {
+                    info: app_data,
+                },
+            });
         } catch (err) {
             console.log(err);
         }

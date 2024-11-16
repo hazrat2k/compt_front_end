@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { redirect } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import loanPersonnel from "../../stores/const/loanPersonnel";
@@ -14,6 +15,11 @@ export default function PersoneelDash() {
     const pd_navigate = useNavigate();
 
     const { state } = useLocation();
+
+    // if (state === null) {
+    //     console.log(state);
+    //     return redirect("/login");
+    // }
 
     const pd_data = state["data"];
 
@@ -187,7 +193,20 @@ export default function PersoneelDash() {
         }
     };
 
-    const onLoanIdClick = (e, data) => {
+    const onLoanIdClick = async (e, data) => {
+        var uploadData = {
+            LOAN_ID: data["LOAN_ID"],
+        };
+        try {
+            const sal_res = await axios.post(
+                "http://localhost:8800/processing_loan_salary",
+                uploadData
+            );
+            data["loan_data"] = sal_res.data;
+        } catch (err) {
+            console.log(err);
+        }
+
         data["sendFrom"] = pd_data["USERNAME"];
         pd_navigate("/personnel_dashboard/pending_loan_details", {
             state: { data: data },
@@ -256,7 +275,10 @@ export default function PersoneelDash() {
                             {pd_pend_loan_data[i]["LOAN_ID"]}
                         </div>
                     </div>
-                    <div className="pd_section_col pd_section_col_wid">
+                    <div
+                        className="pd_section_col pd_section_col_wid linked_col"
+                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
+                    >
                         <div className="pd_section_col_value">
                             {pd_pend_loan_data[i]["EMPLOYEE_NAME"]}
                         </div>
@@ -290,7 +312,6 @@ export default function PersoneelDash() {
                     </div>
                 </div>
             );
-
         } else {
             processing_loan_status = true;
 
@@ -304,7 +325,10 @@ export default function PersoneelDash() {
                             {pd_pend_loan_data[i]["LOAN_ID"]}
                         </div>
                     </div>
-                    <div className="pd_section_col pd_section_col_wid">
+                    <div
+                        className="pd_section_col pd_section_col_wid linked_col"
+                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
+                    >
                         <div className="pd_section_col_value">
                             {pd_pend_loan_data[i]["EMPLOYEE_NAME"]}
                         </div>
@@ -514,7 +538,6 @@ export default function PersoneelDash() {
         });
     };
 
-
     return (
         <>
             <NavBar hide={{ nav_mid: true }} />
@@ -539,17 +562,28 @@ export default function PersoneelDash() {
                     </div>
                 </div>
 
+                <div className="ld_button">
+                    <div
+                        className="ld_forward"
+                        onClick={() => {
+                            pd_navigate("/login");
+                        }}
+                    >
+                        Log out
+                    </div>
+                </div>
+
                 <select
                     className="pd_select"
                     onChange={onLoanSelect}
                     defaultValue={pd_select}
                 >
                     <option value="null">Select a Loan Type......</option>
-                    <option value="HOUSE BUILDING LOAN">
+                    <option value="House Building Loan">
                         HOUSE BUILDING LOAN
                     </option>
-                    <option value="CONSUMER LOAN">CONSUMER LOAN</option>
-                    <option value="LAPTOP LOAN">LAPTOP LOAN</option>
+                    <option value="Consumer Loan">CONSUMER LOAN</option>
+                    <option value="Laptop Loan">LAPTOP LOAN</option>
                 </select>
 
                 {pd_select == "null" ? (
@@ -558,7 +592,7 @@ export default function PersoneelDash() {
                     </div>
                 ) : (
                     <>
-                        {pd_userName === "accntt_fund" ? (
+                        {pd_userName === "acct_fund" ? (
                             <div className="pd_section">
                                 <div className="pd_section_label">
                                     Preview Copy :
@@ -728,7 +762,7 @@ export default function PersoneelDash() {
                                         </div>
                                         <div className="pd_section_col pd_section_col_wid">
                                             <div className="pd_section_col_value">
-                                                APPLIED TIME
+                                                APPLIED DATE
                                             </div>
                                         </div>
                                     </div>
@@ -782,7 +816,7 @@ export default function PersoneelDash() {
                                         </div>
                                         <div className="pd_section_col pd_section_col_wid">
                                             <div className="pd_section_col_value">
-                                                APPLIED TIME
+                                                APPLIED DATE
                                             </div>
                                         </div>
                                     </div>

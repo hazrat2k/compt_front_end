@@ -34,7 +34,7 @@ export default function NavBar(props) {
         if (tl.reversed()) {
             tl.play();
         } else {
-            tl.to(".nav_items_with_close", { right: "-50vw" })
+            tl.to(".nav_items_with_close", { display: "flex", right: "-50vw" })
                 .to(".nav_items_with_close", { opacity: 1, right: 0 })
                 .to(".nav_items_with_close", { height: height_ }, "-=.1")
                 .to(
@@ -50,20 +50,20 @@ export default function NavBar(props) {
         tl.reverse();
     };
 
-    const [padVal, setpadVal] = useState("5rem");
-    const [height, setheight] = useState("9rem");
-    const listenScrollEvent = () => {
-        window.scrollY > 20 ? setpadVal("1rem") : setpadVal("5rem");
-        window.scrollY > 20 ? setheight("6rem") : setheight("9rem");
-    };
+    const [padVal, setpadVal] = useState("2rem");
+    const [height, setheight] = useState("6rem");
+    // const listenScrollEvent = () => {
+    //     window.scrollY > 20 ? setpadVal("1rem") : setpadVal("5rem");
+    //     window.scrollY > 20 ? setheight("6rem") : setheight("9rem");
+    // };
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        window.addEventListener("scroll", listenScrollEvent);
-        return () => {
-            window.removeEventListener("scroll", listenScrollEvent);
-        };
-    }, []);
+    // useEffect(() => {
+    //     window.scrollTo(0, 0);
+    //     window.addEventListener("scroll", listenScrollEvent);
+    //     return () => {
+    //         window.removeEventListener("scroll", listenScrollEvent);
+    //     };
+    // }, []);
 
     return (
         <>

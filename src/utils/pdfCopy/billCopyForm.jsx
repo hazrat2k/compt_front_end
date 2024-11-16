@@ -240,7 +240,7 @@ export default function BillCopyForm(props) {
 
     const bcf_sentFrom = props.sentFrom;
 
-    const bcf_sanc_status = bcf_sentFrom == "accntt_fund" ? "BILL" : "BILLED";
+    const bcf_sanc_status = bcf_sentFrom == "acct_fund" ? "BILL" : "BILLED";
 
     const [bc_sanc_loan_data, setBc_sanc_loan_data] = useState([]);
     const bc_sanc_loan_display = useState([]);
@@ -364,7 +364,7 @@ export default function BillCopyForm(props) {
         fetch_sanction_loan_data();
     }, []);
 
-    const bc_table_col = (value, cn) => {
+    const bc_table_col = (value, cn, bold) => {
         return (
             <View
                 style={[
@@ -372,12 +372,19 @@ export default function BillCopyForm(props) {
                     cn == "small_col" ? style_bc.small_col : style_bc.large_col,
                 ]}
             >
-                <Text style={style_bc.bc_table_cell}>{value}</Text>
+                <Text
+                    style={[
+                        style_bc.bc_table_cell,
+                        bold == "bcf_bold" ? style_bc.bc_bold : "",
+                    ]}
+                >
+                    {value}
+                </Text>
             </View>
         );
     };
 
-    const s_table_col = (value, cn) => {
+    const s_table_col = (value, cn, bold) => {
         return (
             <View
                 style={[
@@ -387,7 +394,14 @@ export default function BillCopyForm(props) {
                         : style_bc.s_large_col,
                 ]}
             >
-                <Text style={style_bc.s_table_cell}>{value}</Text>
+                <Text
+                    style={[
+                        style_bc.s_table_cell,
+                        bold == "bcf_bold" ? style_bc.bc_bold : "",
+                    ]}
+                >
+                    {value}
+                </Text>
             </View>
         );
     };
@@ -409,437 +423,193 @@ export default function BillCopyForm(props) {
     var count = 0;
     var sanction_total = 0;
 
-    if (sel_cat == "ALL") {
-        count = 0;
-        sanction_total = 0;
-        for (let i = 0; i < bc_sanc_loan_data.length; i++) {
-            if (
-                bcf_selected_loan[bc_sanc_loan_data[i]["LOAN_ID"]] &&
-                bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL"
-            ) {
-                bc_sanc_loan_display.push(
-                    <View style={style_bc.bc_table_row}>
-                        <View style={[style_bc.bc_table_col, style_bc.sl_col]}>
-                            <Text style={style_bc.bc_table_cell}>
-                                {++count}
-                            </Text>
-                        </View>
-                        <View
-                            style={[
-                                style_bc.bc_table_col,
-                                style_bc.loan_id_col,
-                            ]}
-                        >
-                            <Text style={style_bc.bc_table_cell}>
-                                {bc_sanc_loan_data[i]["LOAN_ID"]}
-                            </Text>
-                        </View>
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DESIGNATION"],
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["OFFICE"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["CATEGORY"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]),
-                            "small_col"
-                        )}
-                        <View
-                            style={[style_bc.bc_table_col, style_bc.large_col]}
-                        >
-                            <Text style={style_bc.bc_table_cell}>
-                                {nf.format(
-                                    bc_sanc_loan_data[i]["SANCTION_AMOUNT"]
-                                )}
-                            </Text>
-                        </View>
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["INSTALL_NO"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(" ", "small_col")}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(10, "small_col")}
-                        {bc_table_col(
-                            nf.format(
-                                bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
-                            ),
-                            "small_col"
-                        )}
+    for (let i = 0; i < bc_sanc_loan_data.length; i++) {
+        if (
+            bcf_selected_loan[bc_sanc_loan_data[i]["LOAN_ID"]] &&
+            bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL" &&
+            bc_sanc_loan_data[i]["CATEGORY"] == sel_cat
+        ) {
+            bc_sanc_loan_display.push(
+                <View style={style_bc.bc_table_row}>
+                    <View style={[style_bc.bc_table_col, style_bc.sl_col]}>
+                        <Text style={style_bc.bc_table_cell}>{++count}</Text>
                     </View>
-                );
-
-                s_sanc_loan_display.push(
-                    <View style={style_bc.bc_table_row}>
-                        {s_table_col(count, "small_col")}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEEID"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_ID"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["LOAN_ID"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DESIGNATION"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["OFFICE"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["CATEGORY"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["INSTALL_NO"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
-                            "large_col"
-                        )}
+                    <View style={[style_bc.bc_table_col, style_bc.loan_id_col]}>
+                        <Text style={style_bc.bc_table_cell}>
+                            {bc_sanc_loan_data[i]["LOAN_ID"]}
+                        </Text>
                     </View>
-                );
+                    {bc_table_col(
+                        bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
+                        "large_col"
+                    )}
+                    {bc_table_col(
+                        bc_sanc_loan_data[i]["DESIGNATION"],
+                        "large_col"
+                    )}
+                    {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                    {bc_table_col(
+                        bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        "small_col"
+                    )}
+                    {bc_table_col(
+                        bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        "small_col"
+                    )}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
+                        "small_col"
+                    )}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]),
+                        "small_col"
+                    )}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]),
+                        "small_col"
+                    )}
+                    <View style={[style_bc.bc_table_col, style_bc.large_col]}>
+                        <Text style={style_bc.bc_table_cell}>
+                            {nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"])}
+                        </Text>
+                    </View>
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
+                        "large_col"
+                    )}
+                    {bc_table_col(
+                        bc_sanc_loan_data[i]["INSTALL_NO"],
+                        "small_col"
+                    )}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
+                        "small_col"
+                    )}
+                    {bc_table_col(" ", "small_col")}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
+                        "small_col",
+                        "bcf_bold"
+                    )}
+                    {bc_table_col(10, "small_col")}
+                    {bc_table_col(
+                        nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10),
+                        "small_col",
+                        "bcf_bold"
+                    )}
+                </View>
+            );
 
-                sanction_total += Number(
-                    bc_sanc_loan_data[i]["SANCTION_AMOUNT"]
-                );
-            }
+            s_sanc_loan_display.push(
+                <View style={style_bc.bc_table_row}>
+                    {s_table_col(count, "small_col")}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["EMPLOYEEID"],
+                        "small_col"
+                    )}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["EMPLOYEE_ID"],
+                        "large_col"
+                    )}
+                    {s_table_col(bc_sanc_loan_data[i]["LOAN_ID"], "large_col")}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
+                        "large_col"
+                    )}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["DESIGNATION"],
+                        "large_col"
+                    )}
+                    {s_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        "large_col"
+                    )}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        "large_col"
+                    )}
+                    {s_table_col(
+                        nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
+                        "large_col",
+                        "bcf_bold"
+                    )}
+                    {s_table_col(
+                        bc_sanc_loan_data[i]["INSTALL_NO"],
+                        "small_col"
+                    )}
+                    {s_table_col(
+                        nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
+                        "small_col"
+                    )}
+                    {s_table_col(
+                        nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
+                        "large_col"
+                    )}
+                </View>
+            );
+
+            sanction_total += Number(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]);
         }
-
-        bc_sanc_loan_display.push(
-            <View style={style_bc.bc_table_row}>
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col("TOTAL", "small_col bc_bold")}
-                <View
-                    style={[
-                        style_bc.bc_table_col,
-                        style_bc.large_col,
-                        style_bc.bc_bold,
-                    ]}
-                >
-                    <Text style={style_bc.bc_table_cell}>
-                        {nf.format(sanction_total)}
-                    </Text>
-                </View>
-                {bc_table_col(" ", "small_col")}
-                <View
-                    style={[
-                        style_bc.bc_table_col,
-                        style_bc.large_col,
-                        style_bc.bc_bold,
-                    ]}
-                >
-                    <Text style={style_bc.bc_table_cell}>
-                        {nf.format(sanction_total - count * 10)}
-                    </Text>
-                </View>
-            </View>
-        );
-
-        s_sanc_loan_display.push(
-            <View style={[style_bc.bc_table_row, style_bc.bc_bold]}>
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("TOTAL", "small_col")}
-                {s_table_col(nf.format(sanction_total), "large_col")}
-            </View>
-        );
-    } else if (["A", "B", "C", "D"].includes(sel_cat)) {
-        count = 0;
-        sanction_total = 0;
-        for (let i = 0; i < bc_sanc_loan_data.length; i++) {
-            if (
-                bcf_selected_loan[bc_sanc_loan_data[i]["LOAN_ID"]] &&
-                bc_sanc_loan_data[i]["SANC_STATUS"] == "BILL" &&
-                bc_sanc_loan_data[i]["CATEGORY"] == sel_cat
-            ) {
-                bc_sanc_loan_display.push(
-                    <View style={style_bc.bc_table_row}>
-                        <View style={[style_bc.bc_table_col, style_bc.sl_col]}>
-                            <Text style={style_bc.bc_table_cell}>
-                                {++count}
-                            </Text>
-                        </View>
-                        <View
-                            style={[
-                                style_bc.bc_table_col,
-                                style_bc.loan_id_col,
-                            ]}
-                        >
-                            <Text style={style_bc.bc_table_cell}>
-                                {bc_sanc_loan_data[i]["LOAN_ID"]}
-                            </Text>
-                        </View>
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DESIGNATION"],
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["OFFICE"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["APPLY_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["ALLOW_AMOUNT"]),
-                            "small_col"
-                        )}
-                        <View
-                            style={[style_bc.bc_table_col, style_bc.large_col]}
-                        >
-                            <Text style={style_bc.bc_table_cell}>
-                                {nf.format(
-                                    bc_sanc_loan_data[i]["SANCTION_AMOUNT"]
-                                )}
-                            </Text>
-                        </View>
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
-                            "large_col"
-                        )}
-                        {bc_table_col(
-                            bc_sanc_loan_data[i]["INSTALL_NO"],
-                            "small_col"
-                        )}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(" ", "small_col")}
-                        {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {bc_table_col(10, "small_col")}
-                        {bc_table_col(
-                            nf.format(
-                                bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
-                            ),
-                            "small_col"
-                        )}
-                    </View>
-                );
-
-                s_sanc_loan_display.push(
-                    <View style={style_bc.bc_table_row}>
-                        {s_table_col(count, "small_col")}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEEID"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_ID"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["LOAN_ID"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["EMPLOYEE_NAME"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DESIGNATION"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["OFFICE"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "large_col"
-                        )}
-                        {s_table_col(
-                            bc_sanc_loan_data[i]["INSTALL_NO"],
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
-                            "small_col"
-                        )}
-                        {s_table_col(
-                            nf.format(bc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
-                            "large_col"
-                        )}
-                    </View>
-                );
-
-                sanction_total += Number(
-                    bc_sanc_loan_data[i]["SANCTION_AMOUNT"]
-                );
-            }
-        }
-
-        bc_sanc_loan_display.push(
-            <View style={style_bc.bc_table_row}>
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "small_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col(" ", "large_col")}
-                {bc_table_col("TOTAL", "small_col bc_bold")}
-                <View
-                    style={[
-                        style_bc.bc_table_col,
-                        style_bc.large_col,
-                        style_bc.bc_bold,
-                    ]}
-                >
-                    <Text style={style_bc.bc_table_cell}>
-                        {nf.format(sanction_total)}
-                    </Text>
-                </View>
-                {bc_table_col(" ", "small_col")}
-                <View
-                    style={[
-                        style_bc.bc_table_col,
-                        style_bc.large_col,
-                        style_bc.bc_bold,
-                    ]}
-                >
-                    <Text style={style_bc.bc_table_cell}>
-                        {nf.format(sanction_total - count * 10)}
-                    </Text>
-                </View>
-            </View>
-        );
-
-        s_sanc_loan_display.push(
-            <View style={[style_bc.bc_table_row, style_bc.bc_bold]}>
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("", "large_col")}
-                {s_table_col("TOTAL", "small_col")}
-                {s_table_col(nf.format(sanction_total), "large_col")}
-            </View>
-        );
     }
+
+    bc_sanc_loan_display.push(
+        <View style={style_bc.bc_table_row}>
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "small_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col(" ", "large_col")}
+            {bc_table_col("TOTAL", "small_col", "bcf_bold")}
+            <View
+                style={[
+                    style_bc.bc_table_col,
+                    style_bc.large_col,
+                    style_bc.bc_bold,
+                ]}
+            >
+                <Text style={style_bc.bc_table_cell}>
+                    {nf.format(sanction_total)}
+                </Text>
+            </View>
+            {bc_table_col(" ", "small_col")}
+            <View
+                style={[
+                    style_bc.bc_table_col,
+                    style_bc.large_col,
+                    style_bc.bc_bold,
+                ]}
+            >
+                <Text style={style_bc.bc_table_cell}>
+                    {nf.format(sanction_total - count * 10)}
+                </Text>
+            </View>
+        </View>
+    );
+
+    s_sanc_loan_display.push(
+        <View style={[style_bc.bc_table_row, style_bc.bc_bold]}>
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("", "large_col")}
+            {s_table_col("TOTAL", "small_col")}
+            {s_table_col(nf.format(sanction_total), "large_col")}
+        </View>
+    );
 
     const MyBillForm = (
         <Document>

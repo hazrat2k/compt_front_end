@@ -182,7 +182,7 @@ export default function BankCopyForm(props) {
     const bac_billedLoan = props.billedLoan;
     const bac_sentFrom = props.sentFrom;
 
-    const bac_sanc_status = bac_sentFrom == "accntt_fund" ? "BILL" : "BILLED";
+    const bac_sanc_status = bac_sentFrom == "acct_fund" ? "BILL" : "BILLED";
 
     var bac_loan_ids = "";
 
@@ -373,10 +373,17 @@ export default function BankCopyForm(props) {
         fetch_sanction_loan_data();
     }, []);
 
-    const sal_table_col = (value) => {
+    const sal_table_col = (value, cn) => {
         return (
             <View style={[style_sal.sal_table_col]}>
-                <Text style={style_sal.sal_table_cell}>{value}</Text>
+                <Text
+                    style={[
+                        style_sal.sal_table_cell,
+                        cn == "bcf_bold" ? style_sal.sal_bold : "",
+                    ]}
+                >
+                    {value}
+                </Text>
             </View>
         );
     };
@@ -386,7 +393,7 @@ export default function BankCopyForm(props) {
     var count = 0;
     var sanction_total = 0;
 
-    if (bac_sentFrom == "accntt_fund") {
+    if (bac_sentFrom == "acct_fund") {
         for (let i = 0; i < sal_sanc_loan_data.length; i++) {
             if (
                 bac_billedLoan[sal_sanc_loan_data[i]["LOAN_ID"]] &&
@@ -406,7 +413,8 @@ export default function BankCopyForm(props) {
                         {sal_table_col(
                             nf.format(
                                 sal_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
-                            )
+                            ),
+                            "bcf_bold"
                         )}
                     </View>
                 );
@@ -520,10 +528,6 @@ export default function BankCopyForm(props) {
                                 {sal_table_col("EMPLOYEE NAME")}
                                 {sal_table_col("DESIGNATION")}
                                 {sal_table_col("OFFICE/ DEPT.")}
-                                {sel_cat == "ALL"
-                                    ? sal_table_col("CATEGORY")
-                                    : ""}
-
                                 {sal_table_col("ACCOUNT NO")}
                                 {sal_table_col("NET PAY")}
                             </View>
@@ -615,7 +619,7 @@ export default function BankCopyForm(props) {
     }
 
     const onBacForwardClick = async () => {
-        if (bac_sentFrom == "accntt_fund") {
+        if (bac_sentFrom == "acct_fund") {
             if (count == 0) {
                 setBac_error(true);
                 setBac_error_text("***Select at least one loan to forward");
@@ -625,7 +629,7 @@ export default function BankCopyForm(props) {
             }
         }
 
-        if (bac_sentFrom == "accntt_cash") {
+        if (bac_sentFrom == "acct_cash") {
             if (bac_cheque_no == "") {
                 setBac_error(true);
                 setBac_error_text("***Enter cheque no to forward");
@@ -645,7 +649,7 @@ export default function BankCopyForm(props) {
 
         const new_date = new Date();
 
-        if (bac_sentFrom == "accntt_fund") {
+        if (bac_sentFrom == "acct_fund") {
             bac_app_pos = 15;
 
             const upload_billed_loan = {
@@ -673,12 +677,12 @@ export default function BankCopyForm(props) {
             } catch (err) {
                 console.log(err);
             }
-        } else if (bac_sentFrom == "accntt_cash") {
+        } else if (bac_sentFrom == "acct_cash") {
             try {
                 await axios.put("http://localhost:8800/sanction", {
                     loan_id: bac_loan_ids,
                     status: "CASHED",
-                    cheque_no: bac_cheque_no
+                    cheque_no: bac_cheque_no,
                 });
             } catch (err) {
                 console.log(err);
@@ -747,7 +751,7 @@ export default function BankCopyForm(props) {
                 }}
             </BlobProvider>
 
-            {bac_sentFrom == "accntt_fund" ? (
+            {bac_sentFrom == "acct_fund" ? (
                 count == 0 ? (
                     <div style={style_butt.alert_message}>
                         Select at least one loan to forward or download
@@ -766,7 +770,7 @@ export default function BankCopyForm(props) {
                 ""
             )}
 
-            {bac_sentFrom == "accntt_cash" ? (
+            {bac_sentFrom == "acct_cash" ? (
                 <div style={style_form.cheque_box}>
                     <div style={style_form.cheque_label}>Cheque No. : </div>
 

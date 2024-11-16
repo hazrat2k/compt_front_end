@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./logo.css";
 import { useNavigate } from "react-router";
 
+import { primary, secondary } from "../../../stores/const/colors";
+
 export default function Logo() {
     const [hovering, setHovering] = useState(false);
 
@@ -9,7 +11,7 @@ export default function Logo() {
 
     return (
         <>
-            <a href="/" style={{textDecoration: 'none'}}>
+            <a href="/" style={{ textDecoration: "none" }}>
                 <div
                     className="nv_logo_with_text"
                     onMouseEnter={() => setHovering(true)}
@@ -27,8 +29,8 @@ export default function Logo() {
                         >
                             <g
                                 transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-                                fill={hovering ? "#3f8ba8" : "#dc143c"}
-                                stroke={hovering ? "#3f8ba8" : "#dc143c"}
+                                fill={hovering ? secondary : primary}
+                                stroke={hovering ? secondary : primary}
                             >
                                 <path
                                     d="M2434 4923 c-18 -3 -25 -22 -49 -119 -15 -63 -31 -116 -34 -118 -3
@@ -285,14 +287,14 @@ export default function Logo() {
                     <div className="nv_logo_text">
                         <div
                             className="nv_logo_text_1"
-                            style={{ color: hovering ? "#3f8ba8" : "#dc143c" }}
+                            style={{ color: hovering ? secondary : primary }}
                         >
                             COMPTROLLER OFFICE
                         </div>
 
                         <div
                             className="nv_logo_text_2"
-                            style={{ color: hovering ? "#3f8ba8" : "#dc143c" }}
+                            style={{ color: hovering ? secondary : primary }}
                         >
                             Bangladesh University of Engineering and Technology
                             (BUET)

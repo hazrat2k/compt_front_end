@@ -4,10 +4,56 @@ import moment from "moment";
 
 import "./previewApplication.css";
 
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 import Logo from "../../component/loan_apply/logo/logo";
 
+import InWords from "../../utils/functions/inWords";
+import ToTitleCase from "../../utils/functions/toTitleCase";
 import PreviewText from "../../component/loan_apply/previewText/previewText";
 import Application from "../../utils/pdfCopy/application";
+
+const createSalaryData = (
+    serialNo,
+    loanMonth,
+    loanPrevMonth1,
+    loanPrevMonth2,
+    loanPrevMonth3
+) => {
+    return {
+        serialNo,
+        loanMonth,
+        loanPrevMonth1,
+        loanPrevMonth2,
+        loanPrevMonth3,
+    };
+};
+
+const createLoanData = (
+    serialNo,
+    loanType,
+    loanAmnt,
+    instAmnt,
+    totInstNo,
+    paidInstNo,
+    unpaidLoanAmnt
+) => {
+    return {
+        serialNo,
+        loanType,
+        loanAmnt,
+        instAmnt,
+        totInstNo,
+        paidInstNo,
+        unpaidLoanAmnt,
+    };
+};
 
 export default function PreviewApplication() {
     const { state } = useLocation();
@@ -20,9 +66,9 @@ export default function PreviewApplication() {
     const preAppApplicantName = previewData["EMPLOYEE_NAME"];
     const preAppDesignation = previewData["DESIGNATION"];
     const preAppOfficeDept = previewData["OFFICE"];
-    const preAppAccountNo = "44040" + previewData["BANK_ACCOUNT_NO"];
+    const preAppAccountNo = previewData["BANK_ACCOUNT_NO"];
     const preAppLoanType = previewData["LOAN_TYPE"];
-    const preAppLoanAmnt = nf.format(previewData["LOAN_AMNT"]);
+    const preAppLoanAmnt = previewData["LOAN_AMNT"];
     const preAppLoanReas = previewData["REASON_FOR_LOAN"];
 
     const preAppPersoInfo = [
@@ -31,11 +77,11 @@ export default function PreviewApplication() {
             "পিতা/স্বামীর নাম",
             "মাতার নাম",
             "নমিনীর নাম",
-            "আপনার সাথে নমিনীর সম্পর্ক",
+            "নমিনীর সম্পর্ক",
             "বর্তমান ঠিকানা",
             "স্থায়ী ঠিকানা",
             "জন্ম তারিখ",
-            "নমিনীর জাতীয় পরিচয়পত্র নম্বর",
+            "নমিনীর NID",
         ],
         [
             previewData["FATHERS_NAME"],
@@ -55,10 +101,10 @@ export default function PreviewApplication() {
         ["ক", "খ", "গ", "ঘ", "ঙ"],
         [
             "বুয়েট আই.ডি. নং",
-            "বিশ্ববিদ্যালয়ের চাকুরী",
-            "বিশ্ববিদ্যালয়ে যোগদানের তারিখ",
-            "এই বিশ্ববিদ্যালয়ে মোট চাকুরীকাল",
-            "চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর)",
+            "চাকুরীর ধরণ",
+            "যোগদানের তারিখ",
+            "মোট চাকুরীকাল",
+            "অবসরের তারিখ",
         ],
         [
             previewData["EMPLOYEE_ID"],
@@ -84,7 +130,8 @@ export default function PreviewApplication() {
         ["ক্রমিক নং", "০১", "০২", "০৩", "০৪", "০৫", "০৬", "০৭", "০৮"],
         [
             "ঋণের নাম",
-            "মোটরযান ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয়",
+            //মোটরযান ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয়
+            "গৃহ নির্মাণ ঋণ",
             "ভোগ্যপণ্য ঋণ",
             "ল্যাপটপ ঋণ",
             "সোনালী ব্যাংকের হোলসেল ঋণের আওতায় প্রদত্ত পারসোনাল বা অন্যান্য বা এনি পারপোস লোন",
@@ -116,13 +163,82 @@ export default function PreviewApplication() {
     const preAppSign = previewData["SIGN_PIC"];
 
     const persoTable = [];
+    const persoTable2 = [];
+    const persoTable3 = [];
+    const persoTable4 = [];
+    const persoTable5 = [];
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 4; i += 2) {
         persoTable.push(
             <tbody>
                 <tr>
-                    <th className="tableIndexCol">{preAppPersoInfo[0][i]}</th>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
                     <th className="tableLabelCol">{preAppPersoInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 1; i < 4; i += 2) {
+        persoTable2.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol">{preAppPersoInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 4; i < 6; i += 1) {
+        persoTable3.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol tablebigCol">
+                        {preAppPersoInfo[1][i]}
+                    </th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 6; i < 7; i += 1) {
+        persoTable4.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol">{preAppPersoInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 7; i < 8; i += 1) {
+        persoTable5.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol">{preAppPersoInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
                     <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
                 </tr>
             </tbody>
@@ -130,13 +246,32 @@ export default function PreviewApplication() {
     }
 
     const servTable = [];
+    const servTable2 = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i += 2) {
         servTable.push(
             <tbody>
                 <tr>
-                    <th className="tableIndexCol">{preAppServInfo[0][i]}</th>
+                    <th className="tableIndexCol">
+                        {preAppServInfo[0][i] + ")"}
+                    </th>
                     <th className="tableLabelCol">{preAppServInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppServInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 1; i < 5; i += 2) {
+        servTable2.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppServInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol">{preAppServInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
                     <th className="tableValueCol">{preAppServInfo[2][i]}</th>
                 </tr>
             </tbody>
@@ -145,99 +280,35 @@ export default function PreviewApplication() {
 
     const salTable = [];
 
-    for (let i = 0; i < 1; i++) {
-        salTable.push(
-            <tbody>
-                <tr>
-                    <th className="tableIndexCol">{preAppSalInfo[0][i]}</th>
-                    <th className="tableLabelCol">{preAppSalInfo[1][i]}</th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppSalInfo[2][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppSalInfo[3][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppSalInfo[4][i]}
-                    </th>
-                </tr>
-            </tbody>
-        );
-    }
-
     for (let i = 1; i < 5; i++) {
         salTable.push(
-            <tbody>
-                <tr>
-                    <th className="tableIndexCol">{preAppSalInfo[0][i]}</th>
-                    <th className="tableLabelCol">{preAppSalInfo[1][i]}</th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppSalInfo[2][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppSalInfo[3][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppSalInfo[4][i])}
-                    </th>
-                </tr>
-            </tbody>
+            createSalaryData(
+                preAppSalInfo[0][i],
+                preAppSalInfo[1][i],
+                nf.format(preAppSalInfo[2][i]),
+                nf.format(preAppSalInfo[3][i]),
+                nf.format(preAppSalInfo[4][i])
+            )
         );
     }
 
     const loanTable = [];
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 1; i < 9; i++) {
         loanTable.push(
-            <tbody>
-                <tr>
-                    <th className="tableIndexCol">{preAppLoanInfo[0][i]}</th>
-                    <th className="tableLabelCol">{preAppLoanInfo[1][i]}</th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppLoanInfo[2][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppLoanInfo[3][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppLoanInfo[4][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppLoanInfo[5][i]}
-                    </th>
-                    <th className="tableValueCol pa_bold">
-                        {preAppLoanInfo[6][i]}
-                    </th>
-                </tr>
-            </tbody>
+            createLoanData(
+                preAppLoanInfo[0][i],
+                preAppLoanInfo[1][i],
+                nf.format(preAppLoanInfo[2][i]),
+                nf.format(preAppLoanInfo[3][i]),
+                nf.format(preAppLoanInfo[4][i]),
+                nf.format(preAppLoanInfo[5][i]),
+                nf.format(preAppLoanInfo[6][i])
+            )
         );
     }
 
-    for (let i = 1; i < 9; i++) {
-        loanTable.push(
-            <tbody>
-                <tr>
-                    <th className="tableIndexCol">{preAppLoanInfo[0][i]}</th>
-                    <th className="tableLabelCol">{preAppLoanInfo[1][i]}</th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppLoanInfo[2][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppLoanInfo[3][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppLoanInfo[4][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppLoanInfo[5][i])}
-                    </th>
-                    <th className="tableValueCol">
-                        {nf.format(preAppLoanInfo[6][i])}
-                    </th>
-                </tr>
-            </tbody>
-        );
-    }
+    console.log(loanTable);
 
     const lastTable = [];
 
@@ -270,60 +341,183 @@ export default function PreviewApplication() {
                             />
 
                             <PreviewText
+                                label="৩. অফিস/বিভাগ"
+                                value={preAppOfficeDept}
+                            />
+                        </div>
+
+                        <div className="preAppProPic">
+                            <PreviewText
                                 label="২. পদবী"
                                 value={preAppDesignation}
                             />
 
                             <PreviewText
-                                label="৩. অফিস/বিভাগ"
-                                value={preAppOfficeDept}
-                            />
-
-                            <PreviewText
-                                label="৪. সোনালী ব্যাংক, বুয়েট শাখায় পরিচালিত হিসাব নম্বর"
+                                label="৪. হিসাব নম্বর"
                                 value={preAppAccountNo}
                             />
 
-                            <PreviewText
-                                label="৫. যে ঋণের জন্যে আবেদন করা হয়েছে"
-                                value={preAppLoanType}
-                            />
-
-                            <PreviewText
-                                label="৬. আবেদনকৃত ঋণের পরিমাণ"
-                                value={preAppLoanAmnt}
-                            />
-
-                            <PreviewText
-                                label="৭. আবেদনকৃত ঋণ গ্রহণের কারণ"
-                                value={preAppLoanReas}
-                            />
+                            {/* <img className='preAppProImg' src={preAppPhoto} /> */}
                         </div>
-
-                        {/* <div className='preAppProPic'>
-                            <img className='preAppProImg' src={preAppPhoto} />
-                        </div> */}
                     </div>
+                    <>
+                        <PreviewText
+                            label="৫. যে ঋণের জন্যে আবেদন করা হয়েছে"
+                            value={preAppLoanType}
+                        />
+
+                        <PreviewText
+                            label="৬. আবেদনকৃত ঋণের পরিমাণ"
+                            value={
+                                nf.format(preAppLoanAmnt) +
+                                " ( " +
+                                InWords(preAppLoanAmnt) +
+                                ")"
+                            }
+                        />
+
+                        <PreviewText
+                            label="৭. আবেদনকৃত ঋণ গ্রহণের কারণ"
+                            value={preAppLoanReas}
+                        />
+                    </>
 
                     <div className="prePersInfo">
                         <div className="prePersInfoLabel">
                             ৮. ব্যক্তিগত তথ্যাবলী :
                         </div>
-                        <table>{persoTable}</table>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                flexBasis: "50%",
+                            }}
+                        >
+                            <table>{persoTable}</table>
+                            <table>{persoTable2}</table>
+                        </div>
+                        <table>{persoTable3}</table>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                flexBasis: "50%",
+                            }}
+                        >
+                            <table>{persoTable4}</table>
+                            <table>{persoTable5}</table>
+                        </div>
                     </div>
 
                     <div className="prePersInfo">
                         <div className="prePersInfoLabel">
                             ৯. আবেদনকারীর চাকুরী সংক্রান্ত তথ্যাবলী :
                         </div>
-                        <table>{servTable}</table>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                flexBasis: "50%",
+                            }}
+                        >
+                            <table>{servTable}</table>
+                            <table>{servTable2}</table>
+                        </div>
                     </div>
 
                     <div className="prePersInfo">
                         <div className="prePersInfoLabel">
                             ১০. বেতন সংক্রান্ত তথ্যাবলী (বিগত তিন মাসের) :
                         </div>
-                        <table>{salTable}</table>
+                        <TableContainer component={Paper}>
+                            <Table
+                                sx={{ minWidth: 650 }}
+                                aria-label="simple table"
+                            >
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            {preAppSalInfo[0][0]}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            {preAppSalInfo[1][0]}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            {preAppSalInfo[2][0]}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            {preAppSalInfo[3][0]}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            {preAppSalInfo[4][0]}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {salTable.map((row) => (
+                                        <TableRow
+                                            key={row.serialNo}
+                                            sx={{
+                                                "&:last-child td, &:last-child th":
+                                                    {
+                                                        border: 0,
+                                                    },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                                align="center"
+                                                className="sal_bold"
+                                            >
+                                                {row.serialNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanMonth}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanPrevMonth1}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanPrevMonth2}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanPrevMonth3}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
 
                     <div className="prePersInfo">
@@ -331,7 +525,117 @@ export default function PreviewApplication() {
                             ১১. বিশ্ববিদ্যালয় ও সোনালী ব্যাংক হতে গৃহীত ঋণের
                             তথ্যাবলী (কম্পট্রোলার অফিস কর্তৃক যাচাইকৃত) :
                         </div>
-                        <table>{loanTable}</table>
+                        <TableContainer component={Paper}>
+                            <Table
+                                sx={{ minWidth: 650 }}
+                                aria-label="simple table"
+                            >
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            ক্রমিক নং
+                                        </TableCell>
+                                        <TableCell
+                                            align="justified"
+                                            className="sal_bold"
+                                        >
+                                            ঋণের নাম
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            ঋণের পরিমাণ
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            কিস্তির পরিমাণ
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            মোট কিস্তির সংখ্যা
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            পরিশোধিত কিস্তির সংখ্যা
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            className="sal_bold"
+                                        >
+                                            অপরিশোধিত ঋণের পরিমাণ (সুদ সহ)
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {loanTable.map((row) => (
+                                        <TableRow
+                                            key={row.serialNo}
+                                            sx={{
+                                                "&:last-child td, &:last-child th":
+                                                    {
+                                                        border: 0,
+                                                    },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                                align="center"
+                                                className="sal_bold"
+                                            >
+                                                {row.serialNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="justified"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanType}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.loanAmnt}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.instAmnt}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.totInstNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.paidInstNo}
+                                            </TableCell>
+                                            <TableCell
+                                                align="center"
+                                                className="sal_reg"
+                                            >
+                                                {row.unpaidLoanAmnt}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
 
                     <div className="prePersInfo">

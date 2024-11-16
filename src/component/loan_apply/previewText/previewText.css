@@ -37,7 +37,7 @@
     .previewData{
         display: flex;
         padding: 0.5rem 1rem 0.5rem 1rem;
-    
+        align-items: center;
     }
 
     .previewDataLabel{
@@ -45,7 +45,6 @@
         font-size: 1.2rem;
         font-weight: bold;
         text-align: justify;
-        width:40%;
     }
     
     .previewColon{
@@ -59,7 +58,6 @@
     .previewDataValue{
         font-family: 'AdorshoLipi', PT Serif, Arial !important;
         font-size: 1.2rem;
-        width:60%;
     }
 }
 

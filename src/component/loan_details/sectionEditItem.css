@@ -1,0 +1,24 @@
+.section_item {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+.sec_item_def {
+    font-size: large;
+    font-weight: 550;
+}
+
+.section_item_label {
+    width: 30%;
+    margin-right: 5pt;
+}
+
+.section_item_colon {
+    margin-right: 10pt;
+}
+
+.section_item_value {
+    font-size: large;
+}

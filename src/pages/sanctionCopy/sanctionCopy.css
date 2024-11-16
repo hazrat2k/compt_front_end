@@ -39,17 +39,18 @@
     padding: 0.125rem;
 }
 
-.large_col{
-    width: 6%;
+.sc_large_col{
+    width: 6.5%;
 }
 
-.small_col{
-    width: 5%;
+.sc_small_col{
+    width: 5.5%;
 }
 
 .sc_table_cell{
     font-size: 9pt;
     text-align: center;
+    width: 100%;
 }
 
 .sc_in_words{

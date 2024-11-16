@@ -89,32 +89,21 @@ export default function Login() {
     };
 
     const checkValidation = (employ_data) => {
-        // const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
+        const duration = duration_calculation(employ_data["DATE_OF_BIRTH"]);
 
-        // if (duration["year"] < 10) {
-        //     setL_error(true);
-        //     setL_err_text_color(!l_err_text_color);
-        //     setL_error_text(
-        //         "Service period needs to be more than 10 years. Yours is " +
-        //             duration["year"] +
-        //             " years, " +
-        //             duration["month"] +
-        //             " months, " +
-        //             duration["day"] +
-        //             " days"
-        //     );
-        //     return false;
-        // } else {
-        //     setL_error(false);
-        // }
+        const teacherOrNot = employ_data["EMPLOYEE_ID"][0] == "T";
 
-        const retirementDate = new Date(employ_data["DATE_OF_RETIREMENT"]);
-        const currentDate = new Date();
-
-        if (retirementDate < currentDate) {
+        if (duration["year"] > 60 && !teacherOrNot) {
             setL_error(true);
             setL_err_text_color(!l_err_text_color);
-            setL_error_text("You are already retired.");
+            setL_error_text(
+                "You are retired already."
+            );
+            return false;
+        } else if (duration["year"] > 65 && teacherOrNot) {
+            setL_error(true);
+            setL_err_text_color(!l_err_text_color);
+            setL_error_text("You are retired already.");
             return false;
         } else {
             setL_error(false);

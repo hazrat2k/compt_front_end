@@ -17,7 +17,7 @@ export default function BillCopy() {
 
     const bc_sent_from = state["sentFrom"];
 
-    const bc_sanc_status = bc_sent_from == "accntt_fund" ? "BILL" : "BILLED";
+    const bc_sanc_status = bc_sent_from == "acct_fund" ? "BILL" : "BILLED";
 
     const bc_app_pos = state["app_pos"];
 
@@ -130,9 +130,10 @@ export default function BillCopy() {
         );
     };
 
-    const sal_table_col = (value) => {
+    const sal_table_col = (value, cn) => {
+        cn = "sal_table_col " + cn;
         return (
-            <div className="sal_table_col">
+            <div className={cn}>
                 <div className="sal_table_cell">{value}</div>
             </div>
         );
@@ -152,7 +153,7 @@ export default function BillCopy() {
 
     var total_sanction = 0;
 
-    if (bc_sent_from == "accntt_fund") {
+    if (bc_sent_from == "acct_fund") {
         count = 0;
         total_sanction = 0;
 
@@ -225,14 +226,14 @@ export default function BillCopy() {
                         {bc_table_col(" ", "small_col")}
                         {bc_table_col(
                             nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "small_col"
+                            "small_col bc_bold"
                         )}
                         {bc_table_col(10, "small_col")}
                         {bc_table_col(
                             nf.format(
                                 bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
                             ),
-                            "small_col"
+                            "small_col bc_bold"
                         )}
                     </div>
                 );
@@ -255,7 +256,8 @@ export default function BillCopy() {
                         {sal_table_col(
                             nf.format(
                                 bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
-                            )
+                            ),
+                            "bc_bold"
                         )}
                     </div>
                 );
@@ -329,14 +331,14 @@ export default function BillCopy() {
                         {bc_table_col(" ", "small_col")}
                         {bc_table_col(
                             nf.format(bc_sanc_loan_data[i]["SANCTION_AMOUNT"]),
-                            "small_col"
+                            "small_col bc_bold"
                         )}
                         {bc_table_col(10, "small_col")}
                         {bc_table_col(
                             nf.format(
                                 bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
                             ),
-                            "small_col"
+                            "small_col bc_bold"
                         )}
                     </div>
                 );
@@ -352,7 +354,8 @@ export default function BillCopy() {
                         {sal_table_col(
                             nf.format(
                                 bc_sanc_loan_data[i]["SANCTION_AMOUNT"] - 10
-                            )
+                            ),
+                            "bc_bold"
                         )}
                     </div>
                 );
@@ -408,7 +411,7 @@ export default function BillCopy() {
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="bill_copy">
-                {bc_sent_from == "accntt_fund" ? (
+                {bc_sent_from == "acct_fund" ? (
                     <select
                         className="bc_select"
                         onChange={(e) => {
@@ -431,7 +434,7 @@ export default function BillCopy() {
                     <>
                         <div className="bc_table">
                             <div className="bc_table_row bc_bold">
-                                {bc_sent_from == "accntt_fund" ? (
+                                {bc_sent_from == "acct_fund" ? (
                                     <input
                                         className="sc_checkbox"
                                         type="checkbox"
@@ -469,7 +472,7 @@ export default function BillCopy() {
                             TK. Only
                         </div>
 
-                        {bc_sent_from == "accntt_fund" ? (
+                        {bc_sent_from == "acct_fund" ? (
                             <BillCopyForm
                                 category={selectedCategory}
                                 loan_type={bc_loan_type}
@@ -493,7 +496,7 @@ export default function BillCopy() {
                     <>
                         <div className="bc_table">
                             <div className="bc_table_row bc_bold">
-                                {bc_sent_from == "accntt_fund" ? (
+                                {bc_sent_from == "acct_fund" ? (
                                     <input
                                         className="sc_checkbox"
                                         type="checkbox"

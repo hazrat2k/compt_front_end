@@ -144,7 +144,7 @@ export default function BasicInfo() {
                     <DataField
                         refer={accountNoRef}
                         type="data"
-                        label="৪. সোনালী ব্যাংক, বুয়েট শাখায় পরিচালিত হিসাব নম্বর "
+                        label="৪. হিসাব নম্বর "
                         value={accountNo}
                     />
 

@@ -9,6 +9,8 @@ import moment from "moment";
 
 import "./loanDetails.css";
 
+import SectionEditItem from "../../component/loan_details/sectionItemEdit";
+
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import LoanAssesmentForm from "../../utils/pdfCopy/loanAssesmentForm";
@@ -20,10 +22,21 @@ export default function LoanDetails() {
 
     const ld_data = state["data"];
 
+    const ld_loan_data = ld_data["loan_data"];
+
     const [ld_pers_data, setLd_pers_data] = useState([]);
-    const [ld_pl_sal, setLd_pl_sal] = useState([]);
     const [ld_pl_prev_loan_1, setLd_pl_prev_loan_1] = useState([]);
     const [ld_pl_remarks, setLd_pl_remarks] = useState([]);
+
+    const [ld_basic_salary, setLd_basic_salary] = useState(
+        Number(ld_loan_data[0]["LAST_MON_BASIC_SAL"])
+    );
+    const [ld_gross_salary, setLd_gross_salary] = useState(
+        Number(ld_loan_data[0]["LAST_MON_TOTAL_SAL"])
+    );
+    const [ld_total_deduct, setLd_total_deduct] = useState(
+        Number(ld_loan_data[0]["LAST_MON_TOTAL_DEDUCT"])
+    );
 
     useEffect(() => {
         const fetch_data = async () => {
@@ -41,12 +54,6 @@ export default function LoanDetails() {
                 uploadData = {
                     LOAN_ID: ld_data["LOAN_ID"],
                 };
-
-                const sal_res = await axios.post(
-                    "http://localhost:8800/processing_loan_salary",
-                    uploadData
-                );
-                setLd_pl_sal(sal_res.data);
 
                 const prev_loan_1_res = await axios.post(
                     "http://localhost:8800/processing_loan_prev_loan_1",
@@ -154,9 +161,9 @@ export default function LoanDetails() {
 
     ld_value["rem_serv_m"] = ld_duration[0] * 12 + ld_duration[1];
 
-    ld_value["basic_salary"] = 0;
-    ld_value["gross_salary"] = 0;
-    ld_value["deduct"] = 0;
+    ld_value["basic_salary"] = ld_basic_salary;
+    ld_value["gross_salary"] = ld_gross_salary;
+    ld_value["deduct"] = ld_total_deduct;
     ld_value["net_salary"] = 0;
 
     ld_value["pens_gra"] = 0;
@@ -206,16 +213,17 @@ export default function LoanDetails() {
             ? pension_rate_table[25]
             : pension_rate_table[ld_value["serv_len_y"]];
 
-    for (let i = 0; i < ld_pl_sal.length; i++) {
-        ld_value["basic_salary"] = Number(ld_pl_sal[0]["LAST_MON_BASIC_SAL"]);
-        ld_value["gross_salary"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_SAL"]);
-        ld_value["deduct"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_DEDUCT"]);
-        ld_value["net_salary"] = Number(ld_pl_sal[0]["LAST_MON_NET_SAL"]);
-    }
+    // for (let i = 0; i < ld_pl_sal.length; i++) {
+    //     ld_value["basic_salary"] = Number(ld_pl_sal[0]["LAST_MON_BASIC_SAL"]);
+    //     ld_value["gross_salary"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_SAL"]);
+    //     ld_value["deduct"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_DEDUCT"]);
+    // }
+
+    ld_value["net_salary"] = ld_gross_salary - ld_total_deduct;
 
     ld_value["pens_gra"] =
-        (ld_value["basic_salary"] * 0.5 * ld_pens_rate * ld_gra_rate) / 100;
-    ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_value["basic_salary"];
+        (ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100;
+    ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
     ld_value["tot_rec"] =
         ld_value["pens_gra"] + ld_value["leav_sal"] + ld_value["25_mon_gran"];
 
@@ -237,6 +245,7 @@ export default function LoanDetails() {
         ld_value["consu_loan"] +
         ld_value["lap_loan"] +
         ld_value["sblws_loan"];
+
     ld_value["net_rec"] = ld_value["tot_rec"] - ld_value["tot_pay"];
 
     ld_value["tot_loan_ins_amnt"] =
@@ -247,7 +256,7 @@ export default function LoanDetails() {
 
     ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
 
-    ld_value["60_basic_sal"] = ld_value["basic_salary"] * 0.6;
+    ld_value["60_basic_sal"] = ld_basic_salary * 0.6;
 
     var calc_mon = 0;
 
@@ -485,33 +494,25 @@ export default function LoanDetails() {
                     <div className="section_items">
                         <div className="section_items_div">
                             {sectionItem("1", "Loan ID", ld_value["loan_id"])}
-                            {sectionItem(
-                                "2",
-                                "Loan Application Date",
-                                ld_value["loan_app_date"]
-                            )}
+
                             {sectionItem(
                                 "3",
                                 "Loan Type",
                                 ld_value["loan_type"]
                             )}
-                            {sectionItem("4", "BUET ID", ld_value["buet_id"])}
+
                             {sectionItem(
                                 "5",
                                 "Applicant Name",
                                 ld_value["applicant_name"]
                             )}
-                            {sectionItem(
-                                "6",
-                                "Designation",
-                                ld_value["designation"]
-                            )}
+
                             {sectionItem(
                                 "7",
                                 "Office/Dept.",
                                 ld_value["office_dept"]
                             )}
-                            {sectionItem("8", "Date of Birth", ld_value["dob"])}
+
                             {ld_user
                                 ? ""
                                 : sectionItem(
@@ -520,7 +521,22 @@ export default function LoanDetails() {
                                       temp_status_t
                                   )}
                         </div>
-                        <div className="section_items_div"></div>
+                        <div className="section_items_div">
+                            {sectionItem(
+                                "2",
+                                "Application Date",
+                                ld_value["loan_app_date"]
+                            )}
+                            {sectionItem("4", "BUET ID", ld_value["buet_id"])}
+
+                            {sectionItem(
+                                "6",
+                                "Designation",
+                                ld_value["designation"]
+                            )}
+
+                            {sectionItem("8", "Date of Birth", ld_value["dob"])}
+                        </div>
                     </div>
                 </div>
 
@@ -560,32 +576,72 @@ export default function LoanDetails() {
                 <div className="assessment_section salary_information">
                     <div className="section_label">C) Salary Information :</div>
 
-                    <div className="section_items">
-                        <div className="section_items_div">
-                            {sectionItem(
-                                "1",
-                                "Basic Salary",
-                                nf.format(ld_value["basic_salary"])
-                            )}
-                            {sectionItem(
-                                "3",
-                                "Deduction",
-                                nf.format(ld_value["deduct"])
-                            )}
+                    {ld_data["sendFrom"] == "acct_fund" ? (
+                        <div className="section_items">
+                            <div className="section_items_div">
+                                <SectionEditItem
+                                    index="1"
+                                    label="Basic Salary"
+                                    value={ld_basic_salary}
+                                    setValue={(data) => {
+                                        setLd_basic_salary(data);
+                                    }}
+                                />
+
+                                <SectionEditItem
+                                    index="3"
+                                    label="Deduction"
+                                    value={ld_total_deduct}
+                                    setValue={(data) => {
+                                        setLd_total_deduct(data);
+                                    }}
+                                />
+                            </div>
+                            <div className="section_items_div">
+                                <SectionEditItem
+                                    index="2"
+                                    label="Gross Salary"
+                                    value={ld_gross_salary}
+                                    setValue={(data) => {
+                                        setLd_gross_salary(data);
+                                    }}
+                                />
+                                {sectionItem(
+                                    "4",
+                                    "Net Salary",
+                                    nf.format(ld_value["net_salary"])
+                                )}
+                            </div>
                         </div>
-                        <div className="section_items_div">
-                            {sectionItem(
-                                "2",
-                                "Gross Salary",
-                                nf.format(ld_value["gross_salary"])
-                            )}
-                            {sectionItem(
-                                "4",
-                                "Net Salary",
-                                nf.format(ld_value["net_salary"])
-                            )}
+                    ) : (
+                        <div className="section_items">
+                            <div className="section_items_div">
+                                {sectionItem(
+                                    "1",
+                                    "Basic Salary",
+                                    nf.format(ld_basic_salary)
+                                )}
+
+                                {sectionItem(
+                                    "3",
+                                    "Deduction",
+                                    nf.format(ld_total_deduct)
+                                )}
+                            </div>
+                            <div className="section_items_div">
+                                {sectionItem(
+                                    "2",
+                                    "Gross Salary",
+                                    nf.format(ld_gross_salary)
+                                )}
+                                {sectionItem(
+                                    "4",
+                                    "Net Salary",
+                                    nf.format(ld_value["net_salary"])
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div className="assessment_section financial_position">
@@ -781,27 +837,27 @@ export default function LoanDetails() {
                     </div>
                 </div>
 
-                {ld_user &&
-                (temp_status < 6 || (temp_status > 11 && temp_status < 15)) ? (
-                    <div className="ld_button">
+                <div className="ld_button">
+                    {ld_user &&
+                    (temp_status < 6 ||
+                        (temp_status > 11 && temp_status < 15)) ? (
                         <div className="ld_forward" onClick={onForwardClick}>
                             Forward
                         </div>
-                        {ld_data["sendFrom"] === "accntt_fund" ? (
-                            <LoanAssesmentForm lafData={ld_value} />
-                        ) : (
-                            ""
-                        )}
-                        {ld_data["sendFrom"] === "accntt_fund" &&
-                        temp_status > 11 ? (
-                            <OfficeOrderCopy data={off_or_copy} />
-                        ) : (
-                            ""
-                        )}
-                    </div>
-                ) : (
-                    ""
-                )}
+                    ) : (
+                        ""
+                    )}
+                    {ld_data["sendFrom"] === "acct_fund" ? (
+                        <LoanAssesmentForm lafData={ld_value} />
+                    ) : (
+                        ""
+                    )}
+                    {ld_data["sendFrom"] === "acct_fund" && temp_status > 11 ? (
+                        <OfficeOrderCopy data={off_or_copy} />
+                    ) : (
+                        ""
+                    )}
+                </div>
             </div>
 
             <Footer />

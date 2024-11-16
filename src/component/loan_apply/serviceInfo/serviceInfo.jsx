@@ -73,13 +73,13 @@ export default function ServiceInfo(props) {
 
                 <DataField
                     type="data"
-                    label="খ) বিশ্ববিদ্যালয়ের চাকুরী "
+                    label="খ) চাকুরীর ধরণ "
                     value={servData["APPOINTMENT_TYPE"]}
                 />
 
                 <DataField
                     type="data"
-                    label="গ) বিশ্ববিদ্যালয়ে যোগদানের তারিখ "
+                    label="গ) যোগদানের তারিখ "
                     value={moment(new Date(servData["DATE_FIRST_JOIN"])).format(
                         "DD MMM YYYY"
                     )}
@@ -87,13 +87,13 @@ export default function ServiceInfo(props) {
 
                 <DataField
                     type="data"
-                    label="ঘ) এই বিশ্ববিদ্যালয়ে মোট চাকুরীকাল "
+                    label="ঘ) মোট চাকুরীকাল "
                     value={servData["SERV_PERIOD"]}
                 />
 
                 <DataField
                     type="data"
-                    label="ঙ) চাকুরীর বয়স পূর্তির তারিখ (শিক্ষকের বয়স ৬৫ বছর, কর্মকর্তা/কর্মচারীর বয়স ৬০ বছর) "
+                    label="ঙ) অবসরের তারিখ "
                     value={moment(
                         new Date(servData["DATE_OF_RETIREMENT"])
                     ).format("DD MMM YYYY")}

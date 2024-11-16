@@ -55,8 +55,9 @@ export default function LoanInfo() {
 
     const table_data = [
         [
+            //গৃহ নির্মাণ/মেরামত/জমি ক্রয়/মোটরযান ক্রয়
             "০১",
-            "মোটরযান ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয়",
+            "গৃহ নির্মাণ ঋণ",
             "House Building Loan",
         ],
         ["০২", "ভোগ্যপণ্য ঋণ", "Consumer Loan"],
@@ -242,8 +243,7 @@ export default function LoanInfo() {
                 state: { info: loan_data, used: "yes" },
             });
         }
-    }
-    
+    };
 
     return (
         <div>

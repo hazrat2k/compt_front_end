@@ -49,11 +49,11 @@ const createRlData = (
 };
 
 const loanTypes = [
-    "HOUSE BUILDING LOAN",
-    "CONSUMER LOAN",
-    "LAPTOP LOAN",
-    "SBL HOUSE BUILDING LOAN",
-    "SBL WHOLESALE LOAN",
+    "House Building Loan",
+    "Consumer Loan",
+    "Laptop Loan",
+    "SBL House Building Loan",
+    "SBL Wholesale Loan",
 ];
 
 const duration_calculation = (date) => {
@@ -115,7 +115,7 @@ const LoanApply = (props) => {
             setLaDEColor(!laDEColor);
             setLaDialogError(
                 "You already have a " +
-                    ToTitleCase(pro_loan[0]["LOAN_TYPE"]) +
+                    pro_loan[0]["LOAN_TYPE"] +
                     " processing."
             );
             return false;
@@ -127,15 +127,14 @@ const LoanApply = (props) => {
         if (loan.length != 0) {
             setLaDEColor(!laDEColor);
             setLaDialogError(
-                "You already have a " +
-                    ToTitleCase(loan[0]["LOAN_TYPE"]) +
-                    " running."
+                "You already have a " + loan[0]["LOAN_TYPE_NAME"] + " running."
             );
             return false;
         } else {
             setLaDialogError("");
         }
 
+        // whether service period is more than 10 years or not.
         if (duration["year"] < 10) {
             setLaDEColor(!laDEColor);
             setLaDialogError(
@@ -152,18 +151,17 @@ const LoanApply = (props) => {
             setLaDialogError("");
         }
 
-        return false;
+        return true;
     };
 
     const handleListItemClick = async (value) => {
-        if (value != "HOUSE BUILDING LOAN") {
+        if (value != "House Building Loan") {
             setLaDEColor(!laDEColor);
             setLaDialogError(
-                "Only HOUSE BUILDING LOAN is being processed currently."
+                "Only House Building Loan is being processed currently."
             );
         } else {
             setLaDialogError("");
-            var temp_l_t = ToTitleCase(value);
 
             var loan_data = [];
 
@@ -172,9 +170,8 @@ const LoanApply = (props) => {
             try {
                 const uploadLoan = {
                     EMPLOYEEID: employ_data["EMPLOYEEID"],
-                    LOAN_TYPE: temp_l_t,
+                    LOAN_TYPE: value,
                 };
-
                 const loan_res = await axios.post(
                     "http://localhost:8800/loan_with_type",
                     uploadLoan
@@ -185,23 +182,20 @@ const LoanApply = (props) => {
                     EMPLOYEEID: employ_data["EMPLOYEEID"],
                     LOAN_TYPE: value,
                 };
-
                 const IdTypeRes = await axios.post(
                     "http://localhost:8800/processing_loan_info_with_emp_id",
                     uploadIdType
                 );
-
                 pro_loan_data = IdTypeRes.data;
             } catch (err) {
                 console.log(err);
             }
 
-            // whether service period is more than 10 years or not.
             if (checkValidation(pro_loan_data, loan_data)) {
                 edNavigate("/application/1", {
                     state: {
                         info: employ_data,
-                        loan_type: temp_l_t,
+                        loan_type: value,
                         used: "no",
                     },
                 });
@@ -298,11 +292,11 @@ const LoanStatus = (props) => {
                         No loan is being processed currently
                     </Typography>
                 ) : (
-                    <TableContainer style={{marginBottom: "20px"}} component={Paper}>
-                        <Table
-                            sx={{ minWidth: 650 }}
-                            aria-label="simple table"
-                        >
+                    <TableContainer
+                        style={{ marginBottom: "20px" }}
+                        component={Paper}
+                    >
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell
@@ -585,6 +579,8 @@ export default function EmployeeDash() {
     const ed_data = state["info"];
     const fSize = "18px";
 
+    const ed_navigate = useNavigate();
+
     const plRows = [];
     const rlRows = [];
 
@@ -673,48 +669,60 @@ export default function EmployeeDash() {
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="ed_body">
-                <div className="ed_label">Employee Dash</div>
+                <div className="ed_label">Employee Dashboard</div>
 
                 <div className="ed_section">
                     <div className="ed_sec_label">Personal Information : </div>
                     <div className="ed_double_items">
                         <DataField
                             type="data"
-                            label="BUET ID"
-                            value={ed_data["EMPLOYEE_ID"]}
-                            fontSize={fSize}
-                        />
-                        <DataField
-                            type="data"
                             label="Name"
                             value={ed_data["EMPLOYEE_NAME"]}
                             fontSize={fSize}
                         />
-                    </div>
-                    <div className="ed_double_items">
                         <DataField
                             type="data"
                             label="Designation"
                             value={ed_data["DESIGNATION"]}
                             fontSize={fSize}
                         />
+                    </div>
+                    <div className="ed_double_items">
                         <DataField
                             type="data"
                             label="Office"
                             value={ed_data["OFFICE"]}
                             fontSize={fSize}
                         />
+
+                        <DataField
+                            type="data"
+                            label="BUET ID"
+                            value={ed_data["EMPLOYEE_ID"]}
+                            fontSize={fSize}
+                        />
+                    </div>
+                </div>
+
+                <div className="ld_button">
+                    <div
+                        className="ld_forward"
+                        onClick={() => {
+                            ed_navigate("/employeelogin");
+                        }}
+                    >
+                        Log out
                     </div>
                 </div>
 
                 <div className="ed_section">
                     <div className="ed_sec_label"> Loan Section : </div>
                     <div className="ed_double_items">
-                        <div className="ed_button" onClick={onHandleLoanApply}>
-                            Apply for Loan
-                        </div>
                         <div className="ed_button" onClick={onHandleLoanStatus}>
                             Check Loan Status
+                        </div>
+                        <div className="ed_button" onClick={onHandleLoanApply}>
+                            Apply for Loan
                         </div>
                     </div>
                 </div>
@@ -733,7 +741,7 @@ export default function EmployeeDash() {
                     proLoan={plRows}
                     runLoan={rlRows}
                     onLoanStatusClose={handleLoanStatusClose}
-                    title="Check Loan Status"
+                    title="Current Loan Status"
                 />
             </div>
 

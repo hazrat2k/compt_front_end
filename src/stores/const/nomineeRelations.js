@@ -28,6 +28,11 @@ const nomineeRelations = [
         title: "DAUGHTER",
         value: "DAUGHTER",
     },
+
+    {
+        title: "SPOUSE",
+        value: "SPOUSE",
+    },
 ];
 
 export default nomineeRelations;

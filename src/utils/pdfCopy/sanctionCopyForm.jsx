@@ -2,87 +2,100 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 
-import { BlobProvider, Document, Page, View, Text, Image, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
+import {
+    BlobProvider,
+    Document,
+    Page,
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    Font,
+    PDFViewer,
+} from "@react-pdf/renderer";
+
+import InWords from "../functions/inWords";
 
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 
-
-
-Font.register({family: 'English Bold', fontWeight: 'normal', src: PT_Serif_Bold});
-Font.register({family: 'English', fontWeight: 'normal', src: "http://fonts.gstatic.com/s/ptserif/v8/EgBlzoNBIHxNPCMwXaAhYPesZW2xOQ-xsNqO47m55DA.ttf"});
-
+Font.register({
+    family: "English Bold",
+    fontWeight: "normal",
+    src: PT_Serif_Bold,
+});
+Font.register({
+    family: "English",
+    fontWeight: "normal",
+    src: "http://fonts.gstatic.com/s/ptserif/v8/EgBlzoNBIHxNPCMwXaAhYPesZW2xOQ-xsNqO47m55DA.ttf",
+});
 
 const styles = StyleSheet.create({
-    viewer:{
+    viewer: {
         width: window.innerWidth,
         height: window.innerHeight,
     },
 
-    pageLabel:{
+    pageLabel: {
         textAlign: "center",
         fontFamily: "English",
         fontSize: "12pt",
         fontWeight: "bold",
         marginBottom: "5pt",
         color: "black",
-        marginTop: "3pt"
+        marginTop: "3pt",
     },
-
 });
 
-
 const style_logo = StyleSheet.create({
-    logo:{
+    logo: {
         marginTop: "5pt",
         display: "flex",
         flexDirection: "row",
         padding: "10pt",
-        alignSelf:"center",
-        alignItems:"start"
+        alignSelf: "center",
+        alignItems: "start",
     },
 
-    logo_img:{
+    logo_img: {
         float: "center",
     },
 
-    l_img:{
+    l_img: {
         height: "35pt",
-        width: "35pt"
+        width: "35pt",
     },
 
-
-    logo_text:{
+    logo_text: {
         color: "crimson",
         marginLeft: "1%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
     },
 
-
-    logo_text_1:{
+    logo_text_1: {
         fontSize: "10pt",
         fontWeight: "bold",
         fontFamily: "English Bold",
     },
 
-    logo_text_2:{
+    logo_text_2: {
         fontSize: "10pt",
         fontFamily: "English",
-        textAlign: "center"
+        textAlign: "center",
     },
 });
 
 const style_sc = StyleSheet.create({
-    sc_table:{
+    sc_table: {
         display: "flex",
         flexDirection: "column",
         width: "100%",
         fontFamily: "English",
     },
 
-    sc_table_row:{
+    sc_table_row: {
         display: "flex",
         flexDirection: "row",
         padding: "2.5pt 5pt",
@@ -90,71 +103,67 @@ const style_sc = StyleSheet.create({
         borderTop: "1px solid black",
     },
 
-    sc_bold:{
+    sc_bold: {
         fontFamily: "English Bold",
     },
 
-    sc_table_col:{
+    sc_table_col: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "1pt",
-
     },
 
-    large_col:{
-        width: "6%",
-    },
-    
-    small_col:{
-        width: "5%",
+    large_col: {
+        width: "6.5%",
     },
 
-    sl_col:{
+    small_col: {
+        width: "5.5%",
+    },
+
+    sl_col: {
         width: "3%",
     },
 
-    loan_id_col:{
+    loan_id_col: {
         width: "8%",
     },
 
-    sc_table_cell:{
+    sc_table_cell: {
         fontSize: "8pt",
-        textAlign: "center"
+        textAlign: "center",
     },
 
-    sc_in_words:{
+    sc_in_words: {
         display: "flex",
         flexDirection: "row",
-        padding: "10pt 20pt"
+        padding: "10pt 20pt",
     },
-    
-    sc_text:{
+
+    sc_text: {
         fontFamily: "English Bold",
         textTransform: "uppercase",
-        fontSize: "8pt"
-    }
-
-
+        fontSize: "8pt",
+    },
 });
 
 const style_sig = StyleSheet.create({
-
-    all_sig:{
+    all_sig: {
         display: "flex",
         flexDirection: "column",
         fontFamily: "English",
     },
 
-    sig_label:{
+    sig_label: {
         fontSize: "10pt",
         fontFamily: "English Bold",
         textAlign: "center",
-        textDecoration: "underline"
+        textDecoration: "underline",
     },
 
-    sig_area:{
+    sig_area: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-evenly",
@@ -163,7 +172,7 @@ const style_sig = StyleSheet.create({
         marginTop: "20pt",
     },
 
-    sig_box:{
+    sig_box: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -171,22 +180,18 @@ const style_sig = StyleSheet.create({
         fontFamily: "English",
     },
 
-    sig_lc_field:{
+    sig_lc_field: {
         fontSize: "6pt",
-        textAlign: "center"
+        textAlign: "center",
     },
 
-    sig_field:{
+    sig_field: {
         fontSize: "8pt",
-        textAlign: "center"
+        textAlign: "center",
     },
-
 });
 
-
-
-export default function SanctionCopyForm(props){
-
+export default function SanctionCopyForm(props) {
     const scf_navigate = useNavigate();
 
     const [sc_sanc_loan_data, setSc_sanc_loan_data] = useState([]);
@@ -204,7 +209,8 @@ export default function SanctionCopyForm(props){
 
     const scf_sent_from = props.sentFrom;
 
-    const scf_sanc_status = scf_sent_from == "accntt_fund" ? "IN PROCESS" : "SANCTIONED";
+    const scf_sanc_status =
+        scf_sent_from == "acct_fund" ? "IN PROCESS" : "SANCTIONED";
 
     var scf_app_pos = props.app_pos;
 
@@ -215,15 +221,14 @@ export default function SanctionCopyForm(props){
     const [laf_hover, setLaf_hover] = useState(false);
 
     const style_butt = StyleSheet.create({
-
-        sc_button:{
+        sc_button: {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-evenly",
             alignItems: "center",
         },
 
-        forward_butt:{
+        forward_butt: {
             width: for_hover ? "150pt" : "120pt",
             height: "auto",
             fontFamily: "PT Serif",
@@ -237,10 +242,10 @@ export default function SanctionCopyForm(props){
             color: for_hover ? "white" : "#3f8ba8",
             fontSize: for_hover ? "20pt" : "15pt",
             cursor: for_hover ? "pointer" : "default",
-            transition: "all ease 0.3s"
+            transition: "all ease 0.3s",
         },
 
-        download_butt:{
+        download_butt: {
             width: laf_hover ? "150pt" : "120pt",
             height: "auto",
             fontFamily: "PT Serif",
@@ -254,154 +259,183 @@ export default function SanctionCopyForm(props){
             color: laf_hover ? "white" : "#3f8ba8",
             fontSize: laf_hover ? "20pt" : "15pt",
             cursor: laf_hover ? "pointer" : "default",
-            transition: "all ease 0.3s"
+            transition: "all ease 0.3s",
         },
 
-        alert_message:{
+        alert_message: {
             textAlign: "center",
             color: "gray",
             fontSize: "20pt",
         },
-
-        
     });
 
-    var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
-    var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
-
-    const inWords = (num) => {
-        if ((num = num.toString()).length > 9) return 'overflow';
-        var n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n) return;
-        var str = '';
-        str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'crore ' : '';
-        str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'lakh ' : '';
-        str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
-        str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
-        str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
-        return str;
-    }
-
-    useEffect( () => {
-        const fetch_sanction_loan_data = async () =>{
+    useEffect(() => {
+        const fetch_sanction_loan_data = async () => {
             const uploadLoanType = {
-                "LOAN_TYPE" : scf_loan_type,
-                "SANC_STATUS" : scf_sanc_status
-            }
+                LOAN_TYPE: scf_loan_type,
+                SANC_STATUS: scf_sanc_status,
+            };
 
-            try{
-                const sanc_res = await axios.post("http://localhost:8800/sanction_loan", uploadLoanType);
+            try {
+                const sanc_res = await axios.post(
+                    "http://localhost:8800/sanction_loan",
+                    uploadLoanType
+                );
                 setSc_sanc_loan_data(sanc_res.data);
 
                 var uploadData = {
-                    "USERNAME" : scf_sent_from
-                }
-        
-                const scf_data_res = await axios.post("http://localhost:8800/personeel_login", uploadData);
-                setScf_pers_data(scf_data_res.data);
+                    USERNAME: scf_sent_from,
+                };
 
-            }catch(err){
+                const scf_data_res = await axios.post(
+                    "http://localhost:8800/personeel_login",
+                    uploadData
+                );
+                setScf_pers_data(scf_data_res.data);
+            } catch (err) {
                 console.log(err);
             }
-
-
-
-
-        }
+        };
         fetch_sanction_loan_data();
     }, []);
 
-
     const sc_table_col = (value, cn) => {
-        
-        return(
-            <View style={[style_sc.sc_table_col, cn == "small_col" ? style_sc.small_col : style_sc.large_col]}> 
+        return (
+            <View
+                style={[
+                    style_sc.sc_table_col,
+                    cn == "small_col" ? style_sc.small_col : style_sc.large_col,
+                ]}
+            >
                 <Text style={style_sc.sc_table_cell}>{value}</Text>
             </View>
         );
-    }
+    };
 
     const sc_lc_sig = (name, designation) => {
-        return(
+        return (
             <View style={style_sig.sig_box}>
                 <Text style={style_sig.sig_lc_field}>
                     ------------------------------
                 </Text>
-                <Text style={style_sig.sig_lc_field}>
-                    {name}
-                </Text>
-                <Text style={style_sig.sig_lc_field}>
-                    {designation}
-                </Text>
+                <Text style={style_sig.sig_lc_field}>{name}</Text>
+                <Text style={style_sig.sig_lc_field}>{designation}</Text>
                 <Text style={style_sig.sig_lc_field}>
                     Consumer Loan Approval Committe
                 </Text>
             </View>
         );
-    }
+    };
 
-    const sc_sig = (designation) =>{
-        return(
+    const sc_sig = (designation) => {
+        return (
             <View style={style_sig.sig_box}>
                 <Text style={style_sig.sig_field}>
                     --------------------------------------
                 </Text>
-                
-                <Text style={style_sig.sig_field}>
-                    {designation}
-                </Text>
+
+                <Text style={style_sig.sig_field}>{designation}</Text>
             </View>
         );
-    }
+    };
 
-    let nf = new Intl.NumberFormat('en-US');
+    let nf = new Intl.NumberFormat("en-US");
 
     var count = 0;
     var sanction_total = 0;
     var sanctioned_loan_ids = "";
 
-    for(let i=0;i<sc_sanc_loan_data.length;i++){
-        if(scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]){
-
+    for (let i = 0; i < sc_sanc_loan_data.length; i++) {
+        if (scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]) {
             sanctioned_loan_ids += sc_sanc_loan_data[i]["LOAN_ID"] + ",";
 
             sc_sanc_loan_display.push(
                 <View style={style_sc.sc_table_row}>
-                    <View style={[style_sc.sc_table_col, style_sc.sl_col]}> 
+                    <View style={[style_sc.sc_table_col, style_sc.sl_col]}>
                         <Text style={style_sc.sc_table_cell}>{++count}</Text>
                     </View>
-                    <View style={[style_sc.sc_table_col, style_sc.loan_id_col]}> 
-                        <Text style={style_sc.sc_table_cell}>{sc_sanc_loan_data[i]["LOAN_ID"]}</Text>
+                    <View style={[style_sc.sc_table_col, style_sc.loan_id_col]}>
+                        <Text style={style_sc.sc_table_cell}>
+                            {sc_sanc_loan_data[i]["LOAN_ID"]}
+                        </Text>
                     </View>
-                    {sc_table_col(sc_sanc_loan_data[i]["EMPLOYEE_NAME"], "large_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DESIGNATION"], "large_col")}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["EMPLOYEE_NAME"],
+                        "large_col"
+                    )}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["DESIGNATION"],
+                        "large_col"
+                    )}
                     {sc_table_col(sc_sanc_loan_data[i]["OFFICE"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["CATEGORY"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DATE_OF_BIRTH"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"], "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["NET_PAY"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]),"small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]),"small_col")}
-                    <View style={[style_sc.sc_table_col, style_sc.large_col, style_sc.sc_bold]}> 
-                        <Text style={style_sc.sc_table_cell}>{nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"])}</Text>
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["CATEGORY"],
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["NET_PAY"]),
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["APPLY_AMOUNT"]),
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["ALLOW_AMOUNT"]),
+                        "small_col"
+                    )}
+                    <View
+                        style={[
+                            style_sc.sc_table_col,
+                            style_sc.large_col,
+                            style_sc.sc_bold,
+                        ]}
+                    >
+                        <Text style={style_sc.sc_table_cell}>
+                            {nf.format(sc_sanc_loan_data[i]["SANCTION_AMOUNT"])}
+                        </Text>
                     </View>
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]), "large_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]), "small_col")}
-                    {sc_table_col(nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]), "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["INSTALL_NO"], "small_col")}
-                    {sc_table_col(sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"], "small_col")}
-                    {sc_table_col(" ", "small_col")}
-                    {sc_table_col(" ", "small_col")}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["RECOVERY_AMOUNT"]),
+                        "large_col"
+                    )}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["INSTALL_AMOUNT"]),
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        nf.format(sc_sanc_loan_data[i]["TOTAL_INTEREST"]),
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["INSTALL_NO"],
+                        "small_col"
+                    )}
+                    {sc_table_col(
+                        sc_sanc_loan_data[i]["BANK_ACCOUNT_NO"],
+                        "small_col"
+                    )}
+                    {/* {sc_table_col(" ", "small_col")}
+                    {sc_table_col(" ", "small_col")} */}
                 </View>
             );
 
             sanction_total += Number(sc_sanc_loan_data[i]["SANCTION_AMOUNT"]);
-
-
         }
     }
 
-    sanctioned_loan_ids = sanctioned_loan_ids.slice(0, sanctioned_loan_ids.length-1);
+    sanctioned_loan_ids = sanctioned_loan_ids.slice(
+        0,
+        sanctioned_loan_ids.length - 1
+    );
 
     sc_sanc_loan_display.push(
         <View style={style_sc.sc_table_row}>
@@ -414,35 +448,52 @@ export default function SanctionCopyForm(props){
             {sc_table_col(" ", "small_col")}
             {sc_table_col(" ", "small_col")}
             {sc_table_col(" ", "small_col")}
-            {sc_table_col("TOTAL","small_col")}
-            <View style={[style_sc.sc_table_col, style_sc.large_col, style_sc.sc_bold]}> 
-                <Text style={style_sc.sc_table_cell}>{nf.format(sanction_total)}</Text>
+            <View
+                style={[
+                    style_sc.sc_table_col,
+                    style_sc.large_col,
+                    style_sc.sc_bold,
+                ]}
+            >
+                <Text style={style_sc.sc_table_cell}>TOTAL</Text>
             </View>
-            
+            <View
+                style={[
+                    style_sc.sc_table_col,
+                    style_sc.large_col,
+                    style_sc.sc_bold,
+                ]}
+            >
+                <Text style={style_sc.sc_table_cell}>
+                    {nf.format(sanction_total)}
+                </Text>
+            </View>
         </View>
     );
 
     var scf_personnel_data = [];
-    if(scf_pers_data.length != 0){
+    if (scf_pers_data.length != 0) {
         scf_personnel_data = scf_pers_data[0];
     }
 
-
     const MySanctionForm = (
-
         <Document>
-
-            <Page size="A4" orientation="landscape" style={{paddingLeft: "5pt", paddingRight: "5pt"}}>
-                <View style={{marginTop:"10pt"}}></View>
+            <Page
+                size="A4"
+                orientation="landscape"
+                style={{ paddingLeft: "5pt", paddingRight: "5pt" }}
+            >
+                <View style={{ marginTop: "10pt" }}></View>
 
                 <View style={style_logo.logo}>
                     <View style={style_logo.logo_img}>
-                        <Image style={style_logo.l_img} src={logo_image}/>
+                        <Image style={style_logo.l_img} src={logo_image} />
                     </View>
 
                     <View style={style_logo.logo_text}>
                         <Text style={style_logo.logo_text_1}>
-                            Bangladesh University of Engineering and Technology (BUET)
+                            Bangladesh University of Engineering and Technology
+                            (BUET)
                         </Text>
                         <Text style={style_logo.logo_text_2}>
                             COMPTROLLER OFFICE
@@ -451,16 +502,19 @@ export default function SanctionCopyForm(props){
                             {scf_loan_type} FOR SANCTION
                         </Text>
                     </View>
-
                 </View>
 
                 <View style={style_sc.sc_table}>
                     <View style={[style_sc.sc_table_row, style_sc.sc_bold]}>
-
-                        <View style={[style_sc.sc_table_col, style_sc.sl_col]}> 
+                        <View style={[style_sc.sc_table_col, style_sc.sl_col]}>
                             <Text style={style_sc.sc_table_cell}>SL NO</Text>
                         </View>
-                        <View style={[style_sc.sc_table_col, style_sc.loan_id_col]}> 
+                        <View
+                            style={[
+                                style_sc.sc_table_col,
+                                style_sc.loan_id_col,
+                            ]}
+                        >
                             <Text style={style_sc.sc_table_cell}>LOAN ID</Text>
                         </View>
                         {sc_table_col("NAME", "large_col")}
@@ -478,27 +532,26 @@ export default function SanctionCopyForm(props){
                         {sc_table_col("TOTAL INTEREST", "small_col")}
                         {sc_table_col("INST NO", "small_col")}
                         {sc_table_col("ACCOUNT NO", "small_col")}
-                        {sc_table_col("LAST AP N", "small_col")}
-                        {sc_table_col("LAST LOAN D", "small_col")}
+                        {/* {sc_table_col("LAST AP N", "small_col")}
+                        {sc_table_col("LAST LOAN D", "small_col")} */}
                     </View>
 
                     {sc_sanc_loan_display}
-                     
                 </View>
 
                 <View style={style_sc.sc_in_words}>
                     <Text style={style_sc.sc_text}>
-                        In Words : {inWords(sanction_total)} TK. Only
+                        In Words : {InWords(sanction_total)} TK. Only
                     </Text>
                 </View>
 
-
                 <View style={style_sig.all_sig}>
-                    <Text style={style_sig.sig_label}>
-                        Loan Committe
-                    </Text>
+                    <Text style={style_sig.sig_label}>Loan Committe</Text>
                     <View style={style_sig.sig_area}>
-                        {sc_lc_sig("Prof. Dr. Muhammad Masroor Ali", "President")}
+                        {sc_lc_sig(
+                            "Prof. Dr. Muhammad Masroor Ali",
+                            "President"
+                        )}
                         {sc_lc_sig("Dr. Tanvir Ahmed", "Member")}
                         {sc_lc_sig("Dr. Kazi Arafat Rahman", "Member")}
                         {sc_lc_sig("Md. Sozibur Rahman", "Member")}
@@ -508,12 +561,18 @@ export default function SanctionCopyForm(props){
                     </View>
                 </View>
 
-                <View style={{marginTop:"5pt",marginBottom: "5pt", borderTop: "1px solid black", width: "80%", alignSelf: "center"}}></View>
+                <View
+                    style={{
+                        marginTop: "5pt",
+                        marginBottom: "5pt",
+                        borderTop: "1px solid black",
+                        width: "80%",
+                        alignSelf: "center",
+                    }}
+                ></View>
 
                 <View style={style_sig.all_sig}>
-                    <Text style={style_sig.sig_label}>
-                        Fund Section
-                    </Text>
+                    <Text style={style_sig.sig_label}>Fund Section</Text>
                     <View style={style_sig.sig_area}>
                         {sc_sig("ASS. ACCT./ACCT")}
                         {sc_sig("SR A.D.")}
@@ -522,12 +581,18 @@ export default function SanctionCopyForm(props){
                     </View>
                 </View>
 
-                <View style={{marginTop:"5pt",marginBottom: "5pt", borderTop: "1px solid black", width: "80%", alignSelf: "center"}}></View>
+                <View
+                    style={{
+                        marginTop: "5pt",
+                        marginBottom: "5pt",
+                        borderTop: "1px solid black",
+                        width: "80%",
+                        alignSelf: "center",
+                    }}
+                ></View>
 
                 <View style={style_sig.all_sig}>
-                    <Text style={style_sig.sig_label}>
-                        AUDIT
-                    </Text>
+                    <Text style={style_sig.sig_label}>AUDIT</Text>
                     <View style={style_sig.sig_area}>
                         {sc_sig("ASS. ACCT./ACCT")}
                         {sc_sig("A.O.")}
@@ -536,23 +601,19 @@ export default function SanctionCopyForm(props){
                     </View>
                 </View>
 
-                <View style={{marginTop:"20pt"}}></View>
+                <View style={{ marginTop: "20pt" }}></View>
 
                 {sc_sig("HONORABLE PRO-VC")}
-
             </Page>
-
         </Document>
-
     );
-
 
     const downloadURI = (uri, name) => {
         const link = document.createElement("a");
         link.href = uri;
         link.download = name;
         link.click();
-    }
+    };
 
     const onSCDownload = (e) => {
         e.preventDefault();
@@ -560,181 +621,189 @@ export default function SanctionCopyForm(props){
         if (!scUrl) {
             return;
         }
-        downloadURI(scUrl, 'sanction_copy.pdf');
-    }
+        downloadURI(scUrl, "sanction_copy.pdf");
+    };
 
     const onScForwardClick = async () => {
-
-        if(count==0){
+        if (count == 0) {
             setScf_remarks_error(true);
             setScf_remarks_error_text("***Select at least one loan to forward");
             return;
-        }else{
+        } else {
             setScf_remarks_error(false);
         }
 
-
-        if(scf_remarks == ""){
+        if (scf_remarks == "") {
             setScf_remarks_error(true);
             setScf_remarks_error_text("***Remarks must be written to forward");
             return;
-        }else{
+        } else {
             setScf_remarks_error(false);
         }
 
-
         const new_date = new Date();
 
-        if(scf_sent_from == "accntt_fund"){
-
+        if (scf_sent_from == "acct_fund") {
             scf_app_pos = 6;
 
             const upload_sanctioned_loan = {
-                "LOAN_ID": sanctioned_loan_ids,
-                "LOAN_TYPE": scf_loan_type,
-                "APP_POS": 7,
-                "SANC_DATE": new_date,
-                "SANCTION_STATUS": "SANCTIONED"
+                LOAN_ID: sanctioned_loan_ids,
+                LOAN_TYPE: scf_loan_type,
+                APP_POS: 7,
+                SANC_DATE: new_date,
+                SANCTION_STATUS: "SANCTIONED",
             };
 
-            try{
-                await axios.post("http://localhost:8800/sanctioning_loan", upload_sanctioned_loan);
-    
-            }catch(err){
+            try {
+                await axios.post(
+                    "http://localhost:8800/sanctioning_loan",
+                    upload_sanctioned_loan
+                );
+            } catch (err) {
                 console.log(err);
             }
 
-            try{
-                await axios.put("http://localhost:8800/sanction", {"loan_id" : sanctioned_loan_ids, "status" : "SANCTIONED"});
-    
-            }catch(err){
+            try {
+                await axios.put("http://localhost:8800/sanction", {
+                    loan_id: sanctioned_loan_ids,
+                    status: "SANCTIONED",
+                });
+            } catch (err) {
                 console.log(err);
             }
-
-        }else if(scf_sent_from == "dc_audit"){
-            try{
-                await axios.put("http://localhost:8800/sanction", {"loan_id" : sanctioned_loan_ids, "status" : "OFF_ORD"});
-    
-            }catch(err){
+        } else if (scf_sent_from == "dc_audit") {
+            try {
+                await axios.put("http://localhost:8800/sanction", {
+                    loan_id: sanctioned_loan_ids,
+                    status: "OFF_ORD",
+                });
+            } catch (err) {
                 console.log(err);
             }
 
             const updateSancedData = {
-                "LOAN_ID": sanctioned_loan_ids,
-                "APP_POS": scf_app_pos,
-                "SANCTION_STATUS": "OFF_ORD"
-                
+                LOAN_ID: sanctioned_loan_ids,
+                APP_POS: scf_app_pos,
+                SANCTION_STATUS: "OFF_ORD",
             };
-    
-            try{
-                await axios.put("http://localhost:8800/sanctioned", updateSancedData);
-    
-            }catch(err){
+
+            try {
+                await axios.put(
+                    "http://localhost:8800/sanctioned",
+                    updateSancedData
+                );
+            } catch (err) {
                 console.log(err);
             }
-        }else{
-
+        } else {
             const updateSancedData = {
-                "LOAN_ID": sanctioned_loan_ids,
-                "APP_POS": scf_app_pos,
-                "SANCTION_STATUS": "SANCTIONED"
+                LOAN_ID: sanctioned_loan_ids,
+                APP_POS: scf_app_pos,
+                SANCTION_STATUS: "SANCTIONED",
             };
-    
-            try{
-                await axios.put("http://localhost:8800/sanctioned", updateSancedData);
-    
-            }catch(err){
+
+            console.log(updateSancedData);
+
+            try {
+                await axios.put(
+                    "http://localhost:8800/sanctioned",
+                    updateSancedData
+                );
+            } catch (err) {
                 console.log(err);
             }
-
         }
-
 
         const updateRemarksData = {
-            "LOAN_ID": sanctioned_loan_ids,
-            "REMARKER": scf_app_pos,
-            "REMARKS": scf_remarks,
+            LOAN_ID: sanctioned_loan_ids,
+            REMARKER: scf_app_pos,
+            REMARKS: scf_remarks,
         };
 
-        try{
-            await axios.put("http://localhost:8800/processing_loan_remarks_update", updateRemarksData);
+        try {
+            await axios.put(
+                "http://localhost:8800/processing_loan_remarks_update",
+                updateRemarksData
+            );
 
-            scf_navigate("/personnel_dashboard", {state : {data : scf_personnel_data, loan_type: scf_loan_type}});
-
-        }catch(err){
+            scf_navigate("/personnel_dashboard", {
+                state: { data: scf_personnel_data, loan_type: scf_loan_type },
+            });
+        } catch (err) {
             console.log(err);
         }
+    };
 
-    }
-
-    return(
-
+    return (
         // <PDFViewer style={styles.viewer}>
         //     <MySanctionForm />
         // </PDFViewer>
         <>
-
-            {
-                scf_sent_from == "accntt_fund" ?
+            {scf_sent_from == "acct_fund" ? (
                 <BlobProvider document={MySanctionForm}>
                     {({ blob, url, loading, error }) => {
                         setScUrl(url);
                     }}
                 </BlobProvider>
-                :
+            ) : (
                 ""
-            }
+            )}
 
-            {
+            {scf_sent_from == "acct_fund" ? (
+                count == 0 ? (
+                    <div style={style_butt.alert_message}>
+                        Select at least one loan to download
+                    </div>
+                ) : (
+                    <div
+                        style={style_butt.download_butt}
+                        onClick={onSCDownload}
+                        onMouseEnter={() => setLaf_hover(true)}
+                        onMouseLeave={() => setLaf_hover(false)}
+                    >
+                        Download
+                    </div>
+                )
+            ) : (
+                ""
+            )}
 
-                scf_sent_from == "accntt_fund" ? 
+            <div className="assessment_section remarks">
+                <div className="section_label">Remarks :</div>
 
-                    (count == 0) ?
-                        <div style={style_butt.alert_message}>
-                            Select at least one loan to download
-                        </div>
-                    :
-                        <div style={style_butt.download_butt} onClick={onSCDownload} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
-                            Download
-                        </div>
-                            
-                :
+                {scf_remarks_error ? (
+                    <div className="remarks_input" style={{ color: "red" }}>
+                        {scf_remarks_error_text}
+                    </div>
+                ) : (
                     ""
-            }
+                )}
 
-
-                <div className="assessment_section remarks">
-                    <div className="section_label">Remarks :</div>
-
-                    {
-                        scf_remarks_error ?
-                        <div className="remarks_input" style={{color: "red"}}>
-                            {scf_remarks_error_text}
-                        </div>
-                
-                        : ""    
-                    }
-                    
-                    <div className="remarks_items">
-                        <div className="remarks_input_item">
-                            <textarea className="remarks_input" placeholder="write your remarks about the loan" type="text" value={scf_remarks} onChange={(e) => {setScf_remarks(e.target.value)}} />
-                        </div>
-                    </div>
-
-                </div>
-
-                <div style={style_butt.sc_button}>
-                    <div style={style_butt.forward_butt} onClick={onScForwardClick} onMouseEnter={() => setFor_hover(true)} onMouseLeave={() => setFor_hover(false)}>
-                        Forward
+                <div className="remarks_items">
+                    <div className="remarks_input_item">
+                        <textarea
+                            className="remarks_input"
+                            placeholder="write your remarks about the loan"
+                            type="text"
+                            value={scf_remarks}
+                            onChange={(e) => {
+                                setScf_remarks(e.target.value);
+                            }}
+                        />
                     </div>
                 </div>
-            
+            </div>
 
+            <div style={style_butt.sc_button}>
+                <div
+                    style={style_butt.forward_butt}
+                    onClick={onScForwardClick}
+                    onMouseEnter={() => setFor_hover(true)}
+                    onMouseLeave={() => setFor_hover(false)}
+                >
+                    Forward
+                </div>
+            </div>
         </>
-
-
-            
-
     );
 }
-
