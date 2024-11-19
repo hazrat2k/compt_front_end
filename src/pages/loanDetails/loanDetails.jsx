@@ -222,7 +222,7 @@ export default function LoanDetails() {
     ld_value["net_salary"] = ld_gross_salary - ld_total_deduct;
 
     ld_value["pens_gra"] =
-        (ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100;
+        Math.round((ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100);
     ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
     ld_value["tot_rec"] =
         ld_value["pens_gra"] + ld_value["leav_sal"] + ld_value["25_mon_gran"];
@@ -256,7 +256,7 @@ export default function LoanDetails() {
 
     ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
 
-    ld_value["60_basic_sal"] = ld_basic_salary * 0.6;
+    ld_value["60_basic_sal"] = Math.round(ld_basic_salary * 0.6);
 
     var calc_mon = 0;
 
@@ -577,7 +577,7 @@ export default function LoanDetails() {
                 <div className="assessment_section salary_information">
                     <div className="section_label">C) Salary Information :</div>
 
-                    {ld_data["sendFrom"] == "acct_fund" ? (
+                    {/* {ld_data["sendFrom"] == "acct_fund" ? (
                         <div className="section_items">
                             <div className="section_items_div">
                                 <SectionEditItem
@@ -642,7 +642,34 @@ export default function LoanDetails() {
                                 )}
                             </div>
                         </div>
-                    )}
+                    )} */}
+                    <div className="section_items">
+                        <div className="section_items_div">
+                            {sectionItem(
+                                "1",
+                                "Basic Salary",
+                                nf.format(ld_basic_salary)
+                            )}
+
+                            {sectionItem(
+                                "3",
+                                "Deduction",
+                                nf.format(ld_total_deduct)
+                            )}
+                        </div>
+                        <div className="section_items_div">
+                            {sectionItem(
+                                "2",
+                                "Gross Salary",
+                                nf.format(ld_gross_salary)
+                            )}
+                            {sectionItem(
+                                "4",
+                                "Net Salary",
+                                nf.format(ld_value["net_salary"])
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="assessment_section financial_position">

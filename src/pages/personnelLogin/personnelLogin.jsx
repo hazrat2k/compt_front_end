@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./personnelLogin.css";
 import axios from "axios";
 
+import TextField from "@mui/material/TextField";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 
@@ -38,7 +39,7 @@ export default function PersonnelLogin() {
 
         const uploadData = {
             USERNAME: user,
-            PASSWORD : password
+            PASSWORD: password,
         };
 
         try {
@@ -51,7 +52,10 @@ export default function PersonnelLogin() {
             console.log(err);
         }
 
-        if (personeelData.length == 0) {
+        if (personeelData.offset == 0) {
+            setMatchError("***Database Error");
+            return;
+        } else if (personeelData.length == 0) {
             setMatchError("***UserName and Password doesn't match.");
             return;
         } else {
@@ -59,9 +63,7 @@ export default function PersonnelLogin() {
             perLoginNavigate("/personnel_dashboard", {
                 state: { data: personeelData[0], loan_type: "null" },
             });
-            
         }
-
     };
 
     return (
@@ -73,35 +75,44 @@ export default function PersonnelLogin() {
                     <div className="titleContainer">
                         <div>Personnel Login</div>
                     </div>
+                    
+                    <TextField
+                        error={userError != ""}
+                        id="outlined-basic"
+                        label="User ID"
+                        className="log_font"
+                        variant="outlined"
+                        value={user}
+                        onChange={(e) => setUser(e.target.value)}
+                        helperText={userError}
+                        style={{
+                            width: "300px",
+                            marginBottom: "5px",
+                        }}
+                    />
                     <br />
-                    <div className="inputContainer">
-                        <input
-                            value={user}
-                            placeholder="Enter your username here"
-                            onChange={(ev) => setUser(ev.target.value)}
-                            className="inputBox"
-                        />
-                        <label className="errorLabel">{userError}</label>
-                    </div>
-                    <br />
-                    <div className="inputContainer">
-                        <input
-                            type="password"
-                            value={password}
-                            placeholder="Enter your password here"
-                            onChange={(ev) => setPassword(ev.target.value)}
-                            className="inputBox"
-                        />
-                        <label className="errorLabel">{passwordError}</label>
-                    </div>
-                    <br />
-                    <div className="inputContainer">
-                        <input
-                            className="inputButton"
-                            type="button"
+                    <TextField
+                        error={passwordError != ""}
+                        id="outlined-basic"
+                        label="Password"
+                        type="password"
+                        className="log_font"
+                        variant="outlined"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        helperText={passwordError}
+                        style={{
+                            width: "300px",
+                            marginBottom: "5px",
+                        }}
+                    />
+                    <div className="login_text_area">
+                        <div
+                            className="inputButton not-selectable"
                             onClick={onButtonClick}
-                            value={"Log in"}
-                        />
+                        >
+                            LOGIN
+                        </div>
                     </div>
 
                     <label className="errorLabel">{matchError}</label>

@@ -275,6 +275,7 @@ export default function PersoneelDash() {
                             {pd_pend_loan_data[i]["LOAN_ID"]}
                         </div>
                     </div>
+
                     <div
                         className="pd_section_col pd_section_col_wid linked_col"
                         onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
@@ -283,26 +284,31 @@ export default function PersoneelDash() {
                             {pd_pend_loan_data[i]["EMPLOYEE_NAME"]}
                         </div>
                     </div>
+
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
                             {pd_pend_loan_data[i]["DESIGNATION"]}
                         </div>
                     </div>
+
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
                             {pd_pend_loan_data[i]["OFFICE"]}
                         </div>
                     </div>
+
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
                             {pd_pend_loan_data[i]["LOAN_TYPE"]}
                         </div>
                     </div>
+
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
                             {AppStatus(temp_status)}
                         </div>
                     </div>
+
                     <div className="pd_section_col pd_section_col_wid">
                         <div className="pd_section_col_value">
                             {dateFormation(

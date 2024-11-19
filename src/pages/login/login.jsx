@@ -96,9 +96,7 @@ export default function Login() {
         if (duration["year"] > 60 && !teacherOrNot) {
             setL_error(true);
             setL_err_text_color(!l_err_text_color);
-            setL_error_text(
-                "You are retired already."
-            );
+            setL_error_text("You are retired already.");
             return false;
         } else if (duration["year"] > 65 && teacherOrNot) {
             setL_error(true);
@@ -155,7 +153,12 @@ export default function Login() {
             emp_data = res.data;
 
             // checking whether the input employee exists or not
-            if (emp_data.length == 0) {
+            if (emp_data.offset == 0) {
+                setL_error(true);
+                setL_err_text_color(!l_err_text_color);
+                setL_error_text("Database Error!!!");
+                return;
+            } else if (emp_data.length == 0) {
                 setL_error(true);
                 setL_err_text_color(!l_err_text_color);
                 setL_error_text(
@@ -191,6 +194,8 @@ export default function Login() {
         } catch (err) {
             console.log(err);
         }
+
+        // console.log(pay_data);
 
         // // does have more selected loan or not
         // if (loan_data.length != 0) {
@@ -360,7 +365,7 @@ export default function Login() {
                             onChange={(e) => setBuetId(e.target.value)}
                             helperText={buetIdHelperText}
                             style={{
-                                width: "260px",
+                                width: "300px",
                                 marginBottom: "5px",
                             }}
                         />
@@ -376,6 +381,10 @@ export default function Login() {
                                         textField: {
                                             error: dobHelperText != "",
                                             helperText: dobHelperText,
+                                            style: {
+                                                width: "300px",
+                                                marginBottom: "5px",
+                                            },
                                         },
                                     }}
                                 />
