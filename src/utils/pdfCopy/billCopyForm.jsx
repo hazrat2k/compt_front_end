@@ -15,6 +15,7 @@ import {
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 Font.register({
     family: "English Bold",
@@ -355,7 +356,7 @@ export default function BillCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadLoanType
                 );
                 setBc_sanc_loan_data(sanc_res.data);

@@ -170,19 +170,21 @@ input[type="button"] {
 }
 
 .inputButton {
-    color: white;
-    background-color: var(--green);
-    border: 2px solid white;
+    color: var(--green);
+    background-color: white;
+    border: 2px solid var(--green);
     border-radius: 2rem;
     font-weight: bold;
 	font-size: large;
     padding: 0.75rem 1.5rem 0.75rem 1.5rem;
+    transition: all ease 0.3s;
 }
 
 .inputButton:hover {
-    color: var(--green);
-    background-color: white;
-    border: 2px solid var(--green);
+    color: white;
+    background-color: var(--green);
+    border: 2px solid white;
+    font-size: x-large;
 }
 
 .errorLabel {

@@ -10,6 +10,7 @@ import "./personeelDash.css";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function PersoneelDash() {
     const pd_navigate = useNavigate();
@@ -69,7 +70,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_info",
+                    "http://"+backend_site_address+"/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -79,7 +80,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadValue
                 );
                 setPd_sanc_loan_data(sanc_res.data);
@@ -89,7 +90,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanced_res = await axios.post(
-                    "http://localhost:8800/sanctioned_loan",
+                    "http://"+backend_site_address+"/sanctioned_loan",
                     uploadValue
                 );
                 setPd_sanced_loan_data(sanced_res.data);
@@ -99,7 +100,7 @@ export default function PersoneelDash() {
 
             try {
                 const billed_res = await axios.post(
-                    "http://localhost:8800/billed_loan",
+                    "http://"+backend_site_address+"/billed_loan",
                     uploadValue
                 );
                 setPd_billed_loan_data(billed_res.data);
@@ -130,7 +131,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_info",
+                    "http://"+backend_site_address+"/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -145,7 +146,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_id_filter",
+                    "http://"+backend_site_address+"/processing_loan_id_filter",
                     uploadId
                 );
                 setPd_pend_loan_data(res.data);
@@ -169,7 +170,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_info",
+                    "http://"+backend_site_address+"/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -183,7 +184,7 @@ export default function PersoneelDash() {
             };
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_app_nam_filter",
+                    "http://"+backend_site_address+"/processing_app_nam_filter",
                     uploadNam
                 );
                 setPd_pend_loan_data(res.data);
@@ -199,7 +200,7 @@ export default function PersoneelDash() {
         };
         try {
             const sal_res = await axios.post(
-                "http://localhost:8800/processing_loan_salary",
+                "http://"+backend_site_address+"/processing_loan_salary",
                 uploadData
             );
             data["loan_data"] = sal_res.data;
@@ -482,7 +483,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_info",
+                    "http://"+backend_site_address+"/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -492,7 +493,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadValue
                 );
                 setPd_sanc_loan_data(sanc_res.data);
@@ -502,7 +503,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanced_res = await axios.post(
-                    "http://localhost:8800/sanctioned_loan",
+                    "http://"+backend_site_address+"/sanctioned_loan",
                     uploadValue
                 );
                 setPd_sanced_loan_data(sanced_res.data);
@@ -512,7 +513,7 @@ export default function PersoneelDash() {
 
             try {
                 const billed_res = await axios.post(
-                    "http://localhost:8800/billed_loan",
+                    "http://"+backend_site_address+"/billed_loan",
                     uploadValue
                 );
                 setPd_billed_loan_data(billed_res.data);

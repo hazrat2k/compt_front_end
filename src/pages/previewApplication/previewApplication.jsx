@@ -308,7 +308,6 @@ export default function PreviewApplication() {
         );
     }
 
-    console.log(loanTable);
 
     const lastTable = [];
 

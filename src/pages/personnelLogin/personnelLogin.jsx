@@ -4,8 +4,17 @@ import "./personnelLogin.css";
 import axios from "axios";
 
 import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function PersonnelLogin() {
     const perLoginNavigate = useNavigate();
@@ -17,6 +26,17 @@ export default function PersonnelLogin() {
     const [userError, setUserError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [matchError, setMatchError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const handleMouseUpPassword = (event) => {
+        event.preventDefault();
+    };
 
     const onButtonClick = async (e) => {
         e.preventDefault();
@@ -44,7 +64,7 @@ export default function PersonnelLogin() {
 
         try {
             const res = await axios.post(
-                "http://localhost:8800/personeel_login",
+                "http://" + backend_site_address + "/personeel_login",
                 uploadData
             );
             personeelData = res.data;
@@ -75,7 +95,7 @@ export default function PersonnelLogin() {
                     <div className="titleContainer">
                         <div>Personnel Login</div>
                     </div>
-                    
+
                     <TextField
                         error={userError != ""}
                         id="outlined-basic"
@@ -91,27 +111,53 @@ export default function PersonnelLogin() {
                         }}
                     />
                     <br />
-                    <TextField
-                        error={passwordError != ""}
-                        id="outlined-basic"
-                        label="Password"
-                        type="password"
-                        className="log_font"
+
+                    <FormControl
+                        sx={{width: "300px", marginBottom: "5px" }}
                         variant="outlined"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        helperText={passwordError}
-                        style={{
-                            width: "300px",
-                            marginBottom: "5px",
-                        }}
-                    />
+                    >
+                        <InputLabel htmlFor="outlined-adornment-password">
+                            Password
+                        </InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type={showPassword ? "text" : "password"}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label={
+                                            showPassword
+                                                ? "hide the password"
+                                                : "display the password"
+                                        }
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                            className="log_font"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            helperText={passwordError}
+                            error={passwordError != ""}
+                        />
+                    </FormControl>
+
                     <div className="login_text_area">
                         <div
                             className="inputButton not-selectable"
                             onClick={onButtonClick}
                         >
-                            LOGIN
+                            Login
                         </div>
                     </div>
 

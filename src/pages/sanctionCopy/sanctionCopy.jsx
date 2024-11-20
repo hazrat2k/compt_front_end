@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import axios from "axios";
 
 import "./sanctionCopy.css";
@@ -6,10 +7,11 @@ import "./sanctionCopy.css";
 import InWords from "../../utils/functions/inWords";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 import SanctionCopyForm from "../../utils/pdfCopy/sanctionCopyForm";
 
-import { useLocation } from "react-router";
+
 
 export default function SanctionCopy() {
     const [sc_sanc_loan_data, setSc_sanc_loan_data] = useState([]);
@@ -39,7 +41,7 @@ export default function SanctionCopy() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadLoanType
                 );
                 setSc_sanc_loan_data(sanc_res.data);

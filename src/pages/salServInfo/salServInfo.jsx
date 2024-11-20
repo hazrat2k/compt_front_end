@@ -11,6 +11,7 @@ import ToTitleCase from "../../utils/functions/toTitleCase";
 import ServiceInfo from "../../component/loan_apply/serviceInfo/serviceInfo";
 import SalaryInfo from "../../component/loan_apply/salaryInfo/salaryInfo";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function SalServInfo() {
     const salServNavigate = useNavigate();
@@ -31,13 +32,16 @@ export default function SalServInfo() {
     useEffect(() => {
         const fetch_loan_data = async () => {
             try {
-                const res = await axios.post("http://localhost:8800/loan", {
-                    EMPLOYEEID: salServData["EMPLOYEEID"],
-                });
+                const res = await axios.post(
+                    "http://" + backend_site_address + "/loan",
+                    {
+                        EMPLOYEEID: salServData["EMPLOYEEID"],
+                    }
+                );
                 setLoan_file(res.data);
 
                 const type_res = await axios.get(
-                    "http://localhost:8800/loan_type"
+                    "http://" + backend_site_address + "/loan_type"
                 );
                 setLoan_type_file(type_res.data);
             } catch (err) {

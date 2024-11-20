@@ -15,6 +15,7 @@ import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import LoanAssesmentForm from "../../utils/pdfCopy/loanAssesmentForm";
 import OfficeOrderCopy from "../../utils/pdfCopy/officeOrderCopy";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function LoanDetails() {
     const ld_navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function LoanDetails() {
                 };
 
                 const pers_data_res = await axios.post(
-                    "http://localhost:8800/personeel_login",
+                    "http://"+backend_site_address+"/personeel_login",
                     uploadData
                 );
                 setLd_pers_data(pers_data_res.data);
@@ -56,13 +57,13 @@ export default function LoanDetails() {
                 };
 
                 const prev_loan_1_res = await axios.post(
-                    "http://localhost:8800/processing_loan_prev_loan_1",
+                    "http://"+backend_site_address+"/processing_loan_prev_loan_1",
                     uploadData
                 );
                 setLd_pl_prev_loan_1(prev_loan_1_res.data);
 
                 const remarks_res = await axios.post(
-                    "http://localhost:8800/processing_loan_remarks",
+                    "http://"+backend_site_address+"/processing_loan_remarks",
                     uploadData
                 );
                 setLd_pl_remarks(remarks_res.data);
@@ -426,7 +427,7 @@ export default function LoanDetails() {
         ) {
             try {
                 await axios.post(
-                    "http://localhost:8800/sanction_register",
+                    "http://"+backend_site_address+"/sanction_register",
                     ld_value
                 );
             } catch (err) {
@@ -436,7 +437,7 @@ export default function LoanDetails() {
 
         if (ld_user && ld_data["sendFrom"] == "compt" && temp_status > 13) {
             try {
-                await axios.put("http://localhost:8800/sanction", {
+                await axios.put("http://"+backend_site_address+"/sanction", {
                     loan_id: ld_value["loan_id"],
                     status: "BILL",
                 });
@@ -453,7 +454,7 @@ export default function LoanDetails() {
 
         try {
             await axios.put(
-                "http://localhost:8800/processing_loan_remarks_update",
+                "http://"+backend_site_address+"/processing_loan_remarks_update",
                 updateRemarksData
             );
 

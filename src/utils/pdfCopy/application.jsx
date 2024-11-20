@@ -20,6 +20,7 @@ import InWords from "../functions/inWords";
 
 import logo_image from "../../assets/images/logo.png";
 import checkBox_image from "../../assets/images/checkbox_image.png";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 import PT_Serif from "../../assets/fonts/PTSerif-Regular.ttf";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
@@ -1322,7 +1323,7 @@ export default function Application(props) {
                         </Text>
 
                         <Text style={styles.pageLabel}>
-                            Application for Loan
+                            Application for {app_data["LOAN_TYPE"]}
                         </Text>
                     </View>
                 </View>
@@ -1616,9 +1617,6 @@ export default function Application(props) {
                         <Text style={style_pic.preSignPicText}>
                             (Salary Section)
                         </Text>
-                        <Text style={style_pic.preSignPicText}>
-                            (Signature with Name and Seal)
-                        </Text>
                     </View>
 
                     <View style={{ marginTop: "20pt" }}></View>
@@ -1631,7 +1629,7 @@ export default function Application(props) {
                                 Accountant
                             </Text>
                             <Text style={style_pic.preSignPicText}>
-                                (Signature with Name and Seal)
+                                (Fund Section)
                             </Text>
                         </View>
 
@@ -1640,13 +1638,23 @@ export default function Application(props) {
                                 ------------------------------
                             </Text>
                             <Text style={style_pic.preSignPicText}>
-                                SR. ASST. Director
+                                Accounts Officer
                             </Text>
                             <Text style={style_pic.preSignPicText}>
                                 (Fund Section)
                             </Text>
+                        </View>
+
+                        <View style={style_field.preSigFieldBox}>
                             <Text style={style_pic.preSignPicText}>
-                                (Signature with Name and Seal)
+                                ------------------------------
+                            </Text>
+                            <Text style={style_pic.preSignPicText}>
+                                Deputy Director
+                            </Text>
+
+                            <Text style={style_pic.preSignPicText}>
+                                (Fund Section)
                             </Text>
                         </View>
 
@@ -1657,9 +1665,6 @@ export default function Application(props) {
                             <Text style={style_pic.preSignPicText}>
                                 Deputy Comptroller
                             </Text>
-                            <Text style={style_pic.preSignPicText}>
-                                (Signature with Name and Seal)
-                            </Text>
                         </View>
 
                         <View style={style_field.preSigFieldBox}>
@@ -1668,9 +1673,6 @@ export default function Application(props) {
                             </Text>
                             <Text style={style_pic.preSignPicText}>
                                 Comptroller
-                            </Text>
-                            <Text style={style_pic.preSignPicText}>
-                                (Signature with Name and Seal)
                             </Text>
                         </View>
                     </View>
@@ -1701,7 +1703,10 @@ export default function Application(props) {
         downloadURI(url, "application.pdf");
 
         try {
-            await axios.post("http://localhost:8800/loan_register", app_data);
+            await axios.post(
+                "http://" + backend_site_address + "/loan_register",
+                app_data
+            );
             // applicationNavigate("/");
             applicationNavigate("/employeedash", {
                 state: {

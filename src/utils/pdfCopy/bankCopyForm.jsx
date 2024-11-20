@@ -16,6 +16,7 @@ import {
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 Font.register({
     family: "English Bold",
@@ -355,7 +356,7 @@ export default function BankCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadLoanType
                 );
                 setSal_sanc_loan_data(sanc_res.data);
@@ -365,7 +366,7 @@ export default function BankCopyForm(props) {
                 };
 
                 const bac_data_res = await axios.post(
-                    "http://localhost:8800/personeel_login",
+                    "http://"+backend_site_address+"/personeel_login",
                     uploadData
                 );
                 setBac_pers_data(bac_data_res.data);
@@ -665,7 +666,7 @@ export default function BankCopyForm(props) {
 
             try {
                 await axios.post(
-                    "http://localhost:8800/bill_register",
+                    "http://"+backend_site_address+"/bill_register",
                     upload_billed_loan
                 );
             } catch (err) {
@@ -673,7 +674,7 @@ export default function BankCopyForm(props) {
             }
 
             try {
-                await axios.put("http://localhost:8800/sanction", {
+                await axios.put("http://"+backend_site_address+"/sanction", {
                     loan_id: bac_loan_ids,
                     status: "BILLED",
                 });
@@ -682,7 +683,7 @@ export default function BankCopyForm(props) {
             }
         } else if (bac_sentFrom == "acct_cash") {
             try {
-                await axios.put("http://localhost:8800/sanction", {
+                await axios.put("http://"+backend_site_address+"/sanction", {
                     loan_id: bac_loan_ids,
                     status: "CASHED",
                     cheque_no: bac_cheque_no,
@@ -699,7 +700,7 @@ export default function BankCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://localhost:8800/billed",
+                    "http://"+backend_site_address+"/billed",
                     updateBilledData
                 );
             } catch (err) {
@@ -714,7 +715,7 @@ export default function BankCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://localhost:8800/billed",
+                    "http://"+backend_site_address+"/billed",
                     updateBilledData
                 );
             } catch (err) {
@@ -730,7 +731,7 @@ export default function BankCopyForm(props) {
 
         try {
             await axios.put(
-                "http://localhost:8800/processing_loan_remarks_update",
+                "http://"+backend_site_address+"/processing_loan_remarks_update",
                 updateRemarksData
             );
 

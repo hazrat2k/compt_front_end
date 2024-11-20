@@ -19,6 +19,7 @@ import InWords from "../functions/inWords";
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 Font.register({
     family: "English Bold",
@@ -281,7 +282,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://"+backend_site_address+"/sanction_loan",
                     uploadLoanType
                 );
                 setSc_sanc_loan_data(sanc_res.data);
@@ -291,7 +292,7 @@ export default function SanctionCopyForm(props) {
                 };
 
                 const scf_data_res = await axios.post(
-                    "http://localhost:8800/personeel_login",
+                    "http://"+backend_site_address+"/personeel_login",
                     uploadData
                 );
                 setScf_pers_data(scf_data_res.data);
@@ -659,7 +660,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 await axios.post(
-                    "http://localhost:8800/sanctioning_loan",
+                    "http://"+backend_site_address+"/sanctioning_loan",
                     upload_sanctioned_loan
                 );
             } catch (err) {
@@ -667,7 +668,7 @@ export default function SanctionCopyForm(props) {
             }
 
             try {
-                await axios.put("http://localhost:8800/sanction", {
+                await axios.put("http://"+backend_site_address+"/sanction", {
                     loan_id: sanctioned_loan_ids,
                     status: "SANCTIONED",
                 });
@@ -676,7 +677,7 @@ export default function SanctionCopyForm(props) {
             }
         } else if (scf_sent_from == "dc_audit") {
             try {
-                await axios.put("http://localhost:8800/sanction", {
+                await axios.put("http://"+backend_site_address+"/sanction", {
                     loan_id: sanctioned_loan_ids,
                     status: "OFF_ORD",
                 });
@@ -692,7 +693,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://localhost:8800/sanctioned",
+                    "http://"+backend_site_address+"/sanctioned",
                     updateSancedData
                 );
             } catch (err) {
@@ -709,7 +710,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://localhost:8800/sanctioned",
+                    "http://"+backend_site_address+"/sanctioned",
                     updateSancedData
                 );
             } catch (err) {
@@ -725,7 +726,7 @@ export default function SanctionCopyForm(props) {
 
         try {
             await axios.put(
-                "http://localhost:8800/processing_loan_remarks_update",
+                "http://"+backend_site_address+"/processing_loan_remarks_update",
                 updateRemarksData
             );
 

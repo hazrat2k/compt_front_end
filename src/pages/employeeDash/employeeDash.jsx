@@ -30,6 +30,7 @@ import Footer from "../../component/page_compo/footer/footer";
 
 import DataField from "../../component/loan_apply/dataField/dataField";
 import { Typography } from "@mui/material";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 let nf = new Intl.NumberFormat("en-US");
 
@@ -173,7 +174,7 @@ const LoanApply = (props) => {
                     LOAN_TYPE: value,
                 };
                 const loan_res = await axios.post(
-                    "http://localhost:8800/loan_with_type",
+                    "http://" + backend_site_address + "/loan_with_type",
                     uploadLoan
                 );
                 loan_data = loan_res.data;
@@ -183,7 +184,9 @@ const LoanApply = (props) => {
                     LOAN_TYPE: value,
                 };
                 const IdTypeRes = await axios.post(
-                    "http://localhost:8800/processing_loan_info_with_emp_id",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_info_with_emp_id",
                     uploadIdType
                 );
                 pro_loan_data = IdTypeRes.data;
@@ -599,13 +602,15 @@ export default function EmployeeDash() {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:8800/processing_loan_info_with_emp_id",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_info_with_emp_id",
                     uploadId
                 );
                 setEd_pro_loan_data(res.data);
 
                 const run_res = await axios.post(
-                    "http://localhost:8800/loan_with_type",
+                    "http://" + backend_site_address + "/loan_with_type",
                     uploadId
                 );
                 setEd_run_loan_data(run_res.data);

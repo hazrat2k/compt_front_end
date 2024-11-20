@@ -7,6 +7,7 @@ import "./billCopy.css";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 
+import { backend_site_address } from "../../stores/const/siteAddress";
 import BillCopyForm from "../../utils/pdfCopy/billCopyForm";
 import BankCopyForm from "../../utils/pdfCopy/bankCopyForm";
 
@@ -110,7 +111,7 @@ export default function BillCopy() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://localhost:8800/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadLoanType
                 );
                 setBc_sanc_loan_data(sanc_res.data);

@@ -22,6 +22,7 @@ import "./login.css";
 
 import Logo from "../../component/loan_apply/logo/logo";
 import ToTitleCase from "../../utils/functions/toTitleCase";
+import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function Login() {
     var emp_data = [];
@@ -146,7 +147,7 @@ export default function Login() {
 
         try {
             const res = await axios.post(
-                "http://localhost:8800/application_login",
+                "http://" + backend_site_address + "/application_login",
                 uploadData
             );
 
@@ -175,7 +176,7 @@ export default function Login() {
             // };
 
             // const loan_res = await axios.post(
-            //     "http://localhost:8800/loan_with_type",
+            //     "http://"+backend_site_address+"/loan_with_type",
             //     uploadLoan
             // );
 
@@ -186,7 +187,7 @@ export default function Login() {
             };
 
             const pay_res = await axios.post(
-                "http://localhost:8800/pay_valid",
+                "http://" + backend_site_address + "/pay_valid",
                 uploadPay
             );
 

@@ -13,6 +13,8 @@ import DataField from "../../component/loan_apply/dataField/dataField";
 import nomineeRelations from "../../stores/const/nomineeRelations";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
 
+import { backend_site_address } from "../../stores/const/siteAddress";
+
 export default function PersonalInfo() {
     const personalNavigate = useNavigate();
     const { state } = useLocation();
@@ -24,7 +26,7 @@ export default function PersonalInfo() {
     useEffect(() => {
         const fetch_salServ_data = async () => {
             try {
-                const res = await axios.post("http://localhost:8800/salary", {
+                const res = await axios.post("http://"+backend_site_address+"/salary", {
                     SALARY_ID: personal_data["EMPLOYEEID"],
                 });
                 setSalary_file(res.data);
