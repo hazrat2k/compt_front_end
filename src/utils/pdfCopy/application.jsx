@@ -70,6 +70,20 @@ const styles = StyleSheet.create({
         marginTop: "2pt",
         color: "black",
     },
+
+    pageFooter: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        fontFamily: "English",
+    },
+
+    pageFooterText: {
+        textAlign: "center",
+        fontSize: "8px",
+        color: "black",
+    },
 });
 
 const style_logo = StyleSheet.create({
@@ -326,7 +340,7 @@ const style_table = StyleSheet.create({
         fontFamily: "English Bold",
         fontSize: "10pt",
         fontWeight: "bold",
-        textAlign: "left",
+        textAlign: "center",
         padding: "2pt",
         paddingBottom: "2pt",
         justifyContent: "center",
@@ -520,26 +534,28 @@ export default function Application(props) {
     });
 
     const pdfPersoInfo = [
-        ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)"],
+        ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "i)"],
         [
             "Father's / Husband's Name",
             "Mother's Name",
             "Nominee's Name",
             "Relationship with Nominee",
             "Present Address",
-            "Permanant Address",
+            "Permanent Address",
             "Date of Birth",
             "Nominee's NID",
+            "Contact No",
         ],
         [
             app_data["FATHERS_NAME"],
             app_data["MOTHERS_NAME"],
             app_data["NOMINEES_NAME"],
             app_data["NOMINEES_RELSHIP"],
-            app_data["ADDRESS"],
-            app_data["ADDRESS"],
+            app_data["PRESENT_ADDRESS"],
+            app_data["PERMANENT_ADDRESS"],
             moment(new Date(app_data["DATE_OF_BIRTH"])).format("DD MMM YYYY"),
             app_data["NOMINEES_NID"],
+            app_data["CONTACT_NO"],
         ],
     ];
 
@@ -659,13 +675,50 @@ export default function Application(props) {
         );
     }
 
+    for (let i = 8; i < 9; i++) {
+        pdf_pers_table.push(
+            <View style={style_table.row}>
+                <View style={style_table.double_column}>
+                    <View style={style_table.double_index_column}>
+                        {" "}
+                        <Text>{pdfPersoInfo[0][i]}</Text>
+                    </View>
+                    <View style={style_table.double_label_column}>
+                        <Text>{pdfPersoInfo[1][i]}</Text>
+                    </View>
+                    <View style={style_table.double_colon_column}>
+                        <Text>:</Text>
+                    </View>
+                    <View style={style_table.double_value_column}>
+                        <Text>{pdfPersoInfo[2][i]}</Text>
+                    </View>
+                </View>
+                <View style={style_table.double_column}>
+                    <View style={style_table.double_index_column}>
+                        {" "}
+                        <Text></Text>
+                    </View>
+                    <View style={style_table.double_label_column}>
+                        <Text></Text>
+                    </View>
+                    <View style={style_table.double_colon_column}>
+                        <Text></Text>
+                    </View>
+                    <View style={style_table.double_value_column}>
+                        <Text></Text>
+                    </View>
+                </View>
+            </View>
+        );
+    }
+
     const pdfServInfo = [
         ["a)", "b)", "c)", "d)", "e)"],
         [
             "BUET ID No.",
             "Service Type",
-            "Joining Date",
-            "Total Service Period",
+            "First Joining Date",
+            "Length of Service",
             "Retirement Date (Approx.)",
         ],
         [
@@ -751,7 +804,7 @@ export default function Application(props) {
     }
 
     var pdfSalInfo = [
-        [" ", "a", "b", "c", "d"],
+        ["Sl No", "a", "b", "c", "d"],
         [
             "Month",
             "Basic Salary",
@@ -902,7 +955,7 @@ export default function Application(props) {
     }
 
     var pdfLoanInfo = [
-        ["Serial No.", "01", "02", "03", "04", "05", "06", "07", "08"],
+        ["Sl No.", "01", "02", "03", "04", "05", "06", "07", "08"],
         [
             "Type of Loan",
             // "Vehicle Buying / House Building / Repairment / Land Buying",
@@ -997,7 +1050,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 4; i++) {
         pdf_loan_table.push(
             <View style={[style_table.row, style_table.row_border]}>
                 <View
@@ -1055,7 +1108,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 5; i < 6; i++) {
+    for (let i = 4; i < 5; i++) {
         pdf_loan_table.push(
             <View
                 style={[
@@ -1183,7 +1236,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 6; i < 8; i++) {
+    for (let i = 5; i < 8; i++) {
         pdf_loan_table_2.push(
             <View style={[style_table.row, style_table.row_border]}>
                 <View
@@ -1444,12 +1497,44 @@ export default function Application(props) {
 
                         <View style={style_table.table}>{pdf_loan_table}</View>
                     </View>
+                    <View style={styles.pageFooter}>
+                        <Text style={styles.pageFooterText}>
+                            {app_data["LOAN_TYPE"]}
+                        </Text>
+                        <Text style={styles.pageFooterText}>Page 1 of 2</Text>
+                        <Text style={styles.pageFooterText}>
+                            {new Date().toString().slice(0, 24)}
+                        </Text>
+                    </View>
                 </View>
             </Page>
 
-            <Page size="A4" style={{ marginTop: "30pt" }}>
+            <Page size="A4" style={{ marginTop: "10pt" }}>
+                <View style={style_logo.logo}>
+                    <View style={style_logo.logo_img}>
+                        <Image style={style_logo.l_img} src={logo_image} />
+                    </View>
+
+                    <View style={style_logo.logo_text}>
+                        <Text style={style_logo.logo_text_1}>
+                            Bangladesh University of Engineering and Technology
+                            (BUET)
+                        </Text>
+                        <Text style={style_logo.logo_text_2}>
+                            Comptroller Office
+                        </Text>
+
+                        <Text style={styles.pageLabel}>
+                            Application for {app_data["LOAN_TYPE"]}
+                        </Text>
+                    </View>
+                </View>
                 <View style={style_field.allField}>
                     <View style={style_field.preOtherField}>
+                        <Text style={style_field.preOtherFieldLabel}>
+                            11. Information about Loan Taken from University and
+                            Sonali Bank (Attested by Comptroller Office) :
+                        </Text>
                         <View style={style_table.table}>
                             {pdf_loan_table_2}
                         </View>
@@ -1675,6 +1760,16 @@ export default function Application(props) {
                                 Comptroller
                             </Text>
                         </View>
+                    </View>
+                    <View style={{ marginTop: "20pt" }}></View>
+                    <View style={styles.pageFooter}>
+                        <Text style={styles.pageFooterText}>
+                            {app_data["LOAN_TYPE"]}
+                        </Text>
+                        <Text style={styles.pageFooterText}>Page 2 of 2</Text>
+                        <Text style={styles.pageFooterText}>
+                            {new Date().toString().slice(0, 24)}
+                        </Text>
                     </View>
                 </View>
             </Page>

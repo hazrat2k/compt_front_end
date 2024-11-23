@@ -26,9 +26,12 @@ export default function PersonalInfo() {
     useEffect(() => {
         const fetch_salServ_data = async () => {
             try {
-                const res = await axios.post("http://"+backend_site_address+"/salary", {
-                    SALARY_ID: personal_data["EMPLOYEEID"],
-                });
+                const res = await axios.post(
+                    "http://" + backend_site_address + "/salary",
+                    {
+                        SALARY_ID: personal_data["EMPLOYEEID"],
+                    }
+                );
                 setSalary_file(res.data);
             } catch (err) {
                 console.log(err);
@@ -54,6 +57,8 @@ export default function PersonalInfo() {
     const piMotherNameRef = useRef(null);
     const piNomineeNameRef = useRef(null);
     const piNomineeRelshipRef = useRef(null);
+    const piPresentAddressRef = useRef(null);
+    const piPermanantAddressRef = useRef(null);
     const piDOBRef = useRef(null);
     const piNIDRef = useRef(null);
     const piNomineeNIDRef = useRef(null);
@@ -88,8 +93,22 @@ export default function PersonalInfo() {
     const [nomineeNID, setNomineeNID] = useState(personal_data["NOMINEES_NID"]);
     const [nomineeNIDError, setNomineeNIDError] = useState("");
 
-    const presentAddressValue = personal_data["ADDRESS"];
-    const permanantAddressValue = personal_data["ADDRESS"];
+    const [presentAddressValue, setPresentAddressValue] = useState(
+        personal_data["ADDRESS"]
+    );
+    const [presentAddressValueError, setPresentAddressValueError] =
+        useState("");
+
+    const [permanentAddressValue, setpermanentAddressValue] = useState(
+        personal_data["ADDRESS"]
+    );
+    const [permanentAddressValueError, setpermanentAddressValueError] =
+        useState("");
+
+    const [contactNumber, setContactNumber] = useState(
+        personal_data["CONTACT_NO"]
+    );
+    const [contactNumberError, setContactNumberError] = useState("");
 
     const validPersonalInfo = () => {
         if (motherName == "") {
@@ -116,16 +135,48 @@ export default function PersonalInfo() {
             setNomineeRelshipError("");
         }
 
+        if (presentAddressValue == "") {
+            setPresentAddressValueError("আপনার বর্তমান ঠিকানা লিখুন***");
+            scrollToSection(piPresentAddressRef);
+            return false;
+        } else {
+            setPresentAddressValueError("");
+        }
+
+        if (permanentAddressValue == "") {
+            setpermanentAddressValueError("আপনার বর্তমান ঠিকানা লিখুন***");
+            scrollToSection(piPermanantAddressRef);
+            return false;
+        } else {
+            setpermanentAddressValueError("");
+        }
+
         if (nomineeNID == "") {
             setNomineeNIDError("নমিনীর জাতীয় পরিচয়পত্র নম্বর লিখুন***");
             scrollToSection(piNomineeNIDRef);
             return false;
-        } else if (nomineeNID.length != 10 || Number(nomineeNID.length) <= 0) {
+        } else if (nomineeNID.length != 10) {
             setNomineeNIDError("সঠিক জাতীয় পরিচয়পত্র নম্বর লিখুন***");
             scrollToSection(piNomineeNIDRef);
             return false;
         } else {
             setNomineeNIDError("");
+        }
+
+
+        if (contactNumber == "") {
+            setContactNumberError("আপনার মোবাইল নং লিখুন***");
+            scrollToSection(piNomineeNIDRef);
+            return false;
+        } else if (
+            contactNumber.length != 11 ||
+            !contactNumber.startsWith("01")
+        ) {
+            setContactNumberError("সঠিক মোবাইল নং লিখুন***");
+            scrollToSection(piNomineeNIDRef);
+            return false;
+        } else {
+            setContactNumberError("");
         }
 
         return true;
@@ -142,9 +193,8 @@ export default function PersonalInfo() {
             if (validPersonalInfo()) {
                 personal_data["MOTHERS_NAME"] = motherName;
                 personal_data["NOMINEES_NAME"] = nomineeName;
-
-                console.log(personal_data["NOMINEES_RELSHIP"]);
-                console.log(nomineeRelship["title"]);
+                personal_data["PRESENT_ADDRESS"] = presentAddressValue;
+                personal_data["PERMANENT_ADDRESS"] = permanentAddressValue;
 
                 if (state["used"] === "no") {
                     personal_data["NOMINEES_RELSHIP"] = nomineeRelship["title"];
@@ -156,6 +206,7 @@ export default function PersonalInfo() {
                 }
                 // personal_data["NID_NO"] = nID;
                 personal_data["NOMINEES_NID"] = nomineeNID;
+                personal_data["CONTACT_NO"] = contactNumber;
 
                 const file = { salary: salary_file };
                 personalNavigate("/application/3", {
@@ -230,16 +281,26 @@ export default function PersonalInfo() {
 
                     <DataField
                         refer={piFatherNameRef}
-                        type="data"
+                        helperText={presentAddressValueError}
+                        type="input"
+                        dataType="text"
                         label="ঙ) বর্তমান ঠিকানা "
                         value={presentAddressValue}
+                        setValue={(data) => {
+                            setPresentAddressValue(data);
+                        }}
                     />
 
                     <DataField
                         refer={piFatherNameRef}
-                        type="data"
+                        helperText={permanentAddressValueError}
+                        type="input"
+                        dataType="text"
                         label="চ) স্থায়ী ঠিকানা "
-                        value={permanantAddressValue}
+                        value={permanentAddressValue}
+                        setValue={(data) => {
+                            setpermanentAddressValue(data);
+                        }}
                     />
 
                     <DataField
@@ -267,6 +328,19 @@ export default function PersonalInfo() {
                             setNomineeNID(data);
                         }}
                         placeholder="i.e. 1234567890"
+                    />
+
+                    <DataField
+                        refer={piNomineeNIDRef}
+                        helperText={contactNumberError}
+                        type="input"
+                        dataType="number"
+                        label="ঝ) মোবাইল নং"
+                        value={contactNumber}
+                        setValue={(data) => {
+                            setContactNumber(data);
+                        }}
+                        placeholder="i.e. 01712334798"
                     />
                 </div>
 

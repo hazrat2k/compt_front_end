@@ -72,7 +72,7 @@ export default function PreviewApplication() {
     const preAppLoanReas = previewData["REASON_FOR_LOAN"];
 
     const preAppPersoInfo = [
-        ["ক", "খ", "গ", "ঘ", "ঙ", "চ", "ছ", "জ"],
+        ["ক", "খ", "গ", "ঘ", "ঙ", "চ", "ছ", "জ", "ঝ"],
         [
             "পিতা/স্বামীর নাম",
             "মাতার নাম",
@@ -82,18 +82,20 @@ export default function PreviewApplication() {
             "স্থায়ী ঠিকানা",
             "জন্ম তারিখ",
             "নমিনীর NID",
+            "মোবাইল নং",
         ],
         [
             previewData["FATHERS_NAME"],
             previewData["MOTHERS_NAME"],
             previewData["NOMINEES_NAME"],
             previewData["NOMINEES_RELSHIP"],
-            previewData["ADDRESS"],
-            previewData["ADDRESS"],
+            previewData["PRESENT_ADDRESS"],
+            previewData["PERMANENT_ADDRESS"],
             moment(new Date(previewData["DATE_OF_BIRTH"])).format(
                 "DD MMM YYYY"
             ),
             previewData["NOMINEES_NID"],
+            previewData["CONTACT_NO"],
         ],
     ];
 
@@ -167,6 +169,7 @@ export default function PreviewApplication() {
     const persoTable3 = [];
     const persoTable4 = [];
     const persoTable5 = [];
+    const persoTable6 = [];
 
     for (let i = 0; i < 4; i += 2) {
         persoTable.push(
@@ -232,6 +235,21 @@ export default function PreviewApplication() {
 
     for (let i = 7; i < 8; i += 1) {
         persoTable5.push(
+            <tbody>
+                <tr>
+                    <th className="tableIndexCol">
+                        {preAppPersoInfo[0][i] + ")"}
+                    </th>
+                    <th className="tableLabelCol">{preAppPersoInfo[1][i]}</th>
+                    <th className="tableLabelCol tableColonCol">:</th>
+                    <th className="tableValueCol">{preAppPersoInfo[2][i]}</th>
+                </tr>
+            </tbody>
+        );
+    }
+
+    for (let i = 8; i < 9; i += 1) {
+        persoTable6.push(
             <tbody>
                 <tr>
                     <th className="tableIndexCol">
@@ -406,6 +424,7 @@ export default function PreviewApplication() {
                         >
                             <table>{persoTable4}</table>
                             <table>{persoTable5}</table>
+                            <table>{persoTable6}</table>
                         </div>
                     </div>
 
