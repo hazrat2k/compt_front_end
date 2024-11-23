@@ -10,7 +10,10 @@ export default function NavBar(props) {
 
     var tl = gsap.timeline({ defaults: { duration: 0.5, ease: "expo.inOut" } });
     var isMobile = useMediaQuery({ query: "(max-width: 600px)" });
-    var height_ = isMobile ? "40vh" : "80vh";
+    var height_ = isMobile ? "50vh" : "80vh";
+    var width_ = isMobile ? "80%" : "30%";
+
+
 
     var nav_mid_display = (
         <div className="navbar_middle_items">
@@ -36,7 +39,11 @@ export default function NavBar(props) {
         } else {
             tl.to(".nav_items_with_close", { display: "flex", right: "-50vw" })
                 .to(".nav_items_with_close", { opacity: 1, right: 0 })
-                .to(".nav_items_with_close", { height: height_ }, "-=.1")
+                .to(
+                    ".nav_items_with_close",
+                    { height: height_, width: width_ },
+                    "-=.1"
+                )
                 .to(
                     ".navbar_item",
                     { opacity: 1, pointerEvents: "all", stagger: 0.2 },
@@ -50,7 +57,7 @@ export default function NavBar(props) {
         tl.reverse();
     };
 
-    const [padVal, setpadVal] = useState("2rem");
+    const [padVal, setpadVal] = useState(isMobile ? "0.5rem" : "2rem");
     const [height, setheight] = useState("6rem");
     // const listenScrollEvent = () => {
     //     window.scrollY > 20 ? setpadVal("1rem") : setpadVal("5rem");

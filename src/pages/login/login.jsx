@@ -397,7 +397,7 @@ export default function Login() {
                                 className="login_btn not-selectable"
                                 onClick={authenticate}
                             >
-                                LOGIN
+                                Login
                             </div>
                         </div>
 

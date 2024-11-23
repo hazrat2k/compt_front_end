@@ -15,6 +15,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import { isMobile } from "../../stores/const/mediaQuery";
 
 export default function PersonnelLogin() {
     const perLoginNavigate = useNavigate();
@@ -95,6 +96,7 @@ export default function PersonnelLogin() {
                     <div className="titleContainer">
                         <div>Personnel Login</div>
                     </div>
+
 
                     <TextField
                         error={userError != ""}

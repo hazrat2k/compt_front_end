@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import "./welcome.css";
 import { Slide } from "react-slideshow-image";
+import { useMediaQuery } from "react-responsive";
 import "react-slideshow-image/dist/styles.css";
 import { primary, secondary } from "../../stores/const/colors";
 
+
+
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
+// import { isMobile } from "../../stores/const/mediaQuery";
 
 export default function Welcome() {
     const [buttonHovering, setButtonHovering] = useState(false);
     const [button2Hovering, setButton2Hovering] = useState(false);
+    var isMobile = useMediaQuery({ query: "(max-width: 600px)" });
+    
 
     // const spanStyle = {
     //     padding: '2rem',
@@ -22,7 +28,8 @@ export default function Welcome() {
         alignItems: "center",
         justifyContent: "center",
         backgroundSize: "cover",
-        height: "100vh",
+        height: isMobile ? "30vh" : "100vh",
+        //height: "100vh",
     };
 
     const diameter = "25px";
