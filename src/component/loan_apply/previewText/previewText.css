@@ -1,66 +1,59 @@
 @media screen and (max-width: 800px) {
-
-    .previewData{
-        display: flex;
+    .previewData {
         padding: 0.25rem 0.5rem 0.25rem 0.5rem;
-    
     }
 
-    .previewDataLabel{
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
-        font-size: 0.7rem;
+    .previewDataLabel {
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
+        font-size: 0.8rem;
         font-weight: bold;
-        text-align: justify;
-        width: 50%;
+        text-align: left;
+        width: 40%;
     }
-    
-    .previewColon{
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
-        font-size: 0.7rem;
+
+    .previewColon {
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
+        font-size: 0.8rem;
         font-weight: bold;
         padding-right: 0.5rem;
         padding-left: 0.5rem;
     }
-    
-    .previewDataValue{
-        width:auto;
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
-        font-size: 0.7rem;
+
+    .previewDataValue {
+        width: auto;
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
+        font-size: 0.8rem;
         width: 50%;
     }
 }
 
-
-
 @media screen and (min-width: 800px) {
-
-    .previewData{
-        display: flex;
+    .previewData {
         padding: 0.5rem 1rem 0.5rem 1rem;
-        align-items: center;
     }
 
-    .previewDataLabel{
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
+    .previewDataLabel {
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
         font-size: 1.2rem;
         font-weight: bold;
         text-align: justify;
     }
-    
-    .previewColon{
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
+
+    .previewColon {
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
         font-size: 1.2rem;
         font-weight: bold;
         padding-right: 1rem;
         padding-left: 1rem;
     }
-    
-    .previewDataValue{
-        font-family: 'AdorshoLipi', PT Serif, Arial !important;
+
+    .previewDataValue {
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
         font-size: 1.2rem;
     }
 }
 
-
-
-
+.previewData {
+    display: flex;
+    align-items: center;
+}

@@ -36,10 +36,10 @@ export default function Login() {
 
     const loan_type_check = [
         "",
-        "CONSUMER LOAN",
-        "LAPTOP LOAN",
-        "SBL HOUSE BUILDING LOAN",
-        "SBL WHOLESALE LOAN",
+        "Consumer Loan",
+        "Laptop Loan",
+        "SBL House Loan",
+        "SBL Multipurpose Loan",
     ];
 
     const [buetId, setBuetId] = useState("");

@@ -129,7 +129,7 @@ export default function SalaryInfo(props) {
                 </table>
             </div> */}
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell align="center" className="sal_bold">

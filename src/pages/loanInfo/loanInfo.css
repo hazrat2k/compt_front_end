@@ -1,13 +1,13 @@
 @media screen and (max-width: 800px) {
     .loanInfo {
-        width: 80%;
+        width: 85%;
         margin-bottom: 2%;
     }
 
     .loanInfoLabel {
         width: 100%;
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 0.7rem;
+        font-size: large;
         font-weight: bold;
         color: black;
         margin-bottom: 2%;

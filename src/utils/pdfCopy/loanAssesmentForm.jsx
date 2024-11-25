@@ -38,9 +38,27 @@ const styles = StyleSheet.create({
         fontFamily: "English",
         fontSize: "18pt",
         fontWeight: "bold",
-        marginBottom: "5pt",
         color: "black",
         marginTop: "3pt",
+    },
+    pageFooter: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        fontFamily: "English",
+        paddingLeft: "10pt",
+        paddingRight: "10pt",
+        paddingBottom: "15pt",
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+    },
+
+    pageFooterText: {
+        textAlign: "center",
+        fontSize: "8px",
+        color: "black",
     },
 });
 
@@ -89,7 +107,6 @@ const style_laf = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         fontFamily: "English",
-        marginTop: "2%",
         marginLeft: "10%",
     },
 
@@ -160,7 +177,7 @@ const style_laf = StyleSheet.create({
     section_item_value: {
         fontSize: "10pt",
         fontFamily: "English",
-        width: "60%",
+        width: "58%",
     },
 
     write_signature: {
@@ -216,6 +233,7 @@ export default function LoanAssesmentForm(props) {
     const laf_applicant_name = laf_data["applicant_name"];
     const laf_designation = laf_data["designation"];
     const laf_office_dept = laf_data["office_dept"];
+    const laf_category = laf_data["category"];
 
     const pdf_laf_loan_type = laf_loan_type.toLowerCase();
 
@@ -240,6 +258,7 @@ export default function LoanAssesmentForm(props) {
     var laf_consu_loan = laf_data["consu_loan"];
     var laf_lap_loan = laf_data["lap_loan"];
     var laf_sblws_loan = laf_data["sblws_loan"];
+    var laf_sblh_loan = laf_data["sblh_loan"];
     var laf_tot_pay = laf_data["tot_pay"];
     var laf_net_rec = laf_data["net_rec"];
 
@@ -247,6 +266,7 @@ export default function LoanAssesmentForm(props) {
     var laf_consu_loan_ins_amnt = laf_data["consu_loan_ins_amnt"];
     var laf_lap_loan_ins_amnt = laf_data["lap_loan_ins_amnt"];
     var laf_sblws_loan_ins_amnt = laf_data["sblws_loan_ins_amnt"];
+    var laf_sblh_loan_ins_amnt = laf_data["sblh_loan_ins_amnt"];
     var laf_tot_loan_ins_amnt = laf_data["tot_loan_ins_amnt"];
 
     var laf_75_pens = laf_data["75_pens"];
@@ -260,15 +280,7 @@ export default function LoanAssesmentForm(props) {
     const sectionItem = (index, label, value) => {
         return (
             <View style={style_laf.section_item}>
-                <Text style={style_laf.sec_item_def}>{index}</Text>
-                <Text
-                    style={[
-                        style_laf.section_item_colon,
-                        style_laf.sec_item_def,
-                    ]}
-                >
-                    .
-                </Text>
+                <Text style={style_laf.sec_item_def}>{index + ".  "}</Text>
                 <Text
                     style={[
                         style_laf.section_item_label,
@@ -306,7 +318,7 @@ export default function LoanAssesmentForm(props) {
     const MyForm = (
         <Document>
             <Page size="A4" orientation="portrait">
-                <View style={{ marginTop: "20pt" }}></View>
+                <View style={{ marginTop: "30pt" }}></View>
 
                 <View style={style_logo.logo}>
                     <View style={style_logo.logo_img}>
@@ -335,36 +347,34 @@ export default function LoanAssesmentForm(props) {
 
                         <View style={style_laf.section_personal_items}>
                             <View style={style_laf.section_items_div}>
-                                {sectionItem("1", "Loan ID", laf_loan_id)}
-                                {sectionItem("3", "Loan Type", laf_loan_type)}
                                 {sectionItem(
-                                    "5",
+                                    "1",
                                     "Applicant Name",
                                     laf_applicant_name
                                 )}
                                 {sectionItem(
-                                    "7",
+                                    "3",
                                     "Office/Dept.",
                                     laf_office_dept
                                 )}
+                                {sectionItem("5", "Category", laf_category)}
+                                {sectionItem("7", "Loan ID", laf_loan_id)}
+                                {sectionItem("9", "Loan Type", laf_loan_type)}
                             </View>
 
                             <View style={style_laf.section_items_div}>
                                 {sectionItem(
                                     "2",
-                                    "Application Date",
-                                    laf_app_date
-                                )}
-
-                                {sectionItem("4", "BUET ID", laf_buet_id)}
-
-                                {sectionItem(
-                                    "6",
                                     "Designation",
                                     laf_designation
                                 )}
-
-                                {sectionItem("8", "Date of Birth", laf_dob)}
+                                {sectionItem("4", "BUET ID", laf_buet_id)}
+                                {sectionItem("6", "Date of Birth", laf_dob)}
+                                {sectionItem(
+                                    "8",
+                                    "Application Date",
+                                    laf_app_date
+                                )}
                             </View>
                         </View>
                     </View>
@@ -378,13 +388,13 @@ export default function LoanAssesmentForm(props) {
                             <View style={style_laf.section_items_div}>
                                 {sectionItem(
                                     "1",
-                                    "Joining Date",
+                                    "First Joining Date",
                                     laf_joining_date
                                 )}
                                 {sectionItem(
                                     "3",
-                                    "Maturity of Service (including PRL)",
-                                    laf_mos
+                                    "Remaining Service (No of Month)",
+                                    laf_rem_serv_m
                                 )}
                             </View>
 
@@ -396,8 +406,8 @@ export default function LoanAssesmentForm(props) {
                                 )}
                                 {sectionItem(
                                     "4",
-                                    "Remaining Service (No of Month)",
-                                    laf_rem_serv_m
+                                    "Retirement Date (Approx.)",
+                                    laf_mos
                                 )}
                             </View>
                         </View>
@@ -466,12 +476,7 @@ export default function LoanAssesmentForm(props) {
 
                         {sectionItem(
                             "3",
-                            "25 Months Grant (Trust Fund) (Service Length × Basic Salary)",
-                            nf.format(laf_25_mon_gran)
-                        )}
-                        {sectionItem(
-                            "4",
-                            "Total Receivable (TR) (1.+2.+3.)",
+                            "Total Receivable (TR) (1.+2.)",
                             nf.format(laf_tot_rec)
                         )}
 
@@ -480,49 +485,48 @@ export default function LoanAssesmentForm(props) {
                         <View style={style_laf.section_items}>
                             <View style={style_laf.section_items_div}>
                                 {sectionItem(
-                                    "5",
+                                    "4",
                                     "House Building Loan",
                                     nf.format(laf_hb_loan)
                                 )}
                                 {sectionItem(
-                                    "7",
+                                    "6",
                                     "Laptop Loan",
                                     nf.format(laf_lap_loan)
+                                )}
+                                {sectionItem(
+                                    "8",
+                                    "SBL Multipurpose Loan",
+                                    nf.format(laf_sblws_loan)
                                 )}
                             </View>
 
                             <View style={style_laf.section_items_div}>
                                 {sectionItem(
-                                    "6",
+                                    "5",
                                     "Consumer Loan",
                                     nf.format(laf_consu_loan)
                                 )}
                                 {sectionItem(
-                                    "8",
-                                    "SBL Whole Sale Loan",
-                                    nf.format(laf_sblws_loan)
+                                    "7",
+                                    "SBL House Loan",
+                                    nf.format(laf_sblh_loan)
+                                )}
+
+                                {sectionItem(
+                                    "9",
+                                    "Total Payable(TP) (5.+6.+7.+8.+9.)",
+                                    nf.format(laf_tot_pay)
                                 )}
                             </View>
                         </View>
-                        {sectionItem(
-                            "9",
-                            "Total Payable (TP) (5.+6.+7.+8.)",
-                            nf.format(laf_tot_pay)
-                        )}
+
                         {sectionItem(
                             "10",
-                            "Net Receivable (TR-TP) (4.-9.)",
+                            "Net Receivable (TR-TP) (3.-9.)",
                             nf.format(laf_net_rec)
                         )}
-                    </View>
-                </View>
-            </Page>
 
-            <Page size="A4" orientation="portrait">
-                <View style={{ marginTop: "20pt" }}></View>
-
-                <View style={style_laf.loan_assessment}>
-                    <View style={style_laf.assessment_section}>
                         <Text style={style_laf.subsection_label}>
                             Installment Amount of Loan
                         </Text>
@@ -539,6 +543,12 @@ export default function LoanAssesmentForm(props) {
                                     "Laptop Loan",
                                     nf.format(laf_lap_loan_ins_amnt)
                                 )}
+
+                                {sectionItem(
+                                    "15",
+                                    "SBL Multipurpose Loan",
+                                    nf.format(laf_sblws_loan_ins_amnt)
+                                )}
                             </View>
 
                             <View style={style_laf.section_items_div}>
@@ -549,18 +559,51 @@ export default function LoanAssesmentForm(props) {
                                 )}
                                 {sectionItem(
                                     "14",
-                                    "SBL Whole Sale Loan",
-                                    nf.format(laf_sblws_loan_ins_amnt)
+                                    "SBL House Loan",
+                                    nf.format(laf_sblh_loan_ins_amnt)
+                                )}
+                                {sectionItem(
+                                    "16",
+                                    "Total Installment Amount of Loan (11.+12.+13.+14.+15.)",
+                                    nf.format(laf_tot_loan_ins_amnt)
                                 )}
                             </View>
                         </View>
-                        {sectionItem(
-                            "15",
-                            "Total Installment Amount of Loan (11.+12.+13.+14.)",
-                            nf.format(laf_tot_loan_ins_amnt)
-                        )}
+                    </View>
+                </View>
+
+                <View style={styles.pageFooter}>
+                    <Text style={styles.pageFooterText}>{laf_loan_type}</Text>
+                    <Text style={styles.pageFooterText}>Page 1 of 2</Text>
+                    <Text style={styles.pageFooterText}>
+                        {new Date().toString().slice(0, 24)}
+                    </Text>
+                </View>
+            </Page>
+
+            <Page size="A4" orientation="portrait">
+                <View style={{ marginTop: "30pt" }}></View>
+
+                <View style={style_logo.logo}>
+                    <View style={style_logo.logo_img}>
+                        <Image style={style_logo.l_img} src={logo_image} />
                     </View>
 
+                    <View style={style_logo.logo_text}>
+                        <Text style={style_logo.logo_text_1}>
+                            Bangladesh University of Engineering and Technology
+                            (BUET)
+                        </Text>
+                        <Text style={style_logo.logo_text_2}>
+                            COMPTROLLER OFFICE
+                        </Text>
+                        <Text style={styles.pageLabel}>
+                            {pdf_laf_loan_type} Assesment Form
+                        </Text>
+                    </View>
+                </View>
+
+                <View style={style_laf.loan_assessment}>
                     <View style={style_laf.assessment_section}>
                         <Text style={style_laf.section_label}>
                             E) Loan Assessment :
@@ -603,7 +646,7 @@ export default function LoanAssesmentForm(props) {
                                 )}
                                 {sectionItem(
                                     "6",
-                                    "Total Installment Amount (D15.+E4.)",
+                                    "Total Installment Amount (D16.+E4.)",
                                     nf.format(laf_tot_ins_amnt)
                                 )}
                             </View>
@@ -615,7 +658,7 @@ export default function LoanAssesmentForm(props) {
                     <View style={style_laf.write_signature}>
                         {signatureBox("Accountant")}
                         {signatureBox("Accounts Officer")}
-                        {signatureBox("Sr. Assistant Director")}
+                        {signatureBox("Deputy Director")}
                         {signatureBox("Deputy Comptroller")}
                         {signatureBox("Comptroller")}
                     </View>
@@ -636,6 +679,14 @@ export default function LoanAssesmentForm(props) {
                         {signatureBox("Deputy Director")}
                         {signatureBox("Deputy Comptroller")}
                     </View>
+                </View>
+
+                <View style={styles.pageFooter}>
+                    <Text style={styles.pageFooterText}>{laf_loan_type}</Text>
+                    <Text style={styles.pageFooterText}>Page 2 of 2</Text>
+                    <Text style={styles.pageFooterText}>
+                        {new Date().toString().slice(0, 24)}
+                    </Text>
                 </View>
             </Page>
         </Document>
@@ -663,17 +714,20 @@ export default function LoanAssesmentForm(props) {
         // </PDFViewer>
 
         <>
-
             <BlobProvider document={MyForm}>
                 {({ blob, url, loading, error }) => {
                     setLafUrl(url);
                 }}
             </BlobProvider>
 
-            <div style={style_butt.download_butt} onClick={onLAFClick} onMouseEnter={() => setLaf_hover(true)} onMouseLeave={() => setLaf_hover(false)}>
+            <div
+                style={style_butt.download_butt}
+                onClick={onLAFClick}
+                onMouseEnter={() => setLaf_hover(true)}
+                onMouseLeave={() => setLaf_hover(false)}
+            >
                 Download Assesment Form
             </div>
-
         </>
     );
 }

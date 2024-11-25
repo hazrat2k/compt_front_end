@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 import moment from "moment";
 
@@ -53,8 +54,8 @@ const loanTypes = [
     "House Building Loan",
     "Consumer Loan",
     "Laptop Loan",
-    "SBL House Building Loan",
-    "SBL Wholesale Loan",
+    "SBL House Loan",
+    "SBL Multipurpose Loan",
 ];
 
 const duration_calculation = (date) => {
@@ -580,7 +581,8 @@ LoanStatus.propTypes = {
 export default function EmployeeDash() {
     const { state } = useLocation();
     const ed_data = state["info"];
-    const fSize = "18px";
+    const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+    const fSize = isMobile ? "14px" : "18px";
 
     const ed_navigate = useNavigate();
 
@@ -711,7 +713,7 @@ export default function EmployeeDash() {
 
                 <div className="ld_button">
                     <div
-                        className="ld_forward"
+                        className="ed_button"
                         onClick={() => {
                             ed_navigate("/employeelogin");
                         }}
@@ -722,7 +724,7 @@ export default function EmployeeDash() {
 
                 <div className="ed_section">
                     <div className="ed_sec_label"> Loan Section : </div>
-                    <div className="ed_double_items">
+                    <div className="ed_double_button_items">
                         <div className="ed_button" onClick={onHandleLoanStatus}>
                             Check Loan Status
                         </div>

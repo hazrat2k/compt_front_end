@@ -88,6 +88,8 @@ export default function BasicInfo() {
         return true;
     };
 
+    
+
     const onBasicAuthenticate = async (e) => {
         e.preventDefault();
 
@@ -123,7 +125,7 @@ export default function BasicInfo() {
                     <DataField
                         refer={applicantNameRef}
                         type="data"
-                        label="১. আবেদনকারীর নাম "
+                        label="১. আবেদন-কারীর নাম "
                         value={applicantName}
                     />
 

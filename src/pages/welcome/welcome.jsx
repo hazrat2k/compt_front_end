@@ -14,7 +14,7 @@ import Footer from "../../component/page_compo/footer/footer";
 export default function Welcome() {
     const [buttonHovering, setButtonHovering] = useState(false);
     const [button2Hovering, setButton2Hovering] = useState(false);
-    var isMobile = useMediaQuery({ query: "(max-width: 600px)" });
+    const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
     
 
     // const spanStyle = {

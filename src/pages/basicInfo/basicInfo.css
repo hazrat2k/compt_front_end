@@ -1,4 +1,9 @@
 @media screen and (max-width: 800px) {
+    .basic_label {
+        font-size: x-large;
+        margin-bottom: 1rem;
+    }
+
     .basicFieldBody {
         display: grid;
         grid-template-columns: 100%;
@@ -11,11 +16,10 @@
     .basicField {
         display: flex;
         flex-direction: column;
-        width: 70%;
+        width: 80%;
         justify-content: center;
         align-items: center;
         justify-items: center;
-
     }
 
     .profilePicture {
@@ -73,28 +77,27 @@
 
     .binormalButton {
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         color: crimson;
-        height: 1.7rem;
-        width: 3.5rem;
+        padding: 0.3rem 1rem 0.3rem 1rem;
         border-radius: 2rem;
         background-color: white;
         border-color: crimson;
     }
 
     .binormalButton:hover {
-        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 0.7rem;
         color: white;
-        height: 1.7rem;
-        width: 3.5rem;
-        border-radius: 2rem;
         background-color: crimson;
         border-color: white;
     }
 }
 
 @media screen and (min-width: 800px) {
+    .basic_label {
+        font-size: xx-large;
+        margin-bottom: 2rem;
+    }
+
     .basicFieldBody {
         display: grid;
         grid-template-columns: 100%;
@@ -195,7 +198,7 @@
 
 .basic_label {
     font-family: "PT Serif";
-    font-size: xx-large;
     font-weight: bold;
-    margin-bottom: 2rem;
+    
+    text-align: center;
 }

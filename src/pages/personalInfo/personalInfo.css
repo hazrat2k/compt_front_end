@@ -1,11 +1,8 @@
 @media screen and (max-width: 800px) {
     .personalInfo {
-        width: 80%;
+        width: 90%;
         position: relative;
-        border: 1px solid crimson;
-        border-radius: 1rem;
-        padding: 1rem 1rem 1rem 1rem;
-        margin-top: 5%;
+        padding: 0.3rem 1rem 0.3rem 1rem;
         margin-bottom: 2%;
         display: grid;
         grid-template-columns: 100%;
@@ -13,7 +10,7 @@
 
     .personalInfoLabel {
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 0.7rem;
+        font-size: large;
         font-weight: bold;
         color: black;
         margin-bottom: 2%;
@@ -22,6 +19,8 @@
 }
 
 @media screen and (min-width: 800px) {
+
+    
     .personalInfo {
         width: 70%;
         position: relative;

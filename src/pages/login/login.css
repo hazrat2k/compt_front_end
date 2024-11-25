@@ -13,26 +13,19 @@
         align-self: center;
         font-size: 0.7rem;
         color: crimson;
-        height: 1.7rem;
-        width: 3.5rem;
+        padding: 0.3rem 1rem 0.3rem 1rem;
         border-radius: 2rem;
         background-color: white;
+        border: 2px solid;
         border-color: crimson;
         font-weight: bold;
     }
 
     .login_btn:hover {
-        margin-top: 5%;
-        text-align: center;
-        align-self: center;
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         color: white;
-        height: 1.7rem;
-        width: 3.5rem;
-        border-radius: 2rem;
         background-color: crimson;
         border-color: white;
-        font-weight: bold;
     }
 
     .login_error_Text {

@@ -29,7 +29,8 @@ export default function DataField(props) {
 
             {props.type == "input" ? (
                 <TextField
-                    style={{ width: "68%" }}
+                    style={{ width: "68%", fontSize: "10px" }}
+                    className="dataInput"
                     id="standard-basic"
                     variant="standard"
                     error={props.helperText != ""}
@@ -112,6 +113,7 @@ export default function DataField(props) {
                             placeholder={props.placeholder}
                             error={props.helperText != ""}
                             helperText={props.helperText}
+                            className="dataInput"
                         />
                     )}
                 />

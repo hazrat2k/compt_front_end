@@ -1,3 +1,48 @@
+@media screen and (max-width: 800px) {
+    .ed_label {
+        font-size: x-large;
+    }
+
+    .ed_section {
+        width: 90%;
+    }
+
+    .ed_double_items {
+        flex-direction: column;
+    }
+
+    .ed_sec_label {
+        font-size: large;
+    }
+
+    .ed_button {
+        font-size: 0.7rem;
+        padding: 0.3rem 1rem 0.3rem 1rem;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .ed_label {
+        font-size: xx-large;
+    }
+
+    .ed_section {
+        width: 80%;
+    }
+
+    .ed_double_items {
+        flex-direction: row;
+    }
+    .ed_sec_label {
+        font-size: x-large;
+    }
+
+    .ed_button {
+        font-size: 1.1rem;
+        padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+    }
+}
+
 .ed_body {
     display: flex;
     flex-direction: column;
@@ -7,7 +52,6 @@
 }
 
 .ed_label {
-    font-size: xx-large;
     text-align: center;
     font-weight: bold;
 }
@@ -17,11 +61,16 @@
     flex-direction: column;
     align-items: center;
     align-self: center;
-    width: 80%;
     margin-bottom: 20px;
 }
 
 .ed_double_items {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.ed_double_button_items{
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -29,16 +78,14 @@
 }
 
 .ed_sec_label {
-    font-size: x-large;
     text-align: left;
     font-weight: bold;
     align-self: start;
 }
 
 .ed_button {
-    font-size: 1.1rem;
-    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     border-radius: 2rem;
+    text-align: center;
     border: 2px solid;
     font-weight: bold;
     color: var(--green);

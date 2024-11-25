@@ -70,7 +70,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_info",
+                    "http://" + backend_site_address + "/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -80,7 +80,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadValue
                 );
                 setPd_sanc_loan_data(sanc_res.data);
@@ -90,7 +90,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanced_res = await axios.post(
-                    "http://"+backend_site_address+"/sanctioned_loan",
+                    "http://" + backend_site_address + "/sanctioned_loan",
                     uploadValue
                 );
                 setPd_sanced_loan_data(sanced_res.data);
@@ -100,7 +100,7 @@ export default function PersoneelDash() {
 
             try {
                 const billed_res = await axios.post(
-                    "http://"+backend_site_address+"/billed_loan",
+                    "http://" + backend_site_address + "/billed_loan",
                     uploadValue
                 );
                 setPd_billed_loan_data(billed_res.data);
@@ -131,7 +131,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_info",
+                    "http://" + backend_site_address + "/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -146,7 +146,9 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_id_filter",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_id_filter",
                     uploadId
                 );
                 setPd_pend_loan_data(res.data);
@@ -170,7 +172,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_info",
+                    "http://" + backend_site_address + "/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -184,7 +186,9 @@ export default function PersoneelDash() {
             };
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_app_nam_filter",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_app_nam_filter",
                     uploadNam
                 );
                 setPd_pend_loan_data(res.data);
@@ -200,7 +204,7 @@ export default function PersoneelDash() {
         };
         try {
             const sal_res = await axios.post(
-                "http://"+backend_site_address+"/processing_loan_salary",
+                "http://" + backend_site_address + "/processing_loan_salary",
                 uploadData
             );
             data["loan_data"] = sal_res.data;
@@ -483,7 +487,7 @@ export default function PersoneelDash() {
 
             try {
                 const res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_info",
+                    "http://" + backend_site_address + "/processing_loan_info",
                     uploadValue
                 );
                 setPd_pend_loan_data(res.data);
@@ -493,7 +497,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadValue
                 );
                 setPd_sanc_loan_data(sanc_res.data);
@@ -503,7 +507,7 @@ export default function PersoneelDash() {
 
             try {
                 const sanced_res = await axios.post(
-                    "http://"+backend_site_address+"/sanctioned_loan",
+                    "http://" + backend_site_address + "/sanctioned_loan",
                     uploadValue
                 );
                 setPd_sanced_loan_data(sanced_res.data);
@@ -513,7 +517,7 @@ export default function PersoneelDash() {
 
             try {
                 const billed_res = await axios.post(
-                    "http://"+backend_site_address+"/billed_loan",
+                    "http://" + backend_site_address + "/billed_loan",
                     uploadValue
                 );
                 setPd_billed_loan_data(billed_res.data);
@@ -587,10 +591,14 @@ export default function PersoneelDash() {
                 >
                     <option value="null">Select a Loan Type......</option>
                     <option value="House Building Loan">
-                        HOUSE BUILDING LOAN
+                        House Building Loan
                     </option>
-                    <option value="Consumer Loan">CONSUMER LOAN</option>
-                    <option value="Laptop Loan">LAPTOP LOAN</option>
+                    <option value="Consumer Loan">Consumer Loan</option>
+                    <option value="Laptop Loan">Laptop Loan</option>
+                    <option value="SBL House Loan">SBL House Loan</option>
+                    <option value="SBL Multipurpose Loan">
+                        SBL Multipurpose Loan
+                    </option>
                 </select>
 
                 {pd_select == "null" ? (
@@ -838,6 +846,9 @@ export default function PersoneelDash() {
                         </div>
                     </>
                 )}
+
+
+                
             </div>
 
             <Footer />

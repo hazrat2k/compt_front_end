@@ -27,6 +27,7 @@ export default function LoanDetails() {
 
     const [ld_pers_data, setLd_pers_data] = useState([]);
     const [ld_pl_prev_loan_1, setLd_pl_prev_loan_1] = useState([]);
+    const [ld_pl_prev_loan_2, setLd_pl_prev_loan_2] = useState([]);
     const [ld_pl_remarks, setLd_pl_remarks] = useState([]);
 
     const [ld_basic_salary, setLd_basic_salary] = useState(
@@ -47,7 +48,7 @@ export default function LoanDetails() {
                 };
 
                 const pers_data_res = await axios.post(
-                    "http://"+backend_site_address+"/personeel_login",
+                    "http://" + backend_site_address + "/personeel_login",
                     uploadData
                 );
                 setLd_pers_data(pers_data_res.data);
@@ -57,13 +58,25 @@ export default function LoanDetails() {
                 };
 
                 const prev_loan_1_res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_prev_loan_1",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_prev_loan_1",
                     uploadData
                 );
                 setLd_pl_prev_loan_1(prev_loan_1_res.data);
 
+                const prev_loan_2_res = await axios.post(
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_prev_loan_2",
+                    uploadData
+                );
+                setLd_pl_prev_loan_2(prev_loan_2_res.data);
+
                 const remarks_res = await axios.post(
-                    "http://"+backend_site_address+"/processing_loan_remarks",
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_remarks",
                     uploadData
                 );
                 setLd_pl_remarks(remarks_res.data);
@@ -137,6 +150,7 @@ export default function LoanDetails() {
     ld_value["category"] = ld_data["CATEGORY"];
     ld_value["office_dept"] = ld_data["OFFICE"];
     ld_value["account_no"] = ld_data["BANK_ACCOUNT_NO"];
+    ld_value["category"] = ld_data["CATEGORY"];
 
     const ld_loan_type = ld_value["loan_type"].toLowerCase();
 
@@ -169,13 +183,14 @@ export default function LoanDetails() {
 
     ld_value["pens_gra"] = 0;
     ld_value["leav_sal"] = 0;
-    ld_value["25_mon_gran"] = 0;
+    // ld_value["25_mon_gran"] = 0;
     ld_value["tot_rec"] = 0;
 
     ld_value["hb_loan"] = 0;
     ld_value["consu_loan"] = 0;
     ld_value["lap_loan"] = 0;
     ld_value["sblws_loan"] = 0;
+    ld_value["sblh_loan"] = 0;
     ld_value["tot_pay"] = 0;
     ld_value["net_rec"] = 0;
 
@@ -183,6 +198,7 @@ export default function LoanDetails() {
     ld_value["consu_loan_ins_amnt"] = 0;
     ld_value["lap_loan_ins_amnt"] = 0;
     ld_value["sblws_loan_ins_amnt"] = 0;
+    ld_value["sblh_loan_ins_amnt"] = 0;
     ld_value["tot_loan_ins_amnt"] = 0;
 
     ld_value["75_pens"] = 0;
@@ -222,11 +238,11 @@ export default function LoanDetails() {
 
     ld_value["net_salary"] = ld_gross_salary - ld_total_deduct;
 
-    ld_value["pens_gra"] =
-        Math.round((ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100);
-    ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
-    ld_value["tot_rec"] =
-        ld_value["pens_gra"] + ld_value["leav_sal"] + ld_value["25_mon_gran"];
+    ld_value["pens_gra"] = Math.round(
+        (ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100
+    );
+    //ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
+    ld_value["tot_rec"] = ld_value["pens_gra"] + ld_value["leav_sal"];
 
     for (let i = 0; i < ld_pl_prev_loan_1.length; i++) {
         ld_value["hb_loan"] = ld_pl_prev_loan_1[0]["HL_REM_INST_AMNT"];
@@ -241,11 +257,18 @@ export default function LoanDetails() {
             ld_pl_prev_loan_1[0]["SBWSL_INST_AMNT"];
     }
 
+    for (let i = 0; i < ld_pl_prev_loan_2.length; i++) {
+        ld_value["sblh_loan"] = ld_pl_prev_loan_2[0]["SBHL_REM_INST_AMNT"];
+
+        ld_value["sblh_loan_ins_amnt"] = ld_pl_prev_loan_2[0]["SBHL_INST_AMNT"];
+    }
+
     ld_value["tot_pay"] =
         ld_value["hb_loan"] +
         ld_value["consu_loan"] +
         ld_value["lap_loan"] +
-        ld_value["sblws_loan"];
+        ld_value["sblws_loan"] +
+        ld_value["sblh_loan"];
 
     ld_value["net_rec"] = ld_value["tot_rec"] - ld_value["tot_pay"];
 
@@ -253,7 +276,8 @@ export default function LoanDetails() {
         ld_value["hb_loan_ins_amnt"] +
         ld_value["consu_loan_ins_amnt"] +
         ld_value["lap_loan_ins_amnt"] +
-        ld_value["sblws_loan_ins_amnt"];
+        ld_value["sblws_loan_ins_amnt"] +
+        ld_value["sblh_loan_ins_amnt"];
 
     ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
 
@@ -427,7 +451,7 @@ export default function LoanDetails() {
         ) {
             try {
                 await axios.post(
-                    "http://"+backend_site_address+"/sanction_register",
+                    "http://" + backend_site_address + "/sanction_register",
                     ld_value
                 );
             } catch (err) {
@@ -437,10 +461,13 @@ export default function LoanDetails() {
 
         if (ld_user && ld_data["sendFrom"] == "compt" && temp_status > 13) {
             try {
-                await axios.put("http://"+backend_site_address+"/sanction", {
-                    loan_id: ld_value["loan_id"],
-                    status: "BILL",
-                });
+                await axios.put(
+                    "http://" + backend_site_address + "/sanction",
+                    {
+                        loan_id: ld_value["loan_id"],
+                        status: "BILL",
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
@@ -454,7 +481,9 @@ export default function LoanDetails() {
 
         try {
             await axios.put(
-                "http://"+backend_site_address+"/processing_loan_remarks_update",
+                "http://" +
+                    backend_site_address +
+                    "/processing_loan_remarks_update",
                 updateRemarksData
             );
 
@@ -495,49 +524,46 @@ export default function LoanDetails() {
 
                     <div className="section_items">
                         <div className="section_items_div">
-                            {sectionItem("1", "Loan ID", ld_value["loan_id"])}
-
                             {sectionItem(
-                                "3",
-                                "Loan Type",
-                                ld_value["loan_type"]
-                            )}
-
-                            {sectionItem(
-                                "5",
+                                "1",
                                 "Applicant Name",
                                 ld_value["applicant_name"]
                             )}
-
                             {sectionItem(
-                                "7",
+                                "3",
                                 "Office/Dept.",
                                 ld_value["office_dept"]
+                            )}
+                            {sectionItem("5", "Category", ld_value["category"])}
+                            {sectionItem("7", "Loan ID", ld_value["loan_id"])}
+
+                            {sectionItem(
+                                "9",
+                                "Loan Type",
+                                ld_value["loan_type"]
+                            )}
+                        </div>
+                        <div className="section_items_div">
+                            {sectionItem(
+                                "2",
+                                "Designation",
+                                ld_value["designation"]
+                            )}
+                            {sectionItem("4", "BUET ID", ld_value["buet_id"])}
+                            {sectionItem("6", "Date of Birth", ld_value["dob"])}
+                            {sectionItem(
+                                "8",
+                                "Application Date",
+                                ld_value["loan_app_date"]
                             )}
 
                             {ld_user
                                 ? ""
                                 : sectionItem(
-                                      "9",
+                                      "10",
                                       "Application Status",
                                       temp_status_t
                                   )}
-                        </div>
-                        <div className="section_items_div">
-                            {sectionItem(
-                                "2",
-                                "Application Date",
-                                ld_value["loan_app_date"]
-                            )}
-                            {sectionItem("4", "BUET ID", ld_value["buet_id"])}
-
-                            {sectionItem(
-                                "6",
-                                "Designation",
-                                ld_value["designation"]
-                            )}
-
-                            {sectionItem("8", "Date of Birth", ld_value["dob"])}
                         </div>
                     </div>
                 </div>
@@ -551,13 +577,13 @@ export default function LoanDetails() {
                         <div className="section_items_div">
                             {sectionItem(
                                 "1",
-                                "Joining Date",
+                                "First Joining Date",
                                 ld_value["joining_date"]
                             )}
                             {sectionItem(
                                 "3",
-                                "Maturity of Service (including PRL)",
-                                ld_value["mos"]
+                                "Remaining Service (No of Month)",
+                                ld_value["rem_serv_m"]
                             )}
                         </div>
                         <div className="section_items_div">
@@ -568,8 +594,8 @@ export default function LoanDetails() {
                             )}
                             {sectionItem(
                                 "4",
-                                "Remaining Service (No of Month)",
-                                ld_value["rem_serv_m"]
+                                "Retirement Date (Approx.)",
+                                ld_value["mos"]
                             )}
                         </div>
                     </div>
@@ -695,12 +721,7 @@ export default function LoanDetails() {
                     </div>
                     {sectionItem(
                         "3",
-                        "25 Months Grant (Trust Fund) (Service Length × Basic Salary)",
-                        nf.format(ld_value["25_mon_gran"])
-                    )}
-                    {sectionItem(
-                        "4",
-                        "Total Receivable (TR) (1.+2.+3.)",
+                        "Total Receivable (TR) (1.+2.)",
                         nf.format(ld_value["tot_rec"])
                     )}
 
@@ -708,37 +729,43 @@ export default function LoanDetails() {
                     <div className="section_items">
                         <div className="section_items_div">
                             {sectionItem(
-                                "5",
+                                "4",
                                 "House Building Loan",
                                 nf.format(ld_value["hb_loan"])
                             )}
                             {sectionItem(
-                                "7",
+                                "6",
                                 "Laptop Loan",
                                 nf.format(ld_value["lap_loan"])
+                            )}
+                            {sectionItem(
+                                "8",
+                                "SBL Multipurpose Loan",
+                                nf.format(ld_value["sblws_loan"])
                             )}
                         </div>
                         <div className="section_items_div">
                             {sectionItem(
-                                "6",
+                                "5",
                                 "Consumer Loan",
                                 nf.format(ld_value["consu_loan"])
                             )}
                             {sectionItem(
-                                "8",
-                                "SBL Whole Sale Loan",
-                                nf.format(ld_value["sblws_loan"])
+                                "7",
+                                "SBL House Loan",
+                                nf.format(ld_value["sblh_loan"])
+                            )}
+                            {sectionItem(
+                                "9",
+                                "Total Payable (TP) (4.+5.+6.+7.+8.)",
+                                nf.format(ld_value["tot_pay"])
                             )}
                         </div>
                     </div>
-                    {sectionItem(
-                        "9",
-                        "Total Payable (TP) (5.+6.+7.+8.)",
-                        nf.format(ld_value["tot_pay"])
-                    )}
+
                     {sectionItem(
                         "10",
-                        "Net Receivable (TR-TP) (4.-9.)",
+                        "Net Receivable (TR-TP) (3.-9.)",
                         nf.format(ld_value["net_rec"])
                     )}
 
@@ -757,6 +784,12 @@ export default function LoanDetails() {
                                 "Laptop Loan",
                                 nf.format(ld_value["lap_loan_ins_amnt"])
                             )}
+
+                            {sectionItem(
+                                "15",
+                                "SBL Multipurpose Loan",
+                                nf.format(ld_value["sblws_loan_ins_amnt"])
+                            )}
                         </div>
                         <div className="section_items_div">
                             {sectionItem(
@@ -766,16 +799,17 @@ export default function LoanDetails() {
                             )}
                             {sectionItem(
                                 "14",
-                                "SBL Whole Sale Loan",
-                                nf.format(ld_value["sblws_loan_ins_amnt"])
+                                "SBL House Loan",
+                                nf.format(ld_value["sblh_loan_ins_amnt"])
+                            )}
+
+                            {sectionItem(
+                                "16",
+                                "Total Installment Amount of Loan (11.+12.+13.+14.+15.)",
+                                nf.format(ld_value["tot_loan_ins_amnt"])
                             )}
                         </div>
                     </div>
-                    {sectionItem(
-                        "15",
-                        "Total Installment Amount of Loan (11.+12.+13.+14.)",
-                        nf.format(ld_value["tot_loan_ins_amnt"])
-                    )}
                 </div>
 
                 <div className="assessment_section loan_assessment">
@@ -817,7 +851,7 @@ export default function LoanDetails() {
                             )}
                             {sectionItem(
                                 "6",
-                                "Total Installment Amount (D15.+E4.)",
+                                "Total Installment Amount (D16.+E4.)",
                                 nf.format(ld_value["tot_ins_amnt"])
                             )}
                         </div>

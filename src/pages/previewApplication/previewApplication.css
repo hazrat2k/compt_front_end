@@ -2,7 +2,7 @@
     .pageLabel {
         text-align: center;
         font-family: "AdorshoLipi", PT Serif, Arial !important;
-        font-size: 1rem;
+        font-size: large;
         font-weight: bold;
     }
 
@@ -22,7 +22,7 @@
 
     .prePersInfoLabel {
         font-family: "AdorshoLipi", PT Serif, Arial !important;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         font-weight: bold;
         text-align: justify;
     }
@@ -32,29 +32,42 @@
     }
 
     .tableIndexCol {
-        width: 6%;
+        width: 5%;
         font-family: "AdorshoLipi", PT Serif, Arial !important;
-        font-size: 0.5rem;
+        font-size: 0.6rem;
         font-weight: bold;
     }
 
     .tableLabelCol {
         width: 20%;
         font-family: "AdorshoLipi", PT Serif, Arial !important;
-        font-size: 0.5rem;
+        font-size: 0.6rem;
         font-weight: bold;
         text-align: left;
         padding-left: 0.25rem;
     }
 
-    .tableValueCol {
-        font-family: "AdorshoLipi", PT Serif, Arial !important;
-        font-size: 0.5rem;
-        text-align: left;
-        padding-left: 0.5rem;
-        font-weight: lighter;
+    .tableColonCol {
+        font-size: 0.6rem;
+        font-weight: bold;
+        width: 2%;
     }
 
+    .tableValueCol {
+        width: 75%;
+        font-family: "AdorshoLipi", PT Serif, Arial !important;
+        font-size: 0.6rem;
+        text-align: left;
+        font-weight: normal;
+    }
+
+    .pa_bold {
+        font-size: 0.6rem !important;
+    }
+
+    .pa_reg {
+        font-size: 0.6rem !important;
+    }
 
     .preAppSignPic {
         padding: 0.5rem 0.5rem 0.5rem 0.5rem;
@@ -161,6 +174,8 @@
     }
 
     .tableColonCol {
+        font-size: 1rem;
+        font-weight: bold;
         width: 2%;
     }
 
@@ -172,6 +187,13 @@
         font-weight: normal;
     }
 
+    .pa_bold {
+        font-size: 1rem !important;
+    }
+
+    .pa_reg {
+        font-size: 1rem !important;
+    }
 
     .preAppSignPic {
         padding: 1rem 1rem 1rem 1rem;
@@ -229,7 +251,12 @@
 }
 
 .pa_bold {
-    font-weight: bold;
+    font-weight: bold !important;
+    font-family: "AdorshoLipi", PT Serif, Arial !important;
+}
+
+.pa_reg {
+    font-family: "AdorshoLipi", PT Serif, Arial !important;
 }
 
 .preBasicField {
@@ -247,4 +274,9 @@
 .preBasicFieldwithProPic {
     display: flex;
     flex-direction: row;
+}
+
+.preBasicFieldMob {
+    display: flex;
+    flex-direction: column;
 }

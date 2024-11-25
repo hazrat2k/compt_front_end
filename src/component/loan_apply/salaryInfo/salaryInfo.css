@@ -1,17 +1,25 @@
 @media screen and (max-width: 800px) {
     .salaryInfo {
-        width: 80%;
+        width: 90%;
         margin-bottom: 2%;
     }
 
     .salaryInfoLabel {
         width: 100%;
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 0.7rem;
+        font-size: large;
         font-weight: bold;
         color: black;
         margin-bottom: 2%;
         text-align: center;
+    }
+
+    .sal_bold {
+        font-size: 0.8rem !important;
+    }
+
+    .sal_reg {
+        font-size: 0.8rem !important;
     }
 
     .tableText {
@@ -49,6 +57,14 @@
         margin-bottom: 2%;
     }
 
+    .sal_bold {
+        font-size: 1rem !important;
+    }
+
+    .sal_reg {
+        font-size: 1rem !important;
+    }
+
     .tableText {
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 0.8rem;
@@ -69,16 +85,14 @@
     }
 }
 
-.sal_bold{
+.sal_bold {
     font-weight: 700 !important;
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-    font-size: 1rem !important;
 }
 
-.sal_reg{
+.sal_reg {
     font-weight: 400 !important;
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-    font-size: 1rem !important;
 }
 
 .fullTable {

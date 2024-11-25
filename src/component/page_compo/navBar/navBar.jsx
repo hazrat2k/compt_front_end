@@ -13,8 +13,6 @@ export default function NavBar(props) {
     var height_ = isMobile ? "50vh" : "80vh";
     var width_ = isMobile ? "80%" : "30%";
 
-
-
     var nav_mid_display = (
         <div className="navbar_middle_items">
             <a href="/login" style={{ textDecoration: "none" }}>

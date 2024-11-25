@@ -62,26 +62,17 @@ export default function LoanInfo() {
         ],
         ["০২", "ভোগ্যপণ্য ঋণ", "Consumer Loan"],
         ["০৩", "ল্যাপটপ ঋণ", "Laptop Loan"],
-        [
-            "০৪",
-            "সোনালী ব্যাংকের হোলসেল ঋণের আওতায় প্রদত্ত পারসোনাল বা অন্যান্য বা এনি পারপোস লোন",
-            "Any Purpose Loan",
-        ],
+        ["০৪", "সোনালী ব্যাংকের হোলসেল ঋণ", "Sonali Bank Whole-Sale Loan"],
         [
             "০৫",
-            "সোনালী ব্যাংকের হোলসেল ঋণের আওতায় প্রদত্ত গৃহ নির্মাণ ঋণ, গৃহ ক্রয়, নির্মাণ, মেরামত, জমি ক্রয় ঋণ",
-            "Whole-Sale House Building Loan",
+            "সোনালী ব্যাংকের গৃহ নির্মাণ ঋণ",
+            "Sonali Bank House Building Loan",
         ],
-        [
-            "০৬",
-            "বাংলাদেশ প্রকৌশল বিশ্ববিদ্যালয়ের শিক্ষক/কর্মচারীদের ব্যাংকিং ব্যবস্থার মাধ্যমে গৃহীত গৃহ নির্মাণ ঋণ",
-            "Whole-Sale House Building Loan",
-        ],
-        ["০৭", "অন্যান্য", "Others"],
-        ["০৮", "সমষ্টি"],
+        ["০৬", "অন্যান্য", "Others"],
+        ["০৭", "সমষ্টি"],
     ];
 
-    var loan_table_value = Array.from(Array(8), () => new Array(5).fill(0));
+    var loan_table_value = Array.from(Array(7), () => new Array(5).fill(0));
 
     var jsx_table_data = [];
 
@@ -130,17 +121,17 @@ export default function LoanInfo() {
                     data_loan[i]["REMAINING_AMOUNT"]
                 );
 
-                loan_table_value[7][0] += Number(
+                loan_table_value[6][0] += Number(
                     data_loan[i]["TOTAL_AMOUNT_TO_REF"]
                 );
-                loan_table_value[7][1] += Number(
+                loan_table_value[6][1] += Number(
                     data_loan[i]["AMOUNT_OF_INSTALLMENT"]
                 );
-                loan_table_value[7][2] += Number(
+                loan_table_value[6][2] += Number(
                     data_loan[i]["NO_OF_INSTALLMENT"]
                 );
-                loan_table_value[7][3] += Math.round(temp);
-                loan_table_value[7][4] += Number(
+                loan_table_value[6][3] += Math.round(temp);
+                loan_table_value[6][4] += Number(
                     data_loan[i]["REMAINING_AMOUNT"]
                 );
             }

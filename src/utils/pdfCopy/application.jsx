@@ -13,6 +13,8 @@ import {
     PDFViewer,
 } from "@react-pdf/renderer";
 
+import { useMediaQuery } from "react-responsive";
+
 import axios from "axios";
 import moment from "moment";
 
@@ -465,6 +467,8 @@ export default function Application(props) {
 
     const new_date = new Date();
 
+    const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+
     const loan_id = new_date.valueOf();
 
     const [url, setURL] = useState("");
@@ -473,13 +477,15 @@ export default function Application(props) {
 
     app_data["LOAN_ID"] = loan_id;
 
-    app_data["LOAN_APP_DATE"] = new_date;
+    app_data["LOAN_APP_DATE"] = new Date(new_date).toLocaleDateString("en-US");
 
     let nf = new Intl.NumberFormat("en-US");
 
     const [down_hover, setDown_hover] = useState(false);
 
     const [back_hover, setBack_hover] = useState(false);
+
+    const butt_font_size = isMobile ? 10 : 15;
 
     const style_butt = StyleSheet.create({
         app_button: {
@@ -491,11 +497,9 @@ export default function Application(props) {
         },
 
         backward_butt: {
-            width: back_hover ? "150pt" : "120pt",
-            height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
-            padding: "5pt 15pt 5pt 15pt",
+            padding: isMobile ? "4pt 15pt 4pt 15pt" : "6pt 25pt 6pt 25pt",
             alignSelf: "center",
             textAlign: "center",
             border: "2px solid",
@@ -503,17 +507,17 @@ export default function Application(props) {
             borderRadius: back_hover ? "50pt" : "20pt",
             backgroundColor: back_hover ? secondary : "white",
             color: back_hover ? "white" : secondary,
-            fontSize: back_hover ? "20pt" : "15pt",
+            fontSize: back_hover
+                ? butt_font_size + 5 + "pt"
+                : butt_font_size + "pt",
             cursor: back_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
 
         download_butt: {
-            width: down_hover ? "150pt" : "120pt",
-            height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
-            padding: "5pt 15pt 5pt 15pt",
+            padding: isMobile ? "4pt 15pt 4pt 15pt" : "6pt 25pt 6pt 25pt",
             alignSelf: "center",
             textAlign: "center",
             border: "2px solid",
@@ -521,7 +525,9 @@ export default function Application(props) {
             borderRadius: down_hover ? "50pt" : "20pt",
             backgroundColor: down_hover ? secondary : "white",
             color: down_hover ? "white" : secondary,
-            fontSize: down_hover ? "20pt" : "15pt",
+            fontSize: down_hover
+                ? butt_font_size + 5 + "pt"
+                : butt_font_size + "pt",
             cursor: down_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
@@ -809,7 +815,7 @@ export default function Application(props) {
             "Month",
             "Basic Salary",
             "Total Salary",
-            "Total Reduction",
+            "Total Deduction",
             "Net Salary",
         ],
     ];
@@ -955,17 +961,16 @@ export default function Application(props) {
     }
 
     var pdfLoanInfo = [
-        ["Sl No.", "01", "02", "03", "04", "05", "06", "07", "08"],
+        ["Sl No.", "01", "02", "03", "04", "05", "06", "07"],
         [
-            "Type of Loan",
+            "Types of Loan",
             // "Vehicle Buying / House Building / Repairment / Land Buying",
             "House Building Loan",
             "Consumer Loan",
             "Laptop Loan",
-            "Personal or Other or Any Purpose Loan under Sonali Bank Whole-Sale Loan",
+            "Sonali Bank Whole-Sale Loan",
             // "Vehicle Buying / House Building / Repairment / Land Buying under Sonali Bank Whole-Sale Loan",
-            "House Building / Land Buying under Sonali Bank Whole-Sale Loan",
-            "House Building Loan Taken under Banking System of Teacher/Officer/Staff of BUET",
+            "Sonali Bank House Building Loan",
             "Others",
             "Total",
         ],
@@ -1236,7 +1241,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 5; i < 8; i++) {
+    for (let i = 5; i < 7; i++) {
         pdf_loan_table_2.push(
             <View style={[style_table.row, style_table.row_border]}>
                 <View
@@ -1294,7 +1299,7 @@ export default function Application(props) {
         );
     }
 
-    for (let i = 8; i < 9; i++) {
+    for (let i = 7; i < 8; i++) {
         pdf_loan_table_2.push(
             <View
                 style={[
@@ -1460,7 +1465,7 @@ export default function Application(props) {
                         </View>
                         <View style={style_pic.preProPic}>
                             <Text style={style_pic.preProPicImg}>
-                                Attach Passport Size Image
+                                Attach Passport Size Photo
                             </Text>
                         </View>
                     </View>
@@ -1497,6 +1502,8 @@ export default function Application(props) {
 
                         <View style={style_table.table}>{pdf_loan_table}</View>
                     </View>
+
+                    <View style={{ marginTop: "25pt" }}></View>
                     <View style={styles.pageFooter}>
                         <Text style={styles.pageFooterText}>
                             {app_data["LOAN_TYPE"]}
@@ -1761,7 +1768,8 @@ export default function Application(props) {
                             </Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: "20pt" }}></View>
+
+                    <View style={{ marginTop: "95pt" }}></View>
                     <View style={styles.pageFooter}>
                         <Text style={styles.pageFooterText}>
                             {app_data["LOAN_TYPE"]}
@@ -1802,7 +1810,6 @@ export default function Application(props) {
                 "http://" + backend_site_address + "/loan_register",
                 app_data
             );
-            // applicationNavigate("/");
             applicationNavigate("/employeedash", {
                 state: {
                     info: app_data,
