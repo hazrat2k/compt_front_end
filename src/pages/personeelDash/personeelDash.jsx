@@ -8,11 +8,174 @@ import AppStatus from "../../utils/functions/appStatus";
 
 import "./personeelDash.css";
 
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
 
+const pendProcColumns = [
+    { id: "loan_id", label: "Loan ID", minWidth: 150, align: "center" },
+    {
+        id: "applicant_name",
+        label: "Applicant Name",
+        minWidth: 150,
+        align: "center",
+    },
+    {
+        id: "designation",
+        label: "Designation",
+        minWidth: 100,
+        align: "center",
+    },
+    {
+        id: "office",
+        label: "Office",
+        minWidth: 50,
+        align: "center",
+    },
+    {
+        id: "loan_amnt",
+        label: "Loan Amount",
+        minWidth: 100,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "application_status",
+        label: "Application Status",
+        minWidth: 100,
+        align: "center",
+    },
+    {
+        id: "applied_time",
+        label: "Applied Time",
+        minWidth: 100,
+        align: "center",
+    },
+];
+
+const sancBillColumns = [
+    { id: "loan_id", label: "Loan ID", minWidth: 150, align: "center" },
+    {
+        id: "total_amount",
+        label: "Total Amount",
+        minWidth: 150,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "date",
+        label: "Processed Date",
+        minWidth: 100,
+        align: "center",
+    },
+    {
+        id: "office",
+        label: "Office",
+        minWidth: 50,
+        align: "center",
+    },
+    {
+        id: "loan_amnt",
+        label: "Loan Amount",
+        minWidth: 100,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "application_status",
+        label: "Application Status",
+        minWidth: 100,
+        align: "center",
+    },
+    {
+        id: "applied_time",
+        label: "Applied Time",
+        minWidth: 100,
+        align: "center",
+    },
+];
+
+const createPendProcessData = (
+    loan_id,
+    applicant_name,
+    designation,
+    office,
+    loan_amnt,
+    application_status,
+    applied_time
+) => {
+    return {
+        loan_id,
+        applicant_name,
+        designation,
+        office,
+        loan_amnt,
+        application_status,
+        applied_time,
+    };
+};
+
 export default function PersoneelDash() {
+    const [pendPage, setPendPage] = useState(0);
+    const [procPage, setProcPage] = useState(0);
+
+    const [sancPage, setSancPage] = useState(0);
+    const [billPage, setBillPage] = useState(0);
+
+    const [pendRowsPerPage, setPendRowsPerPage] = useState(1);
+    const [procRowsPerPage, setProcRowsPerPage] = useState(1);
+
+    const [sancRowsPerPage, setSancRowsPerPage] = useState(1);
+    const [billRowsPerPage, setBillRowsPerPage] = useState(1);
+
+    const pending_rows = [];
+    const processing_rows = [];
+
+    const handleChangePendPage = (event, newPage) => {
+        setPendPage(newPage);
+    };
+
+    const handleChangeProcPage = (event, newPage) => {
+        setProcPage(newPage);
+    };
+
+    const handleChangeSancPage = (event, newPage) => {
+        setSancPage(newPage);
+    };
+
+    const handleChangeBillPage = (event, newPage) => {
+        setBillPage(newPage);
+    };
+
+    const handleChangePendRowsPerPage = (event) => {
+        setPendRowsPerPage(+event.target.value);
+        setPendPage(0);
+    };
+
+    const handleChangeProcRowsPerPage = (event) => {
+        setProcRowsPerPage(+event.target.value);
+        setProcPage(0);
+    };
+
+    const handleChangeSancRowsPerPage = (event) => {
+        setSancRowsPerPage(+event.target.value);
+        setSancPage(0);
+    };
+
+    const handleChangeBillRowsPerPage = (event) => {
+        setBillRowsPerPage(+event.target.value);
+        setBillPage(0);
+    };
+
     const pd_navigate = useNavigate();
 
     const { state } = useLocation();
@@ -44,9 +207,6 @@ export default function PersoneelDash() {
     const pd_pers_nam = pd_data["EMPLOYEE_NAME"];
     const pd_desig = pd_data["DESIGNATION"];
     const pd_off_dept = pd_data["OFFICE"];
-
-    const pd_pend_loan_display = [];
-    const pd_process_loan_display = [];
 
     const pd_sanced_loan_display = [];
     const pd_billed_loan_display = [];
@@ -200,9 +360,16 @@ export default function PersoneelDash() {
 
     const onLoanIdClick = async (e, data) => {
         var uploadData = {
-            LOAN_ID: data["LOAN_ID"],
+            LOAN_ID: data,
         };
+
         try {
+            const info_res = await axios.post(
+                "http://" + backend_site_address + "/processing_loan_id_filter",
+                uploadData
+            );
+            data = info_res.data[0];
+
             const sal_res = await axios.post(
                 "http://" + backend_site_address + "/processing_loan_salary",
                 uploadData
@@ -270,108 +437,30 @@ export default function PersoneelDash() {
         if (pd_userName === loanPersonnel[temp_status]) {
             pending_loan_status = true;
 
-            pd_pend_loan_display.push(
-                <div className="pd_section_row">
-                    <div
-                        className="pd_section_col pd_section_col_wid linked_col"
-                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
-                    >
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["LOAN_ID"]}
-                        </div>
-                    </div>
-
-                    <div
-                        className="pd_section_col pd_section_col_wid linked_col"
-                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
-                    >
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["EMPLOYEE_NAME"]}
-                        </div>
-                    </div>
-
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["DESIGNATION"]}
-                        </div>
-                    </div>
-
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["OFFICE"]}
-                        </div>
-                    </div>
-
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["LOAN_TYPE"]}
-                        </div>
-                    </div>
-
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {AppStatus(temp_status)}
-                        </div>
-                    </div>
-
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {dateFormation(
-                                pd_pend_loan_data[i]["LOAN_APP_DATE"]
-                            )}
-                        </div>
-                    </div>
-                </div>
+            pending_rows.push(
+                createPendProcessData(
+                    pd_pend_loan_data[i]["LOAN_ID"],
+                    pd_pend_loan_data[i]["EMPLOYEE_NAME"],
+                    pd_pend_loan_data[i]["DESIGNATION"],
+                    pd_pend_loan_data[i]["OFFICE"],
+                    pd_pend_loan_data[i]["LOAN_AMOUNT"],
+                    AppStatus(temp_status),
+                    dateFormation(pd_pend_loan_data[i]["LOAN_APP_DATE"])
+                )
             );
         } else {
             processing_loan_status = true;
 
-            pd_process_loan_display.push(
-                <div className="pd_section_row">
-                    <div
-                        className="pd_section_col pd_section_col_wid linked_col"
-                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
-                    >
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["LOAN_ID"]}
-                        </div>
-                    </div>
-                    <div
-                        className="pd_section_col pd_section_col_wid linked_col"
-                        onClick={(e) => onLoanIdClick(e, pd_pend_loan_data[i])}
-                    >
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["EMPLOYEE_NAME"]}
-                        </div>
-                    </div>
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["DESIGNATION"]}
-                        </div>
-                    </div>
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["OFFICE"]}
-                        </div>
-                    </div>
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {pd_pend_loan_data[i]["LOAN_TYPE"]}
-                        </div>
-                    </div>
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {AppStatus(temp_status)}
-                        </div>
-                    </div>
-                    <div className="pd_section_col pd_section_col_wid">
-                        <div className="pd_section_col_value">
-                            {dateFormation(
-                                pd_pend_loan_data[i]["LOAN_APP_DATE"]
-                            )}
-                        </div>
-                    </div>
-                </div>
+            processing_rows.push(
+                createPendProcessData(
+                    pd_pend_loan_data[i]["LOAN_ID"],
+                    pd_pend_loan_data[i]["EMPLOYEE_NAME"],
+                    pd_pend_loan_data[i]["DESIGNATION"],
+                    pd_pend_loan_data[i]["OFFICE"],
+                    pd_pend_loan_data[i]["LOAN_AMOUNT"],
+                    AppStatus(temp_status),
+                    dateFormation(pd_pend_loan_data[i]["LOAN_APP_DATE"])
+                )
             );
         }
     }
@@ -743,47 +832,153 @@ export default function PersoneelDash() {
                             </div>
 
                             {pending_loan_status ? (
-                                <div className="pd_section_items pending_loan">
-                                    <div className="pd_section_row pd_section_head_row">
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                LOAN ID
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLICANT NAME
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                DESIGNATION
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                OFFICE/DEPT.
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                LOAN TYPE
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLICATION STATUS
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLIED DATE
-                                            </div>
-                                        </div>
-                                    </div>
+                                <Paper
+                                    sx={{
+                                        width: "98%",
+                                        overflow: "hidden",
+                                        alignSelf: "center",
+                                    }}
+                                >
+                                    <TableContainer sx={{ maxHeight: 440 }}>
+                                        <Table
+                                            stickyHeader
+                                            aria-label="sticky table"
+                                        >
+                                            <TableHead>
+                                                <TableRow>
+                                                    {pendProcColumns.map((column) => (
+                                                        <TableCell
+                                                            key={column.id}
+                                                            align={column.align}
+                                                            style={{
+                                                                minWidth:
+                                                                    column.minWidth,
+                                                                fontFamily:
+                                                                    "PT Serif",
+                                                                fontWeight:
+                                                                    "bold",
+                                                                fontSize:
+                                                                    "13pt",
+                                                            }}
+                                                        >
+                                                            {column.label}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {pending_rows
+                                                    .slice(
+                                                        pendPage * pendRowsPerPage,
+                                                        pendPage * pendRowsPerPage +
+                                                            pendRowsPerPage
+                                                    )
+                                                    .map((row) => {
+                                                        return (
+                                                            <TableRow
+                                                                hover
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={
+                                                                    row.loan_id
+                                                                }
+                                                            >
+                                                                {pendProcColumns.map(
+                                                                    (
+                                                                        column
+                                                                    ) => {
+                                                                        const value =
+                                                                            row[
+                                                                                column
+                                                                                    .id
+                                                                            ];
 
-                                    {pd_pend_loan_display}
-                                </div>
+                                                                        return column.id ==
+                                                                            "loan_id" ||
+                                                                            column.id ==
+                                                                                "applicant_name" ? (
+                                                                            <TableCell
+                                                                                key={
+                                                                                    column.id
+                                                                                }
+                                                                                align={
+                                                                                    column.align
+                                                                                }
+                                                                                style={{
+                                                                                    fontFamily:
+                                                                                        "PT Serif",
+                                                                                    fontSize:
+                                                                                        "11pt",
+                                                                                    textDecoration:
+                                                                                        "underline",
+                                                                                    color: "dodgerblue",
+                                                                                    cursor: "pointer",
+                                                                                }}
+                                                                                onClick={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    onLoanIdClick(
+                                                                                        e,
+                                                                                        row[
+                                                                                            "loan_id"
+                                                                                        ]
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                {column.format &&
+                                                                                typeof value ===
+                                                                                    "number"
+                                                                                    ? column.format(
+                                                                                          value
+                                                                                      )
+                                                                                    : value}
+                                                                            </TableCell>
+                                                                        ) : (
+                                                                            <TableCell
+                                                                                key={
+                                                                                    column.id
+                                                                                }
+                                                                                align={
+                                                                                    column.align
+                                                                                }
+                                                                                style={{
+                                                                                    fontFamily:
+                                                                                        "PT Serif",
+                                                                                    fontSize:
+                                                                                        "11pt",
+                                                                                }}
+                                                                            >
+                                                                                {column.format &&
+                                                                                typeof value ===
+                                                                                    "number"
+                                                                                    ? column.format(
+                                                                                          value
+                                                                                      )
+                                                                                    : value}
+                                                                            </TableCell>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </TableRow>
+                                                        );
+                                                    })}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    <TablePagination
+                                        rowsPerPageOptions={[
+                                            1, 5, 10, 15, 20, 25, 50, 100,
+                                        ]}
+                                        component="div"
+                                        count={pending_rows.length}
+                                        rowsPerPage={pendRowsPerPage}
+                                        page={pendPage}
+                                        onPageChange={handleChangePendPage}
+                                        onRowsPerPageChange={
+                                            handleChangePendRowsPerPage
+                                        }
+                                    />
+                                </Paper>
                             ) : (
                                 <div className="no_pending_loan">
                                     No Pending Loan
@@ -797,47 +992,153 @@ export default function PersoneelDash() {
                             </div>
 
                             {processing_loan_status ? (
-                                <div className="pd_section_items pending_loan">
-                                    <div className="pd_section_row pd_section_head_row">
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                LOAN ID
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLICANT NAME
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                DESIGNATION
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                OFFICE/DEPT.
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                LOAN TYPE
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLICATION STATUS
-                                            </div>
-                                        </div>
-                                        <div className="pd_section_col pd_section_col_wid">
-                                            <div className="pd_section_col_value">
-                                                APPLIED DATE
-                                            </div>
-                                        </div>
-                                    </div>
+                                <Paper
+                                    sx={{
+                                        width: "98%",
+                                        overflow: "hidden",
+                                        alignSelf: "center",
+                                    }}
+                                >
+                                    <TableContainer sx={{ maxHeight: 440 }}>
+                                        <Table
+                                            stickyHeader
+                                            aria-label="sticky table"
+                                        >
+                                            <TableHead>
+                                                <TableRow>
+                                                    {pendProcColumns.map((column) => (
+                                                        <TableCell
+                                                            key={column.id}
+                                                            align={column.align}
+                                                            style={{
+                                                                minWidth:
+                                                                    column.minWidth,
+                                                                fontFamily:
+                                                                    "PT Serif",
+                                                                fontWeight:
+                                                                    "bold",
+                                                                fontSize:
+                                                                    "13pt",
+                                                            }}
+                                                        >
+                                                            {column.label}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {processing_rows
+                                                    .slice(
+                                                        procPage * procRowsPerPage,
+                                                        procPage * procRowsPerPage +
+                                                            procRowsPerPage
+                                                    )
+                                                    .map((row) => {
+                                                        return (
+                                                            <TableRow
+                                                                hover
+                                                                role="checkbox"
+                                                                tabIndex={-1}
+                                                                key={
+                                                                    row.loan_id
+                                                                }
+                                                            >
+                                                                {pendProcColumns.map(
+                                                                    (
+                                                                        column
+                                                                    ) => {
+                                                                        const value =
+                                                                            row[
+                                                                                column
+                                                                                    .id
+                                                                            ];
 
-                                    {pd_process_loan_display}
-                                </div>
+                                                                        return column.id ==
+                                                                            "loan_id" ||
+                                                                            column.id ==
+                                                                                "applicant_name" ? (
+                                                                            <TableCell
+                                                                                key={
+                                                                                    column.id
+                                                                                }
+                                                                                align={
+                                                                                    column.align
+                                                                                }
+                                                                                style={{
+                                                                                    fontFamily:
+                                                                                        "PT Serif",
+                                                                                    fontSize:
+                                                                                        "11pt",
+                                                                                    textDecoration:
+                                                                                        "underline",
+                                                                                    color: "dodgerblue",
+                                                                                    cursor: "pointer",
+                                                                                }}
+                                                                                onClick={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    onLoanIdClick(
+                                                                                        e,
+                                                                                        row[
+                                                                                            "loan_id"
+                                                                                        ]
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                {column.format &&
+                                                                                typeof value ===
+                                                                                    "number"
+                                                                                    ? column.format(
+                                                                                          value
+                                                                                      )
+                                                                                    : value}
+                                                                            </TableCell>
+                                                                        ) : (
+                                                                            <TableCell
+                                                                                key={
+                                                                                    column.id
+                                                                                }
+                                                                                align={
+                                                                                    column.align
+                                                                                }
+                                                                                style={{
+                                                                                    fontFamily:
+                                                                                        "PT Serif",
+                                                                                    fontSize:
+                                                                                        "11pt",
+                                                                                }}
+                                                                            >
+                                                                                {column.format &&
+                                                                                typeof value ===
+                                                                                    "number"
+                                                                                    ? column.format(
+                                                                                          value
+                                                                                      )
+                                                                                    : value}
+                                                                            </TableCell>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </TableRow>
+                                                        );
+                                                    })}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    <TablePagination
+                                        rowsPerPageOptions={[
+                                            1, 5, 10, 15, 20, 25, 50, 100,
+                                        ]}
+                                        component="div"
+                                        count={processing_rows.length}
+                                        rowsPerPage={procRowsPerPage}
+                                        page={procPage}
+                                        onPageChange={handleChangeProcPage}
+                                        onRowsPerPageChange={
+                                            handleChangeProcRowsPerPage
+                                        }
+                                    />
+                                </Paper>
                             ) : (
                                 <div className="no_pending_loan">
                                     No Processing Loan
@@ -846,9 +1147,6 @@ export default function PersoneelDash() {
                         </div>
                     </>
                 )}
-
-
-                
             </div>
 
             <Footer />
