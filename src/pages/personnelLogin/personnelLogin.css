@@ -138,7 +138,6 @@ input[type="button"] {
     font-weight: bolder;
     align-items: center;
     justify-content: center;
-    
 }
 
 .resultContainer,
@@ -177,7 +176,7 @@ input[type="button"] {
     border: 2px solid var(--green);
     border-radius: 2rem;
     font-weight: bold;
-	font-size: large;
+    font-size: large;
     padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     transition: all ease 0.3s;
 }
@@ -186,7 +185,7 @@ input[type="button"] {
     color: white;
     background-color: var(--green);
     border: 2px solid white;
-    font-size: x-large;
+    transform: scale(1.25);
     cursor: pointer;
 }
 

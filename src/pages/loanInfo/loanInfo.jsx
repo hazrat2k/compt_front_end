@@ -47,12 +47,6 @@ export default function LoanInfo() {
     const loan_file = state["file"]["loan"];
     const loan_type_file = state["file"]["loan_type"];
 
-    var state_used = "no";
-
-    if (state["used"] === "yes") {
-        state_used = "yes";
-    }
-
     const table_data = [
         [
             //গৃহ নির্মাণ/মেরামত/জমি ক্রয়/মোটরযান ক্রয়
@@ -223,7 +217,7 @@ export default function LoanInfo() {
         if (button == "first") {
             const file = state["file"];
             loanNavigate("/application/3", {
-                state: { info: loan_data, file: file, used: "yes" },
+                state: { info: loan_data, file: file },
             });
         }
 
@@ -231,10 +225,14 @@ export default function LoanInfo() {
             const file = state["file"];
             loanNavigate("/application/preview", {
                 // state: { info: loan_data, file: file, used: state_used },
-                state: { info: loan_data, used: "yes" },
+                state: { info: loan_data },
             });
         }
     };
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, []);
 
     return (
         <div>
@@ -242,7 +240,7 @@ export default function LoanInfo() {
 
             <div className="loan_info">
                 <div className="basic_label">
-                    {ToTitleCase(loan_data["LOAN_TYPE"])} Application Form
+                    {loan_data["LOAN_TYPE"]} Application Form
                 </div>
 
                 <div className="loanInfo">

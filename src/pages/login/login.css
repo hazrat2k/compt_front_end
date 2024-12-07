@@ -59,20 +59,21 @@
     .login_btn {
         margin-top: 5%;
         text-align: center;
-        padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+        padding: 0.4rem 1.5rem 0.4rem 1.5rem;
         font-size: large;
         color: crimson;
         border-radius: 2rem;
         border: 2px solid crimson;
         background-color: white;
         font-weight: bold;
+        transition: all 0.3s ease;
     }
 
     .login_btn:hover {
         color: white;
         background-color: crimson;
         border-color: white;
-        font-size: x-large;
+        transform: scale(1.25);
         cursor: pointer;
     }
 
@@ -101,7 +102,7 @@
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
 
-.log_font{
+.log_font {
     font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
 }
 
@@ -133,7 +134,7 @@
     float: left;
 }
 
-.login_context{
+.login_context {
     display: grid;
     grid-template-columns: 100%;
     justify-content: center;
@@ -141,8 +142,7 @@
     justify-items: center;
 }
 
-
-.alert_msg{
+.alert_msg {
     text-align: center;
     color: gray;
     font-size: x-large;

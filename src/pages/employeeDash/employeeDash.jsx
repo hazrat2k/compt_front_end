@@ -4,6 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 import moment from "moment";
 
+import useLoanInfoStore from "../../stores/loanInfoStore";
 import AppStatus from "../../utils/functions/appStatus";
 
 import PropTypes from "prop-types";
@@ -99,6 +100,8 @@ const LoanApply = (props) => {
     const { onLoanApplyClose, selectedValue, loanApplyOpen } = props;
     const edNavigate = useNavigate();
 
+    const addLoanApplyField = useLoanInfoStore((state) => state.addField);
+
     const [laDialogError, setLaDialogError] = useState("");
     const [laDEColor, setLaDEColor] = useState(false);
 
@@ -113,6 +116,7 @@ const LoanApply = (props) => {
         const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
 
         // does have more selected loan processing or not
+
         if (pro_loan.length != 0) {
             setLaDEColor(!laDEColor);
             setLaDialogError(
@@ -181,7 +185,7 @@ const LoanApply = (props) => {
                 loan_data = loan_res.data;
 
                 const uploadIdType = {
-                    EMPLOYEEID: employ_data["EMPLOYEEID"],
+                    SALARY_ID: employ_data["EMPLOYEEID"],
                     LOAN_TYPE: value,
                 };
                 const IdTypeRes = await axios.post(
@@ -195,12 +199,12 @@ const LoanApply = (props) => {
                 console.log(err);
             }
 
+            addLoanApplyField("LOAN_TYPE", value);
+
             if (checkValidation(pro_loan_data, loan_data)) {
                 edNavigate("/application/1", {
                     state: {
                         info: employ_data,
-                        loan_type: value,
-                        used: "no",
                     },
                 });
             }
@@ -596,9 +600,15 @@ export default function EmployeeDash() {
     const [ed_pro_loan_data, setEd_pro_loan_data] = useState([]);
     const [ed_run_loan_data, setEd_run_loan_data] = useState([]);
 
+    const reset = useLoanInfoStore((state) => state.reset);
+
     useEffect(() => {
         const diaFetchProLoan = async () => {
             const uploadId = {
+                SALARY_ID: ed_data["EMPLOYEEID"],
+            };
+
+            const uploadId2 = {
                 EMPLOYEEID: ed_data["EMPLOYEEID"],
             };
 
@@ -613,15 +623,17 @@ export default function EmployeeDash() {
 
                 const run_res = await axios.post(
                     "http://" + backend_site_address + "/loan_with_type",
-                    uploadId
+                    uploadId2
                 );
                 setEd_run_loan_data(run_res.data);
             } catch (err) {
                 console.log(err);
             }
         };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         diaFetchProLoan();
-    }, []);
+        reset();
+    }, [reset]);
 
     for (let i = 0; i < ed_pro_loan_data.length; i++) {
         plRows.push(

@@ -5,11 +5,13 @@ import loanPersonnel from "../../stores/const/loanPersonnel";
 import AppStatus from "../../utils/functions/appStatus";
 
 import axios from "axios";
-import moment from "moment";
 
 import "./loanDetails.css";
 
 import SectionEditItem from "../../component/loan_details/sectionItemEdit";
+
+import { dateFormation } from "../../utils/functions/dateFormation";
+import { timeDuration } from "../../utils/functions/timeDuration";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
@@ -84,51 +86,9 @@ export default function LoanDetails() {
                 console.log(err);
             }
         };
-
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_data();
     }, []);
-
-    const dateFormation = (date) => {
-        var temp_date = new Date(date);
-        return moment(temp_date).format("DD MMM YYYY");
-    };
-
-    const timeDuration = (date1, date2) => {
-        const now = new Date(date1);
-        const first_join_date = new Date(date2);
-
-        var currentYear = now.getFullYear();
-        var currentMonth = now.getMonth();
-        var currentDate = now.getDate();
-
-        var first_join_dateYear = first_join_date.getFullYear();
-        var first_join_dateMonth = first_join_date.getMonth();
-        var first_join_dateDate = first_join_date.getDate();
-
-        var yearDuration = currentYear - first_join_dateYear;
-        var monthDuration = 0;
-        var dateDuration = 0;
-
-        if (currentMonth >= first_join_dateMonth)
-            monthDuration = currentMonth - first_join_dateMonth;
-        else {
-            yearDuration--;
-            monthDuration = 12 + currentMonth - first_join_dateMonth;
-        }
-
-        if (currentDate >= first_join_dateDate)
-            dateDuration = currentDate - first_join_dateDate;
-        else {
-            monthDuration--;
-            dateDuration = 31 + currentDate - first_join_dateDate;
-            if (monthDuration < 0) {
-                monthDuration = 11;
-                yearDuration--;
-            }
-        }
-
-        return [yearDuration, monthDuration, dateDuration];
-    };
 
     const [ld_remarks, setLd_remarks] = useState("");
     const [ld_remarks_error, setLd_remarks_error] = useState(false);
@@ -140,8 +100,10 @@ export default function LoanDetails() {
 
     var ld_value = {};
     ld_value["loan_id"] = ld_data["LOAN_ID"];
-    ld_value["loan_app_date"] = dateFormation(ld_data["LOAN_APP_DATE"]);
-    ld_value["salary_id"] = ld_data["EMPLOYEEID"];
+    ld_value["loan_app_date"] = new Date(
+        ld_data["LOAN_APP_DATE"]
+    ).toLocaleDateString("en-US");
+    ld_value["salary_id"] = ld_data["SALARY_ID"];
     ld_value["loan_type"] = ld_data["LOAN_TYPE"];
     ld_value["buet_id"] = ld_data["EMPLOYEE_ID"];
     ld_value["applicant_name"] = ld_data["EMPLOYEE_NAME"];
@@ -162,11 +124,17 @@ export default function LoanDetails() {
 
     var ld_processing = true;
 
-    ld_value["dob"] = dateFormation(ld_data["DATE_OF_BIRTH"]);
+    ld_value["dob"] = new Date(ld_data["DATE_OF_BIRTH"]).toLocaleDateString(
+        "en-US"
+    );
 
-    ld_value["joining_date"] = dateFormation(ld_data["DATE_FIRST_JOIN"]);
+    ld_value["joining_date"] = new Date(
+        ld_data["DATE_FIRST_JOIN"]
+    ).toLocaleDateString("en-US");
 
-    ld_value["mos"] = dateFormation(ld_data["DATE_OF_RETIREMENT"]);
+    ld_value["mos"] = new Date(
+        ld_data["DATE_OF_RETIREMENT"]
+    ).toLocaleDateString("en-US");
 
     ld_value["serv_len_y"] = Number(
         ld_data["TOTAL_SERVICE_PERIOD"].split(" ")[0]
@@ -550,11 +518,15 @@ export default function LoanDetails() {
                                 ld_value["designation"]
                             )}
                             {sectionItem("4", "BUET ID", ld_value["buet_id"])}
-                            {sectionItem("6", "Date of Birth", ld_value["dob"])}
+                            {sectionItem(
+                                "6",
+                                "Date of Birth",
+                                dateFormation(ld_value["dob"])
+                            )}
                             {sectionItem(
                                 "8",
                                 "Application Date",
-                                ld_value["loan_app_date"]
+                                dateFormation(ld_value["loan_app_date"])
                             )}
 
                             {ld_user
@@ -578,7 +550,7 @@ export default function LoanDetails() {
                             {sectionItem(
                                 "1",
                                 "First Joining Date",
-                                ld_value["joining_date"]
+                                dateFormation(ld_value["joining_date"])
                             )}
                             {sectionItem(
                                 "3",
@@ -595,7 +567,7 @@ export default function LoanDetails() {
                             {sectionItem(
                                 "4",
                                 "Retirement Date (Approx.)",
-                                ld_value["mos"]
+                                dateFormation(ld_value["mos"])
                             )}
                         </div>
                     </div>

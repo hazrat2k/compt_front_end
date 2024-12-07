@@ -1,4 +1,4 @@
-.personnel_dashboard{
+.personnel_dashboard {
     display: flex;
     flex-direction: column;
     font-family: "PT Serif";
@@ -6,15 +6,14 @@
     margin-bottom: 2%;
 }
 
-
-.pd_page_label{
+.pd_page_label {
     text-align: center;
     font-size: xx-large;
     font-weight: bold;
     margin-bottom: 1%;
 }
 
-.pd_select{
+.pd_select {
     align-self: center;
     width: 20%;
     height: 40px;
@@ -24,23 +23,22 @@
     font-family: "PT Serif";
 }
 
-.pd_section{
+.pd_section {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     padding: 0.5rem 1rem 0.5rem 1rem;
 }
 
-.pd_section_label{
+.pd_section_label {
     display: flex;
     flex-direction: row;
     text-align: left;
     font-size: x-large;
     font-weight: 600;
     margin-bottom: 0.5rem;
-
 }
 
-.pd_section_filter{
+.pd_section_filter {
     margin-top: 1%;
     margin-bottom: 1%;
     display: flex;
@@ -49,35 +47,34 @@
     justify-content: space-around;
 }
 
-
-.pd_section_item_filter{
+.pd_section_item_filter {
     height: 25pt;
     width: 20%;
     font-family: "PT Serif";
     text-transform: uppercase;
 }
 
-.pd_section_items{
+.pd_section_items {
     display: flex;
     width: 100%;
 }
 
-.profile{
+.profile {
     flex-direction: row;
 }
 
-.pending_loan{
+.pending_loan {
     flex-direction: column;
 }
 
-.pd_section_copy{
+.pd_section_copy {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
 }
 
-.pd_butt{
+.pd_butt {
     padding: 0.5rem 1.5rem;
     text-align: center;
     border: 2px solid var(--green);
@@ -89,47 +86,45 @@
     transition: all ease 0.3s;
 }
 
-.pd_butt:hover{
+.pd_butt:hover {
     border: 2px solid white;
     background-color: var(--green);
     color: white;
     cursor: pointer;
-    font-size: x-large;
+    transform: scale(1.25);
 }
 
-
-.pd_section_items_div{
+.pd_section_items_div {
     display: flex;
     flex-direction: column;
     width: 50%;
 }
 
-.pd_section_item{
+.pd_section_item {
     display: flex;
     flex-direction: row;
     padding: 0rem 0.5rem 0.5rem 0.5rem;
     align-items: center;
 }
 
-.pd_section_item_label{
+.pd_section_item_label {
     font-size: large;
     font-weight: 550;
     width: 30%;
 }
 
-.pd_section_item_colon{
+.pd_section_item_colon {
     font-size: large;
     font-weight: 550;
     margin-right: 2%;
 }
 
-.pd_section_item_value{
+.pd_section_item_value {
     font-size: large;
     width: 68%;
 }
 
-
-.pd_section_row{
+.pd_section_row {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -137,13 +132,11 @@
     margin-bottom: 2pt;
 }
 
-.pd_section_head_row{
+.pd_section_head_row {
     font-weight: 550;
 }
 
-
-
-.pd_section_col{
+.pd_section_col {
     height: 4rem;
     margin: 2pt;
     padding: 5pt;
@@ -153,36 +146,30 @@
     justify-content: center;
 }
 
-.pd_section_col_wid{
+.pd_section_col_wid {
     width: 14.28%;
 }
 
-.pd_section_li_col{
+.pd_section_li_col {
     width: 57.12%;
 }
 
-.pd_sanction_section_col{
+.pd_sanction_section_col {
     width: auto;
 }
 
-.pd_section_col_value{
+.pd_section_col_value {
     text-align: center;
 }
 
-.linked_col{
+.linked_col {
     cursor: pointer;
     color: dodgerblue;
     text-decoration: underline;
 }
 
-
-.no_pending_loan{
+.no_pending_loan {
     text-align: center;
     color: gray;
     font-size: x-large;
 }
-
-
-
-
-

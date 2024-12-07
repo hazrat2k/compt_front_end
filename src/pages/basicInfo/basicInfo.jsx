@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 
 import "./basicInfo.css";
@@ -7,25 +7,23 @@ import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 
 import ToTitleCase from "../../utils/functions/toTitleCase";
+import { null_array } from "../../stores/const/nullArray";
+import scrollToSection from "../../utils/functions/scrollToSection";
 import DataField from "../../component/loan_apply/dataField/dataField";
 import loanReasons from "../../stores/const/loanReasons";
+import useLoanInfoStore from "../../stores/loanInfoStore";
 
 export default function BasicInfo() {
     const basicNavigate = useNavigate();
     const { state } = useLocation();
     var basic_data = state["info"];
 
-    var state_used = "no";
+    const addBasicField = useLoanInfoStore((state) => state.addField);
+    const basicDataField = useLoanInfoStore((state) => state.info);
 
-    if (state["used"] === "yes") {
-        state_used = "yes";
-    }
-
-    if (state["used"] === "no") {
-        basic_data["LOAN_TYPE"] = state["loan_type"];
-        basic_data["LOAN_AMNT"] = "";
-        basic_data["REASON_FOR_LOAN"] = "";
-    }
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, []);
 
     const applicantNameRef = useRef(null);
     const designationRef = useRef(null);
@@ -39,47 +37,31 @@ export default function BasicInfo() {
     const designation = basic_data["DESIGNATION"];
     const officeDepartment = basic_data["OFFICE"];
     const accountNo = basic_data["BANK_ACCOUNT_NO"];
-    const loanType = basic_data["LOAN_TYPE"];
 
-    const [loanAmount, setLoanAmount] = useState(basic_data["LOAN_AMNT"]);
+    const loanType = basicDataField["LOAN_TYPE"];
+
     const [loanAmountError, setLoanAmountError] = useState("");
 
-    const [reasonForLoan, setReasonForLoan] = useState(
-        basic_data["REASON_FOR_LOAN"]
-    );
     const [reasonForLoanError, setReasonForLoanError] = useState("");
 
-    const scrollToSection = (elementRef) => {
-        window.scrollTo({
-            top: elementRef.current.offsetTop,
-            behavior: "smooth",
-        });
-    };
-
     const validBasicInfo = () => {
-        // if (loanType === "") {
-        //     setLoanTypeError("আবেদনকৃত ঋণের ধরণ নির্বাচন করুন***");
-        //     scrollToSection(loanTypeRef);
-        //     return false;
-        // } else {
-        //     setLoanTypeError("");
-        // }
+        
 
-        if (loanAmount == "") {
+        if (null_array.includes(basicDataField["LOAN_AMNT"])) {
             setLoanAmountError("আবেদনকৃত ঋণের পরিমাণ লিখুন***");
-            scrollToSection(officeDepartmentRef);
+            scrollToSection(designationRef);
             return false;
-        } else if (Number(loanAmount) <= 0) {
+        } else if (Number(basicDataField["LOAN_AMNT"]) <= 0) {
             setLoanAmountError("আবেদনকৃত ঋণের পরিমাণ ধনাত্মক হতে হবে***");
-            scrollToSection(officeDepartmentRef);
+            scrollToSection(designationRef);
             return false;
         } else {
             setLoanAmountError("");
         }
 
-        if (reasonForLoan == undefined || reasonForLoan == "") {
+        if (null_array.includes(basicDataField["REASON_FOR_LOAN"])) {
             setReasonForLoanError("আবেদনকৃত ঋণ গ্রহণের কারণ লিখুন***");
-            scrollToSection(accountNoRef);
+            scrollToSection(officeDepartmentRef);
             return false;
         } else {
             setReasonForLoanError("");
@@ -88,26 +70,13 @@ export default function BasicInfo() {
         return true;
     };
 
-    
-
     const onBasicAuthenticate = async (e) => {
         e.preventDefault();
 
         if (validBasicInfo()) {
-            basic_data["LOAN_TYPE"] = loanType;
-            basic_data["LOAN_AMNT"] = loanAmount;
-
-            if (state["used"] === "no") {
-                basic_data["REASON_FOR_LOAN"] = reasonForLoan["title"];
-            } else if (
-                reasonForLoan["title"] !== undefined &&
-                basic_data["REASON_FOR_LOAN"] != reasonForLoan["title"]
-            ) {
-                basic_data["REASON_FOR_LOAN"] = reasonForLoan["title"];
-            }
-
+            basic_data["LOAN_TYPE"] = basicDataField["LOAN_TYPE"];
             basicNavigate("/application/2", {
-                state: { info: basic_data, used: state_used },
+                state: { info: basic_data },
             });
         }
     };
@@ -117,9 +86,7 @@ export default function BasicInfo() {
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="basicFieldBody">
-                <div className="basic_label">
-                    {ToTitleCase(loanType)} Application Form
-                </div>
+                <div className="basic_label">{loanType} Application Form</div>
 
                 <div className="basicField">
                     <DataField
@@ -156,9 +123,9 @@ export default function BasicInfo() {
                         type="input"
                         dataType="number"
                         label="৫. আবেদনকৃত ঋণের পরিমাণ "
-                        value={loanAmount}
+                        value={basicDataField["LOAN_AMNT"]}
                         setValue={(data) => {
-                            setLoanAmount(data);
+                            addBasicField("LOAN_AMNT", data);
                         }}
                         placeholder="i.e. 100000"
                     />
@@ -168,10 +135,10 @@ export default function BasicInfo() {
                         helperText={reasonForLoanError}
                         type="suggestedInput"
                         label="৬. আবেদনকৃত ঋণ গ্রহণের কারণ "
-                        value={reasonForLoan}
+                        value={basicDataField["REASON_FOR_LOAN"]}
                         options={loanReasons}
                         setValue={(data) => {
-                            setReasonForLoan(data);
+                            addBasicField("REASON_FOR_LOAN", data["title"]);
                         }}
                         placeholder="i.e. Building House"
                     />

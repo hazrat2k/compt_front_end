@@ -1,4 +1,4 @@
-.loan_assessment_form{
+.loan_assessment_form {
     display: flex;
     flex-direction: column;
     font-family: "PT Serif";
@@ -6,7 +6,7 @@
     margin-left: 5%;
 }
 
-.page_label{
+.page_label {
     text-align: center;
     font-size: xx-large;
     font-weight: bold;
@@ -14,69 +14,68 @@
     text-transform: capitalize;
 }
 
-.assessment_section{
+.assessment_section {
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem 1rem 2rem;
 }
 
-.section_label{
+.section_label {
     text-align: left;
     font-size: x-large;
     font-weight: 600;
     margin-bottom: 1%;
 }
 
-.subsection_label{
+.subsection_label {
     text-align: center;
     font-size: x-large;
     text-decoration: underline;
 }
 
-.section_items{
+.section_items {
     display: flex;
     flex-direction: row;
     width: 100%;
-    
 }
 
-.section_items_div{
+.section_items_div {
     display: flex;
     flex-direction: column;
     width: 50%;
 }
 
-.pro_photo{
+.pro_photo {
     height: 200px;
     width: 200px;
 }
 
-.section_item{
+.section_item {
     display: flex;
     flex-direction: row;
     padding: 0.5rem;
     align-items: center;
 }
 
-.sec_item_def{
+.sec_item_def {
     font-size: large;
     font-weight: 550;
 }
 
-.section_item_label{
+.section_item_label {
     width: 30%;
     margin-right: 5pt;
 }
 
-.section_item_colon{
+.section_item_colon {
     margin-right: 10pt;
 }
 
-.section_item_value{
+.section_item_value {
     font-size: large;
 }
 
-.assessment_comment_label{
+.assessment_comment_label {
     display: flex;
     flex-direction: column;
     font-size: large;
@@ -86,40 +85,38 @@
     padding-left: 2rem;
 }
 
-.assessment_comment{
+.assessment_comment {
     font-size: medium;
     font-weight: 400;
     padding: 0.25rem;
 }
 
-.remarks_items{
+.remarks_items {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.remarks_item{
+.remarks_item {
     display: flex;
     flex-direction: row;
     width: 100%;
     align-items: center;
 }
 
-.remarks_item_label{
+.remarks_item_label {
     width: 25%;
     margin-right: 5pt;
 }
 
-.remarks_input_item{
+.remarks_input_item {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: center;
 }
 
-
-
-.remarks_input{
+.remarks_input {
     margin-top: 2%;
     width: 50%;
     height: 4rem;
@@ -127,8 +124,7 @@
     font-family: "PT Serif";
 }
 
-
-.ld_button{
+.ld_button {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -136,7 +132,7 @@
     margin-bottom: 2%;
 }
 
-.ld_forward{
+.ld_forward {
     padding: 0.5rem 1.5rem;
     text-align: center;
     border: 2px solid var(--green);
@@ -145,20 +141,13 @@
     color: var(--green);
     font-size: large;
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
-.ld_forward:hover{
+.ld_forward:hover {
     border: 2px solid white;
     background-color: var(--green);
     color: white;
     cursor: pointer;
-    font-size: x-large;
-    transition: all 0.3s ease;
+    transform: scale(1.25);
 }
-
-
-
-
-
-
-

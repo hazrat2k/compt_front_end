@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./welcome.css";
 import { Slide } from "react-slideshow-image";
 import { useMediaQuery } from "react-responsive";
 import "react-slideshow-image/dist/styles.css";
 import { primary, secondary } from "../../stores/const/colors";
-
-
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
@@ -15,13 +13,16 @@ export default function Welcome() {
     const [buttonHovering, setButtonHovering] = useState(false);
     const [button2Hovering, setButton2Hovering] = useState(false);
     const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-    
 
     // const spanStyle = {
     //     padding: '2rem',
     //     background: '#efefef',
     //     color: '#000000'
     // }
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, []);
 
     const divStyle = {
         display: "flex",

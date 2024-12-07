@@ -15,6 +15,7 @@ import {
 } from "@react-pdf/renderer";
 
 import InWords from "../functions/inWords";
+import { dateFormation } from "../functions/dateFormation";
 
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
@@ -243,7 +244,8 @@ export default function SanctionCopyForm(props) {
             borderRadius: "20pt",
             backgroundColor: for_hover ? secondary : "white",
             color: for_hover ? "white" : secondary,
-            fontSize: for_hover ? "20pt" : "15pt",
+            fontSize: "15pt",
+            transform: for_hover ? "scale(1.25)" : "scale(1)",
             cursor: for_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
@@ -261,7 +263,8 @@ export default function SanctionCopyForm(props) {
             borderRadius: "20pt",
             backgroundColor: laf_hover ? secondary : "white",
             color: laf_hover ? "white" : secondary,
-            fontSize: laf_hover ? "20pt" : "15pt",
+            fontSize: "15pt",
+            transform: laf_hover ? "scale(1.25)" : "scale(1)",
             cursor: laf_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
@@ -282,7 +285,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadLoanType
                 );
                 setSc_sanc_loan_data(sanc_res.data);
@@ -292,7 +295,7 @@ export default function SanctionCopyForm(props) {
                 };
 
                 const scf_data_res = await axios.post(
-                    "http://"+backend_site_address+"/personeel_login",
+                    "http://" + backend_site_address + "/personeel_login",
                     uploadData
                 );
                 setScf_pers_data(scf_data_res.data);
@@ -351,7 +354,7 @@ export default function SanctionCopyForm(props) {
 
     for (let i = 0; i < sc_sanc_loan_data.length; i++) {
         if (scf_selected_loan[sc_sanc_loan_data[i]["LOAN_ID"]]) {
-            sanctioned_loan_ids += sc_sanc_loan_data[i]["LOAN_ID"] + ",";
+            sanctioned_loan_ids += sc_sanc_loan_data[i]["LOAN_ID"] + ", ";
 
             sc_sanc_loan_display.push(
                 <View style={style_sc.sc_table_row}>
@@ -377,15 +380,15 @@ export default function SanctionCopyForm(props) {
                         "small_col"
                     )}
                     {sc_table_col(
-                        sc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        dateFormation(sc_sanc_loan_data[i]["DATE_OF_BIRTH"]),
                         "small_col"
                     )}
                     {sc_table_col(
-                        sc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        dateFormation(sc_sanc_loan_data[i]["DATE_FIRST_JOIN"]),
                         "small_col"
                     )}
                     {sc_table_col(
-                        nf.format(sc_sanc_loan_data[i]["NET_PAY"]),
+                        nf.format(sc_sanc_loan_data[i]["NET_SALARY"]),
                         "small_col"
                     )}
                     {sc_table_col(
@@ -438,7 +441,7 @@ export default function SanctionCopyForm(props) {
 
     sanctioned_loan_ids = sanctioned_loan_ids.slice(
         0,
-        sanctioned_loan_ids.length - 1
+        sanctioned_loan_ids.length - 2
     );
 
     sc_sanc_loan_display.push(
@@ -653,14 +656,15 @@ export default function SanctionCopyForm(props) {
             const upload_sanctioned_loan = {
                 LOAN_ID: sanctioned_loan_ids,
                 LOAN_TYPE: scf_loan_type,
+                TOTAL_AMOUNT: sanction_total,
                 APP_POS: 7,
-                SANC_DATE: new_date,
+                SANC_DATE: new Date(new_date).toLocaleDateString("en-US"),
                 SANCTION_STATUS: "SANCTIONED",
             };
 
             try {
                 await axios.post(
-                    "http://"+backend_site_address+"/sanctioning_loan",
+                    "http://" + backend_site_address + "/sanctioning_loan",
                     upload_sanctioned_loan
                 );
             } catch (err) {
@@ -668,19 +672,25 @@ export default function SanctionCopyForm(props) {
             }
 
             try {
-                await axios.put("http://"+backend_site_address+"/sanction", {
-                    loan_id: sanctioned_loan_ids,
-                    status: "SANCTIONED",
-                });
+                await axios.put(
+                    "http://" + backend_site_address + "/sanction",
+                    {
+                        loan_id: sanctioned_loan_ids,
+                        status: "SANCTIONED",
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
         } else if (scf_sent_from == "dc_audit") {
             try {
-                await axios.put("http://"+backend_site_address+"/sanction", {
-                    loan_id: sanctioned_loan_ids,
-                    status: "OFF_ORD",
-                });
+                await axios.put(
+                    "http://" + backend_site_address + "/sanction",
+                    {
+                        loan_id: sanctioned_loan_ids,
+                        status: "OFF_ORD",
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
@@ -693,7 +703,7 @@ export default function SanctionCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://"+backend_site_address+"/sanctioned",
+                    "http://" + backend_site_address + "/sanctioned",
                     updateSancedData
                 );
             } catch (err) {
@@ -706,11 +716,9 @@ export default function SanctionCopyForm(props) {
                 SANCTION_STATUS: "SANCTIONED",
             };
 
-            console.log(updateSancedData);
-
             try {
                 await axios.put(
-                    "http://"+backend_site_address+"/sanctioned",
+                    "http://" + backend_site_address + "/sanctioned",
                     updateSancedData
                 );
             } catch (err) {
@@ -726,7 +734,9 @@ export default function SanctionCopyForm(props) {
 
         try {
             await axios.put(
-                "http://"+backend_site_address+"/processing_loan_remarks_update",
+                "http://" +
+                    backend_site_address +
+                    "/processing_loan_remarks_update",
                 updateRemarksData
             );
 

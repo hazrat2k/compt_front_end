@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
     PDFDownloadLink,
@@ -465,21 +465,18 @@ const PreviewData = (props) => {
 export default function Application(props) {
     const applicationNavigate = useNavigate();
 
-    const new_date = new Date();
-
     const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-
-    const loan_id = new_date.valueOf();
 
     const [url, setURL] = useState("");
 
     var app_data = props.applicationData;
 
-    app_data["LOAN_ID"] = loan_id;
-
-    app_data["LOAN_APP_DATE"] = new Date(new_date).toLocaleDateString("en-US");
-
     let nf = new Intl.NumberFormat("en-US");
+
+    useEffect(() => {
+        app_data["LOAN_ID"] = new Date().valueOf();
+        app_data["LOAN_APP_DATE"] = new Date().toLocaleDateString("en-US");
+    }, []);
 
     const [down_hover, setDown_hover] = useState(false);
 
@@ -504,13 +501,12 @@ export default function Application(props) {
             textAlign: "center",
             border: "2px solid",
             borderColor: back_hover ? "white" : secondary,
-            borderRadius: back_hover ? "50pt" : "20pt",
+            borderRadius: "20pt",
             backgroundColor: back_hover ? secondary : "white",
             color: back_hover ? "white" : secondary,
-            fontSize: back_hover
-                ? butt_font_size + 5 + "pt"
-                : butt_font_size + "pt",
+            fontSize: butt_font_size + "pt",
             cursor: back_hover ? "pointer" : "default",
+            transform: back_hover ? "scale(1.25)" : "scale(1)",
             transition: "all ease 0.3s",
         },
 
@@ -522,12 +518,11 @@ export default function Application(props) {
             textAlign: "center",
             border: "2px solid",
             borderColor: down_hover ? "white" : secondary,
-            borderRadius: down_hover ? "50pt" : "20pt",
+            borderRadius: "20pt",
             backgroundColor: down_hover ? secondary : "white",
             color: down_hover ? "white" : secondary,
-            fontSize: down_hover
-                ? butt_font_size + 5 + "pt"
-                : butt_font_size + "pt",
+            fontSize: butt_font_size + "pt",
+            transform: down_hover ? "scale(1.25)" : "scale(1)",
             cursor: down_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
@@ -1787,7 +1782,7 @@ export default function Application(props) {
     const onClickEdit = async (e) => {
         e.preventDefault();
         applicationNavigate("/application/1", {
-            state: { info: app_data, used: "yes" },
+            state: { info: app_data },
         });
     };
 
@@ -1804,6 +1799,8 @@ export default function Application(props) {
         }
 
         downloadURI(url, "application.pdf");
+
+        app_data["SALARY_ID"] = app_data["EMPLOYEEID"];
 
         try {
             await axios.post(

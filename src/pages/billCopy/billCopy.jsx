@@ -7,14 +7,21 @@ import "./billCopy.css";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 
+import { dateFormation } from "../../utils/functions/dateFormation";
+
+import InWords from "../../utils/functions/inWords";
+
 import { backend_site_address } from "../../stores/const/siteAddress";
 import BillCopyForm from "../../utils/pdfCopy/billCopyForm";
 import BankCopyForm from "../../utils/pdfCopy/bankCopyForm";
+import useLoanTypeStore from "../../stores/loanTypeStore";
 
 export default function BillCopy() {
+    const bcLoanType = useLoanTypeStore((state) => state.loanType);
+
     const { state } = useLocation();
 
-    const bc_loan_type = state["type"];
+    const bc_loan_type = bcLoanType;
 
     const bc_sent_from = state["sentFrom"];
 
@@ -31,74 +38,6 @@ export default function BillCopy() {
     const sal_sanc_loan_display = useState([]);
 
     const [selectedCategory, setSelectedCategory] = useState("null");
-
-    var a = [
-        "",
-        "one ",
-        "two ",
-        "three ",
-        "four ",
-        "five ",
-        "six ",
-        "seven ",
-        "eight ",
-        "nine ",
-        "ten ",
-        "eleven ",
-        "twelve ",
-        "thirteen ",
-        "fourteen ",
-        "fifteen ",
-        "sixteen ",
-        "seventeen ",
-        "eighteen ",
-        "nineteen ",
-    ];
-    var b = [
-        "",
-        "",
-        "twenty",
-        "thirty",
-        "forty",
-        "fifty",
-        "sixty",
-        "seventy",
-        "eighty",
-        "ninety",
-    ];
-
-    const inWords = (num) => {
-        if ((num = num.toString()).length > 9) return "overflow";
-        var n = ("000000000" + num)
-            .substr(-9)
-            .match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n) return;
-        var str = "";
-        str +=
-            n[1] != 0
-                ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + "crore "
-                : "";
-        str +=
-            n[2] != 0
-                ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + "lakh "
-                : "";
-        str +=
-            n[3] != 0
-                ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) +
-                  "thousand "
-                : "";
-        str +=
-            n[4] != 0
-                ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) +
-                  "hundred "
-                : "";
-        str +=
-            n[5] != 0
-                ? (str != "" ? "and " : "") +
-                  (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]])
-                : "";
-        return str;
-    };
 
     let nf = new Intl.NumberFormat("en-US");
 
@@ -189,15 +128,19 @@ export default function BillCopy() {
                             "small_col"
                         )}
                         {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                            dateFormation(
+                                bc_sanc_loan_data[i]["DATE_OF_BIRTH"]
+                            ),
                             "small_col"
                         )}
                         {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                            dateFormation(
+                                bc_sanc_loan_data[i]["DATE_FIRST_JOIN"]
+                            ),
                             "small_col"
                         )}
                         {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
+                            nf.format(bc_sanc_loan_data[i]["NET_SALARY"]),
                             "small_col"
                         )}
                         {bc_table_col(
@@ -294,15 +237,19 @@ export default function BillCopy() {
                             "small_col"
                         )}
                         {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                            dateFormation(
+                                bc_sanc_loan_data[i]["DATE_OF_BIRTH"]
+                            ),
                             "small_col"
                         )}
                         {bc_table_col(
-                            bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                            dateFormation(
+                                bc_sanc_loan_data[i]["DATE_FIRST_JOIN"]
+                            ),
                             "small_col"
                         )}
                         {bc_table_col(
-                            nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
+                            nf.format(bc_sanc_loan_data[i]["NET_SALARY"]),
                             "small_col"
                         )}
                         {bc_table_col(
@@ -429,7 +376,7 @@ export default function BillCopy() {
                     ""
                 )}
 
-                <div className="bc_page_title">Bill Copy</div>
+                <div className="bc_page_title">{bc_loan_type} Bill Copy</div>
 
                 {billStatus ? (
                     <>
@@ -468,7 +415,7 @@ export default function BillCopy() {
                         <div className="bc_in_words">
                             In Words :
                             <div className="bc_text">
-                                {inWords(total_sanction - count * 10)}
+                                {InWords(total_sanction - count * 10)}
                             </div>
                             TK. Only
                         </div>
@@ -486,12 +433,12 @@ export default function BillCopy() {
                     </>
                 ) : (
                     <div className="no_billing_loan">
-                        No bill copy is available for {selectedCategory}{" "}
+                        No bill copy is available for {selectedCategory + " "}
                         category
                     </div>
                 )}
 
-                <div className="bc_page_title">Bank Copy</div>
+                <div className="bc_page_title">{bc_loan_type} Bank Copy</div>
 
                 {billStatus ? (
                     <>
@@ -522,7 +469,7 @@ export default function BillCopy() {
                         <div className="bc_in_words">
                             In Words :
                             <div className="bc_text">
-                                {inWords(total_sanction - count * 10)}
+                                {InWords(total_sanction - count * 10)}
                             </div>
                             TK. Only
                         </div>
@@ -537,7 +484,7 @@ export default function BillCopy() {
                     </>
                 ) : (
                     <div className="no_billing_loan">
-                        No bank copy is available for {selectedCategory}{" "}
+                        No bank copy is available for {selectedCategory + " "}
                         category
                     </div>
                 )}

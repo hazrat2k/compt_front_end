@@ -172,22 +172,19 @@
         font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
         font-size: 1rem;
         color: crimson;
-        height: 2.5rem;
-        width: 5rem;
         border-radius: 2rem;
+        font-weight: bold;
+        padding: 0.4rem 1.5rem 0.4rem 1.5rem;
         background-color: white;
         border-color: crimson;
+        transition: all 0.3s ease;
     }
 
     .binormalButton:hover {
-        font-family: "AdorshoLipi", "PT Serif", "Arial" !important;
-        font-size: 1rem;
         color: white;
-        height: 2.5rem;
-        width: 5rem;
-        border-radius: 2rem;
         background-color: crimson;
         border-color: white;
+        transform: scale(1.25);
     }
 }
 
@@ -199,6 +196,6 @@
 .basic_label {
     font-family: "PT Serif";
     font-weight: bold;
-    
+
     text-align: center;
 }

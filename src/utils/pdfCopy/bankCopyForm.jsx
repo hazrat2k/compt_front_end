@@ -13,6 +13,14 @@ import {
     PDFViewer,
 } from "@react-pdf/renderer";
 
+import TextField from "@mui/material/TextField";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
+import InWords from "../functions/inWords";
+
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
@@ -189,6 +197,11 @@ export default function BankCopyForm(props) {
     var bac_loan_ids = "";
 
     const [bac_cheque_no, setBac_cheque_no] = useState("");
+    const [bac_cheque_no_error_text, setBac_cheque_no_error_text] =
+        useState("");
+
+    const [bac_pay_date, setBac_pay_date] = useState(null);
+    const [bac_pay_date_error_text, setBac_pay_date_error_text] = useState("");
 
     const [bac_remarks, setBac_remarks] = useState("");
 
@@ -215,11 +228,10 @@ export default function BankCopyForm(props) {
         },
 
         forward_butt: {
-            width: for_hover ? "150pt" : "120pt",
             height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
-            padding: "5pt 15pt 5pt 15pt",
+            padding: "5pt 20pt 5pt 20pt",
             alignSelf: "center",
             textAlign: "center",
             border: "2px solid",
@@ -227,17 +239,18 @@ export default function BankCopyForm(props) {
             borderRadius: "20pt",
             backgroundColor: for_hover ? secondary : "white",
             color: for_hover ? "white" : secondary,
-            fontSize: for_hover ? "20pt" : "15pt",
+            fontSize: "15pt",
+            transform: for_hover ? "scale(1.25)" : "scale(1)",
             cursor: for_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
+            marginBottom: "20px",
         },
 
         download_butt: {
-            width: laf_hover ? "250pt" : "200pt",
             height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
-            padding: "5pt 15pt 5pt 15pt",
+            padding: "5pt 20pt 5pt 20pt",
             alignSelf: "center",
             textAlign: "center",
             border: "2px solid",
@@ -245,7 +258,8 @@ export default function BankCopyForm(props) {
             borderRadius: "20pt",
             backgroundColor: laf_hover ? secondary : "white",
             color: laf_hover ? "white" : secondary,
-            fontSize: laf_hover ? "20pt" : "15pt",
+            fontSize: "15pt",
+            transform: laf_hover ? "scale(1.25)" : "scale(1)",
             cursor: laf_hover ? "pointer" : "default",
             transition: "all ease 0.3s",
         },
@@ -262,7 +276,7 @@ export default function BankCopyForm(props) {
             display: "flex",
             flexDirection: "row",
             gap: "10pt",
-            justifyContent: "center",
+            justifyContent: "space-around",
             alignItems: "center",
         },
 
@@ -279,74 +293,6 @@ export default function BankCopyForm(props) {
         },
     });
 
-    var a = [
-        "",
-        "one ",
-        "two ",
-        "three ",
-        "four ",
-        "five ",
-        "six ",
-        "seven ",
-        "eight ",
-        "nine ",
-        "ten ",
-        "eleven ",
-        "twelve ",
-        "thirteen ",
-        "fourteen ",
-        "fifteen ",
-        "sixteen ",
-        "seventeen ",
-        "eighteen ",
-        "nineteen ",
-    ];
-    var b = [
-        "",
-        "",
-        "twenty",
-        "thirty",
-        "forty",
-        "fifty",
-        "sixty",
-        "seventy",
-        "eighty",
-        "ninety",
-    ];
-
-    const inWords = (num) => {
-        if ((num = num.toString()).length > 9) return "overflow";
-        var n = ("000000000" + num)
-            .substr(-9)
-            .match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n) return;
-        var str = "";
-        str +=
-            n[1] != 0
-                ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + "crore "
-                : "";
-        str +=
-            n[2] != 0
-                ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + "lakh "
-                : "";
-        str +=
-            n[3] != 0
-                ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) +
-                  "thousand "
-                : "";
-        str +=
-            n[4] != 0
-                ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) +
-                  "hundred "
-                : "";
-        str +=
-            n[5] != 0
-                ? (str != "" ? "and " : "") +
-                  (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]])
-                : "";
-        return str;
-    };
-
     useEffect(() => {
         const fetch_sanction_loan_data = async () => {
             const uploadLoanType = {
@@ -356,7 +302,7 @@ export default function BankCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadLoanType
                 );
                 setSal_sanc_loan_data(sanc_res.data);
@@ -366,7 +312,7 @@ export default function BankCopyForm(props) {
                 };
 
                 const bac_data_res = await axios.post(
-                    "http://"+backend_site_address+"/personeel_login",
+                    "http://" + backend_site_address + "/personeel_login",
                     uploadData
                 );
                 setBac_pers_data(bac_data_res.data);
@@ -403,7 +349,7 @@ export default function BankCopyForm(props) {
                 bac_billedLoan[sal_sanc_loan_data[i]["LOAN_ID"]] &&
                 sal_sanc_loan_data[i]["CATEGORY"] == sel_cat
             ) {
-                bac_loan_ids += sal_sanc_loan_data[i]["LOAN_ID"] + ",";
+                bac_loan_ids += sal_sanc_loan_data[i]["LOAN_ID"] + ", ";
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
                         {sal_table_col(++count)}
@@ -442,7 +388,7 @@ export default function BankCopyForm(props) {
     } else {
         for (let i = 0; i < sal_sanc_loan_data.length; i++) {
             if (bac_billedLoan[sal_sanc_loan_data[i]["LOAN_ID"]]) {
-                bac_loan_ids += sal_sanc_loan_data[i]["LOAN_ID"] + ",";
+                bac_loan_ids += sal_sanc_loan_data[i]["LOAN_ID"] + ", ";
 
                 sal_sanc_loan_display.push(
                     <View style={style_sal.sal_table_row}>
@@ -480,7 +426,7 @@ export default function BankCopyForm(props) {
         );
     }
 
-    bac_loan_ids = bac_loan_ids.slice(0, bac_loan_ids.length - 1);
+    bac_loan_ids = bac_loan_ids.slice(0, bac_loan_ids.length - 2);
 
     const MyBankForm = (
         <Document>
@@ -544,7 +490,7 @@ export default function BankCopyForm(props) {
                             <Text
                                 style={[style_sal.sal_text, style_sal.sal_bold]}
                             >
-                                {inWords(sanction_total - count * 10)}
+                                {InWords(sanction_total - count * 10)}
                             </Text>
 
                             <Text style={style_sal.sal_text_2}>TK. Only</Text>
@@ -635,11 +581,20 @@ export default function BankCopyForm(props) {
 
         if (bac_sentFrom == "acct_cash") {
             if (bac_cheque_no == "") {
-                setBac_error(true);
-                setBac_error_text("***Enter cheque no to forward");
+                setBac_cheque_no_error_text("***Enter cheque no to forward");
                 return;
             } else {
-                setBac_error(false);
+                setBac_cheque_no_error_text("");
+            }
+
+            if (bac_pay_date == null) {
+                setBac_pay_date_error_text("***Payment Date must be filled.");
+                return;
+            } else if (bac_pay_date.$d == "Invalid Date") {
+                setBac_pay_date_error_text("***Payment Date is invalid.");
+                return;
+            } else {
+                setBac_pay_date_error_text("");
             }
         }
 
@@ -660,13 +615,14 @@ export default function BankCopyForm(props) {
                 LOAN_ID: bac_loan_ids,
                 LOAN_TYPE: bac_loan_type,
                 APP_POS: 16,
-                BILL_DATE: new_date,
+                TOTAL_AMOUNT: sanction_total,
+                BILL_DATE: new Date(new_date).toLocaleDateString("en-US"),
                 BILL_STATUS: "BILLED",
             };
 
             try {
                 await axios.post(
-                    "http://"+backend_site_address+"/bill_register",
+                    "http://" + backend_site_address + "/bill_register",
                     upload_billed_loan
                 );
             } catch (err) {
@@ -674,20 +630,29 @@ export default function BankCopyForm(props) {
             }
 
             try {
-                await axios.put("http://"+backend_site_address+"/sanction", {
-                    loan_id: bac_loan_ids,
-                    status: "BILLED",
-                });
+                await axios.put(
+                    "http://" + backend_site_address + "/sanction",
+                    {
+                        loan_id: bac_loan_ids,
+                        status: "BILLED",
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
         } else if (bac_sentFrom == "acct_cash") {
             try {
-                await axios.put("http://"+backend_site_address+"/sanction", {
-                    loan_id: bac_loan_ids,
-                    status: "CASHED",
-                    cheque_no: bac_cheque_no,
-                });
+                await axios.put(
+                    "http://" + backend_site_address + "/sanction",
+                    {
+                        loan_id: bac_loan_ids,
+                        status: "CASHED",
+                        cheque_no: bac_cheque_no,
+                        pay_date: new Date(bac_pay_date).toLocaleDateString(
+                            "en-US"
+                        ),
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
@@ -700,8 +665,21 @@ export default function BankCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://"+backend_site_address+"/billed",
+                    "http://" + backend_site_address + "/billed",
                     updateBilledData
+                );
+            } catch (err) {
+                console.log(err);
+            }
+
+            try {
+                await axios.post(
+                    "http://" + backend_site_address + "/final_loan_register",
+                    {
+                        loan_id: bac_loan_ids,
+                        cheque_no: bac_cheque_no,
+                        pay_date: bac_pay_date,
+                    }
                 );
             } catch (err) {
                 console.log(err);
@@ -715,7 +693,7 @@ export default function BankCopyForm(props) {
 
             try {
                 await axios.put(
-                    "http://"+backend_site_address+"/billed",
+                    "http://" + backend_site_address + "/billed",
                     updateBilledData
                 );
             } catch (err) {
@@ -731,7 +709,9 @@ export default function BankCopyForm(props) {
 
         try {
             await axios.put(
-                "http://"+backend_site_address+"/processing_loan_remarks_update",
+                "http://" +
+                    backend_site_address +
+                    "/processing_loan_remarks_update",
                 updateRemarksData
             );
 
@@ -776,13 +756,43 @@ export default function BankCopyForm(props) {
 
             {bac_sentFrom == "acct_cash" ? (
                 <div style={style_form.cheque_box}>
-                    <div style={style_form.cheque_label}>Cheque No. : </div>
-
-                    <input
-                        style={style_form.cheque_input}
+                    <TextField
+                        error={bac_cheque_no_error_text != ""}
+                        id="outlined-basic"
+                        label="Cheque No."
+                        className="log_font"
+                        variant="outlined"
                         value={bac_cheque_no}
                         onChange={(e) => setBac_cheque_no(e.target.value)}
+                        helperText={bac_cheque_no_error_text}
+                        style={{
+                            width: "300px",
+                            marginBottom: "5px",
+                        }}
                     />
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={["DatePicker"]}>
+                            <DatePicker
+                                label="Payment Date"
+                                value={bac_pay_date}
+                                disableFuture
+                                onChange={(newValue) =>
+                                    setBac_pay_date(newValue)
+                                }
+                                slotProps={{
+                                    textField: {
+                                        error: bac_pay_date_error_text != "",
+                                        helperText: bac_pay_date_error_text,
+                                        style: {
+                                            width: "300px",
+                                            marginBottom: "5px",
+                                        },
+                                    },
+                                }}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider>
                 </div>
             ) : (
                 ""

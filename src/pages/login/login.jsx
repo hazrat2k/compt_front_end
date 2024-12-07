@@ -3,13 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -41,6 +35,10 @@ export default function Login() {
         "SBL House Loan",
         "SBL Multipurpose Loan",
     ];
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, []);
 
     const [buetId, setBuetId] = useState("");
     const [buetIdHelperText, setBuetIdHelperText] = useState("");
@@ -228,131 +226,12 @@ export default function Login() {
         }
     };
 
-    const handleLoginLoanChange = (e) => {
-        setLog_loan_type(e.target.value);
-    };
-
     return (
         <div className="login_body">
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="login_context">
                 <div className="login_label">Employee Login</div>
-
-                {/* <Box sx={{ minWidth: 120, fontFamily: "PT Serif" }}>
-                    <FormControl fullWidth>
-                        <InputLabel
-                            id="demo-simple-select-label"
-                            className="log_font"
-                        >
-                            Loan Type
-                        </InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            className="log_font"
-                            value={log_loan_type}
-                            label="Loan Type"
-                            onChange={handleLoginLoanChange}
-                        >
-                            <MenuItem
-                                value="HOUSE BUILDING LOAN"
-                                className="log_font"
-                            >
-                                HOUSE BUILDING LOAN
-                            </MenuItem>
-                            <MenuItem
-                                value="CONSUMER LOAN"
-                                className="log_font"
-                            >
-                                CONSUMER LOAN
-                            </MenuItem>
-                            <MenuItem value="LAPTOP LOAN" className="log_font">
-                                LAPTOP LOAN
-                            </MenuItem>
-                            <MenuItem
-                                value="SBL HOUSE BUILDING LOAN"
-                                className="log_font"
-                            >
-                                SBL HOUSE BUILDING LOAN
-                            </MenuItem>
-                            <MenuItem
-                                value="SBL WHOLESALE LOAN"
-                                className="log_font"
-                            >
-                                SBL WHOLESALE LOAN
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box> */}
-
-                {/* {loan_type_check.includes(log_loan_type) ? (
-                    <div className="alert_msg">Select HOUSE BUILDING LOAN</div>
-                ) : (
-                    <div className="login">
-                        <div className="login_form_items">
-                            <TextField
-                                error={buetIdHelperText != ""}
-                                id="outlined-basic"
-                                label="BUET ID"
-                                className="log_font"
-                                variant="outlined"
-                                value={buetId}
-                                onChange={(e) => setBuetId(e.target.value)}
-                                helperText={buetIdHelperText}
-                                style={{
-                                    width: "260px",
-                                    marginBottom: "5px",
-                                }}
-                            />
-
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={["DatePicker"]}>
-                                    <DatePicker
-                                        label="Date of Birth"
-                                        value={dob}
-                                        disableFuture
-                                        onChange={(newValue) =>
-                                            setDob(newValue)
-                                        }
-                                        slotProps={{
-                                            textField: {
-                                                error: dobHelperText != "",
-                                                helperText: dobHelperText,
-                                            },
-                                        }}
-                                    />
-                                </DemoContainer>
-                            </LocalizationProvider>
-
-                            <div className="login_text_area">
-                                <div
-                                    className="login_btn not-selectable"
-                                    onClick={authenticate}
-                                >
-                                    LOGIN
-                                </div>
-                            </div>
-
-                            {l_error ? (
-                                <div className="login_text_area">
-                                    <div
-                                        className="login_error_Text"
-                                        style={{
-                                            color: l_err_text_color
-                                                ? "red"
-                                                : "crimson",
-                                        }}
-                                    >
-                                        {l_error_text}
-                                    </div>
-                                </div>
-                            ) : (
-                                ""
-                            )}
-                        </div>
-                    </div>
-                )} */}
 
                 <div className="login">
                     <div className="login_form_items">

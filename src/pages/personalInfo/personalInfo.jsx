@@ -3,11 +3,14 @@ import { useNavigate, useLocation } from "react-router";
 import axios from "axios";
 import moment from "moment";
 
+import useLoanInfoStore from "../../stores/loanInfoStore";
+
 import "./personalInfo.css";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 
+import { null_array } from "../../stores/const/nullArray";
 import ToTitleCase from "../../utils/functions/toTitleCase";
 import DataField from "../../component/loan_apply/dataField/dataField";
 import nomineeRelations from "../../stores/const/nomineeRelations";
@@ -23,6 +26,9 @@ export default function PersonalInfo() {
 
     var personal_data = state["info"];
 
+    const addPersonalField = useLoanInfoStore((state) => state.addField);
+    const personalDataField = useLoanInfoStore((state) => state.info);
+
     useEffect(() => {
         const fetch_salServ_data = async () => {
             try {
@@ -37,21 +43,12 @@ export default function PersonalInfo() {
                 console.log(err);
             }
         };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_salServ_data();
+        addPersonalField("PRESENT_ADDRESS", personal_data["ADDRESS"]);
+        addPersonalField("PERMANENT_ADDRESS", personal_data["ADDRESS"]);
+        addPersonalField("CONTACT_NO", personal_data["CONTACT_NO"]);
     }, []);
-
-    var state_used = "no";
-
-    if (state["used"] === "yes") {
-        state_used = "yes";
-    }
-
-    if (state["used"] === "no") {
-        personal_data["MOTHERS_NAME"] = "";
-        personal_data["NOMINEES_NAME"] = "";
-        personal_data["NOMINEES_RELSHIP"] = "";
-        personal_data["NOMINEES_NID"] = "";
-    }
 
     const piFatherNameRef = useRef(null);
     const piMotherNameRef = useRef(null);
@@ -72,17 +69,10 @@ export default function PersonalInfo() {
 
     const fatherName = personal_data["FATHERS_NAME"];
 
-    const [motherName, setMotherName] = useState(personal_data["MOTHERS_NAME"]);
     const [motherNameError, setMotherNameError] = useState("");
 
-    const [nomineeName, setNomineeName] = useState(
-        personal_data["NOMINEES_NAME"]
-    );
     const [nomineeNameError, setNomineeNameError] = useState("");
 
-    const [nomineeRelship, setNomineeRelship] = useState(
-        personal_data["NOMINEES_RELSHIP"]
-    );
     const [nomineeRelshipError, setNomineeRelshipError] = useState("");
 
     const dob = moment(new Date(personal_data["DATE_OF_BIRTH"])).format(
@@ -90,28 +80,18 @@ export default function PersonalInfo() {
     );
     // const [nID, setNID] = useState(personal_data["NID_NO"]);
 
-    const [nomineeNID, setNomineeNID] = useState(personal_data["NOMINEES_NID"]);
     const [nomineeNIDError, setNomineeNIDError] = useState("");
 
-    const [presentAddressValue, setPresentAddressValue] = useState(
-        personal_data["ADDRESS"]
-    );
     const [presentAddressValueError, setPresentAddressValueError] =
         useState("");
 
-    const [permanentAddressValue, setpermanentAddressValue] = useState(
-        personal_data["ADDRESS"]
-    );
     const [permanentAddressValueError, setpermanentAddressValueError] =
         useState("");
 
-    const [contactNumber, setContactNumber] = useState(
-        personal_data["CONTACT_NO"]
-    );
     const [contactNumberError, setContactNumberError] = useState("");
 
     const validPersonalInfo = () => {
-        if (motherName == "") {
+        if (null_array.includes(personalDataField["MOTHERS_NAME"])) {
             setMotherNameError("আপনার মাতার নাম লিখুন***");
             scrollToSection(piMotherNameRef);
             return false;
@@ -119,7 +99,7 @@ export default function PersonalInfo() {
             setMotherNameError("");
         }
 
-        if (nomineeName == "") {
+        if (null_array.includes(personalDataField["NOMINEES_NAME"])) {
             setNomineeNameError("আপনার নমিনীর নাম লিখুন***");
             scrollToSection(piNomineeNameRef);
             return false;
@@ -127,7 +107,7 @@ export default function PersonalInfo() {
             setNomineeNameError("");
         }
 
-        if (nomineeRelship == "" || nomineeRelship === undefined) {
+        if (null_array.includes(personalDataField["NOMINEES_RELSHIP"])) {
             setNomineeRelshipError("আপনার সাথে নমিনীর সম্পর্ক লিখুন***");
             scrollToSection(piNomineeRelshipRef);
             return false;
@@ -135,7 +115,7 @@ export default function PersonalInfo() {
             setNomineeRelshipError("");
         }
 
-        if (presentAddressValue == "") {
+        if (null_array.includes(personalDataField["PRESENT_ADDRESS"])) {
             setPresentAddressValueError("আপনার বর্তমান ঠিকানা লিখুন***");
             scrollToSection(piPresentAddressRef);
             return false;
@@ -143,19 +123,23 @@ export default function PersonalInfo() {
             setPresentAddressValueError("");
         }
 
-        if (permanentAddressValue == "") {
-            setpermanentAddressValueError("আপনার বর্তমান ঠিকানা লিখুন***");
+        if (null_array.includes(personalDataField["PERMANENT_ADDRESS"])) {
+            setpermanentAddressValueError("আপনার স্থায়ী ঠিকানা লিখুন***");
             scrollToSection(piPermanantAddressRef);
             return false;
         } else {
             setpermanentAddressValueError("");
         }
 
-        if (nomineeNID == "") {
+        const NidLength = [10, 13, 17];
+
+        if (null_array.includes(personalDataField["NOMINEES_NID"])) {
             setNomineeNIDError("নমিনীর জাতীয় পরিচয়পত্র নম্বর লিখুন***");
             scrollToSection(piNomineeNIDRef);
             return false;
-        } else if (nomineeNID.length != 10) {
+        } else if (
+            !NidLength.includes(personalDataField["NOMINEES_NID"].length)
+        ) {
             setNomineeNIDError("সঠিক জাতীয় পরিচয়পত্র নম্বর লিখুন***");
             scrollToSection(piNomineeNIDRef);
             return false;
@@ -163,14 +147,13 @@ export default function PersonalInfo() {
             setNomineeNIDError("");
         }
 
-
-        if (contactNumber == "") {
+        if (null_array.includes(personalDataField["CONTACT_NO"])) {
             setContactNumberError("আপনার মোবাইল নং লিখুন***");
             scrollToSection(piNomineeNIDRef);
             return false;
         } else if (
-            contactNumber.length != 11 ||
-            !contactNumber.startsWith("01")
+            personalDataField["CONTACT_NO"].length != 11 ||
+            !personalDataField["CONTACT_NO"].startsWith("01")
         ) {
             setContactNumberError("সঠিক মোবাইল নং লিখুন***");
             scrollToSection(piNomineeNIDRef);
@@ -185,40 +168,23 @@ export default function PersonalInfo() {
     const onPersonalAuthenticate = (button) => {
         if (button == "first") {
             personalNavigate("/application/1", {
-                state: { info: personal_data, used: "yes" },
+                state: { info: personal_data },
             });
         }
 
         if (button == "second") {
             if (validPersonalInfo()) {
-                personal_data["MOTHERS_NAME"] = motherName;
-                personal_data["NOMINEES_NAME"] = nomineeName;
-                personal_data["PRESENT_ADDRESS"] = presentAddressValue;
-                personal_data["PERMANENT_ADDRESS"] = permanentAddressValue;
-
-                if (state["used"] === "no") {
-                    personal_data["NOMINEES_RELSHIP"] = nomineeRelship["title"];
-                } else if (
-                    nomineeRelship["title"] !== undefined &&
-                    personal_data["NOMINEES_RELSHIP"] != nomineeRelship["title"]
-                ) {
-                    personal_data["NOMINEES_RELSHIP"] = nomineeRelship["title"];
-                }
-                // personal_data["NID_NO"] = nID;
-                personal_data["NOMINEES_NID"] = nomineeNID;
-                personal_data["CONTACT_NO"] = contactNumber;
-
                 const file = { salary: salary_file };
                 personalNavigate("/application/3", {
                     state: {
                         info: personal_data,
                         file: file,
-                        used: state_used,
                     },
                 });
             }
         }
     };
+
 
     return (
         <div>
@@ -226,7 +192,7 @@ export default function PersonalInfo() {
 
             <div className="perInfo">
                 <div className="basic_label">
-                    {ToTitleCase(personal_data["LOAN_TYPE"])} Application Form
+                    {personalDataField["LOAN_TYPE"]} Application Form
                 </div>
                 <div className="personalInfo">
                     <div className="personalInfoLabel">
@@ -246,9 +212,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="text"
                         label="খ) মাতার নাম "
-                        value={motherName}
+                        value={personalDataField["MOTHERS_NAME"]}
                         setValue={(data) => {
-                            setMotherName(data);
+                            addPersonalField("MOTHERS_NAME", data);
                         }}
                         placeholder="i.e. ANOWARA BEGUM"
                     />
@@ -259,9 +225,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="text"
                         label="গ) নমিনীর নাম "
-                        value={nomineeName}
+                        value={personalDataField["NOMINEES_NAME"]}
                         setValue={(data) => {
-                            setNomineeName(data);
+                            addPersonalField("NOMINEES_NAME", data);
                         }}
                         placeholder="i.e. TAHMID AHMED"
                     />
@@ -272,9 +238,9 @@ export default function PersonalInfo() {
                         type="suggestedInput"
                         label="ঘ) আপনার সাথে নমিনীর সম্পর্ক "
                         options={nomineeRelations}
-                        value={nomineeRelship}
+                        value={personalDataField["NOMINEES_RELSHIP"]}
                         setValue={(data) => {
-                            setNomineeRelship(data);
+                            addPersonalField("NOMINEES_RELSHIP", data["title"]);
                         }}
                         placeholder="i.e. SON"
                     />
@@ -285,9 +251,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="text"
                         label="ঙ) বর্তমান ঠিকানা "
-                        value={presentAddressValue}
+                        value={personalDataField["PRESENT_ADDRESS"]}
                         setValue={(data) => {
-                            setPresentAddressValue(data);
+                            addPersonalField("PRESENT_ADDRESS", data);
                         }}
                     />
 
@@ -297,9 +263,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="text"
                         label="চ) স্থায়ী ঠিকানা "
-                        value={permanentAddressValue}
+                        value={personalDataField["PERMANENT_ADDRESS"]}
                         setValue={(data) => {
-                            setpermanentAddressValue(data);
+                            addPersonalField("PERMANENT_ADDRESS", data);
                         }}
                     />
 
@@ -323,9 +289,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="number"
                         label="জ) নমিনীর জাতীয় পরিচয়পত্র নম্বর"
-                        value={nomineeNID}
+                        value={personalDataField["NOMINEES_NID"]}
                         setValue={(data) => {
-                            setNomineeNID(data);
+                            addPersonalField("NOMINEES_NID", data);
                         }}
                         placeholder="i.e. 1234567890"
                     />
@@ -336,9 +302,9 @@ export default function PersonalInfo() {
                         type="input"
                         dataType="number"
                         label="ঝ) মোবাইল নং"
-                        value={contactNumber}
+                        value={personalDataField["CONTACT_NO"]}
                         setValue={(data) => {
-                            setContactNumber(data);
+                            addPersonalField("CONTACT_NO", data);
                         }}
                         placeholder="i.e. 01712334798"
                     />

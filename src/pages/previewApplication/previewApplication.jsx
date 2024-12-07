@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 import moment from "moment";
 
@@ -20,6 +20,8 @@ import InWords from "../../utils/functions/inWords";
 import ToTitleCase from "../../utils/functions/toTitleCase";
 import PreviewText from "../../component/loan_apply/previewText/previewText";
 import Application from "../../utils/pdfCopy/application";
+
+import useLoanInfoStore from "../../stores/loanInfoStore";
 
 const createSalaryData = (
     serialNo,
@@ -63,6 +65,18 @@ export default function PreviewApplication() {
     var previewData = state["info"];
 
     const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+
+    const previewDataField = useLoanInfoStore((state) => state.info);
+
+    previewData["LOAN_AMNT"] = previewDataField["LOAN_AMNT"];
+    previewData["REASON_FOR_LOAN"] = previewDataField["REASON_FOR_LOAN"];
+    previewData["MOTHERS_NAME"] = previewDataField["MOTHERS_NAME"];
+    previewData["NOMINEES_NAME"] = previewDataField["NOMINEES_NAME"];
+    previewData["NOMINEES_RELSHIP"] = previewDataField["NOMINEES_RELSHIP"];
+    previewData["PRESENT_ADDRESS"] = previewDataField["PRESENT_ADDRESS"];
+    previewData["PERMANENT_ADDRESS"] = previewDataField["PERMANENT_ADDRESS"];
+    previewData["NOMINEES_NID"] = previewDataField["NOMINEES_NID"];
+    previewData["CONTACT_NO"] = previewDataField["CONTACT_NO"];
 
     let nf = new Intl.NumberFormat("en-US");
 
@@ -343,6 +357,10 @@ export default function PreviewApplication() {
         );
     }
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, []);
+
     previewData["DATE_FIRST_JOIN"] = new Date(
         previewData["DATE_FIRST_JOIN"]
     ).toLocaleDateString("en-US");
@@ -354,8 +372,6 @@ export default function PreviewApplication() {
     previewData["DATE_OF_RETIREMENT"] = new Date(
         previewData["DATE_OF_RETIREMENT"]
     ).toLocaleDateString("en-US");
-
-
 
     return (
         <div>

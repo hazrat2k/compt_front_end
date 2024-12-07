@@ -4,22 +4,24 @@ import axios from "axios";
 
 import "./sanctionCopy.css";
 
+import { dateFormation } from "../../utils/functions/dateFormation";
+
 import InWords from "../../utils/functions/inWords";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
 
 import SanctionCopyForm from "../../utils/pdfCopy/sanctionCopyForm";
-
-
+import useLoanTypeStore from "../../stores/loanTypeStore";
 
 export default function SanctionCopy() {
+    const scLoanType = useLoanTypeStore((state) => state.loanType);
     const [sc_sanc_loan_data, setSc_sanc_loan_data] = useState([]);
     const sc_sanc_loan_display = useState([]);
 
     const { state } = useLocation();
 
-    const sc_loan_type = state["type"];
+    const sc_loan_type = scLoanType;
 
     const sc_sent_from = state["sentFrom"];
 
@@ -41,7 +43,7 @@ export default function SanctionCopy() {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadLoanType
                 );
                 setSc_sanc_loan_data(sanc_res.data);
@@ -49,6 +51,7 @@ export default function SanctionCopy() {
                 console.log(err);
             }
         };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_sanction_loan_data();
     }, []);
 
@@ -110,15 +113,19 @@ export default function SanctionCopy() {
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            sc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                            dateFormation(
+                                sc_sanc_loan_data[i]["DATE_OF_BIRTH"]
+                            ),
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            sc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                            dateFormation(
+                                sc_sanc_loan_data[i]["DATE_FIRST_JOIN"]
+                            ),
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            nf.format(sc_sanc_loan_data[i]["NET_PAY"]),
+                            nf.format(sc_sanc_loan_data[i]["NET_SALARY"]),
                             "sc_small_col"
                         )}
                         {sc_table_col(
@@ -211,15 +218,19 @@ export default function SanctionCopy() {
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            sc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                            dateFormation(
+                                sc_sanc_loan_data[i]["DATE_OF_BIRTH"]
+                            ),
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            sc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                            dateFormation(
+                                sc_sanc_loan_data[i]["DATE_FIRST_JOIN"]
+                            ),
                             "sc_small_col"
                         )}
                         {sc_table_col(
-                            nf.format(sc_sanc_loan_data[i]["NET_PAY"]),
+                            nf.format(sc_sanc_loan_data[i]["NET_SALARY"]),
                             "sc_small_col"
                         )}
                         {sc_table_col(
@@ -293,7 +304,7 @@ export default function SanctionCopy() {
 
             <div className="sanction_copy">
                 <div className="sc_page_title">
-                    {sc_loan_type.to} Sanction Copy
+                    {sc_loan_type} Sanction Copy
                 </div>
 
                 <div className="sc_table">

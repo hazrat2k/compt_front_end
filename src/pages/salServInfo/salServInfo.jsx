@@ -20,12 +20,6 @@ export default function SalServInfo() {
 
     var salServData = state["info"];
 
-    var state_used = "no";
-
-    if (state["used"] === "yes") {
-        state_used = "yes";
-    }
-
     const [loan_file, setLoan_file] = useState([]);
     const [loan_type_file, setLoan_type_file] = useState([]);
 
@@ -48,6 +42,7 @@ export default function SalServInfo() {
                 console.log(err);
             }
         };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_loan_data();
     }, []);
 
@@ -58,7 +53,7 @@ export default function SalServInfo() {
     const onSalServAuthenticate = (button) => {
         if (button == "first")
             salServNavigate("/application/2", {
-                state: { info: salServData, used: "yes" },
+                state: { info: salServData },
             });
 
         if (button == "second") {
@@ -68,7 +63,7 @@ export default function SalServInfo() {
                 loan_type: loan_type_file,
             };
             salServNavigate("/application/4", {
-                state: { info: salServData, file: file, used: state_used },
+                state: { info: salServData, file: file },
             });
         }
     };
@@ -79,7 +74,7 @@ export default function SalServInfo() {
 
             <div className="salServ_info">
                 <div className="basic_label">
-                    {ToTitleCase(salServData["LOAN_TYPE"])} Application Form
+                    {salServData["LOAN_TYPE"]} Application Form
                 </div>
 
                 <ServiceInfo

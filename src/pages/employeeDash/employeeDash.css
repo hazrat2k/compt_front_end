@@ -70,7 +70,7 @@
     justify-content: space-evenly;
 }
 
-.ed_double_button_items{
+.ed_double_button_items {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -91,6 +91,7 @@
     color: var(--green);
     background-color: white;
     border-color: var(--green);
+    transition: all 0.3s ease;
 }
 
 .ed_button:hover {
@@ -98,6 +99,7 @@
     background-color: var(--green);
     border-color: white;
     cursor: pointer;
+    transform: scale(1.25);
 }
 
 .edShowError {

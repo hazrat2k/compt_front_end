@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./personnelLogin.css";
 import axios from "axios";
 
+import useLoanTypeStore from "../../stores/loanTypeStore";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -19,6 +20,8 @@ import { backend_site_address } from "../../stores/const/siteAddress";
 export default function PersonnelLogin() {
     const perLoginNavigate = useNavigate();
 
+    const resetLoanType = useLoanTypeStore((state) => state.reset);
+
     var personeelData = [];
 
     const [user, setUser] = useState("");
@@ -27,6 +30,12 @@ export default function PersonnelLogin() {
     const [passwordError, setPasswordError] = useState("");
     const [matchError, setMatchError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+
+    
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        resetLoanType();
+    }, []);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -96,7 +105,6 @@ export default function PersonnelLogin() {
                         <div>Personnel Login</div>
                     </div>
 
-
                     <TextField
                         error={userError != ""}
                         id="outlined-basic"
@@ -114,7 +122,7 @@ export default function PersonnelLogin() {
                     <br />
 
                     <FormControl
-                        sx={{width: "300px", marginBottom: "5px" }}
+                        sx={{ width: "300px", marginBottom: "5px" }}
                         variant="outlined"
                     >
                         <InputLabel htmlFor="outlined-adornment-password">

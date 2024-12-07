@@ -12,6 +12,8 @@ import {
     PDFViewer,
 } from "@react-pdf/renderer";
 
+import { dateFormation } from "../functions/dateFormation";
+
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
@@ -255,11 +257,10 @@ export default function BillCopyForm(props) {
 
     const style_butt = StyleSheet.create({
         download_butt: {
-            width: laf_hover ? "250pt" : "220pt",
             height: "auto",
             fontFamily: "PT Serif",
             fontWeight: "bold",
-            padding: "5pt 15pt 5pt 15pt",
+            padding: "5pt 20pt 5pt 20pt",
             alignSelf: "center",
             textAlign: "center",
             border: "2px solid",
@@ -267,7 +268,8 @@ export default function BillCopyForm(props) {
             borderRadius: "20pt",
             backgroundColor: laf_hover ? secondary : "white",
             color: laf_hover ? "white" : secondary,
-            fontSize: laf_hover ? "20pt" : "15pt",
+            fontSize: "15pt",
+            transform: laf_hover ? "scale(1.25)" : "scale(1)",
             cursor: laf_hover ? "pointer" : "default",
             marginBottom: "10pt",
             transition: "all ease 0.3s",
@@ -356,7 +358,7 @@ export default function BillCopyForm(props) {
 
             try {
                 const sanc_res = await axios.post(
-                    "http://"+backend_site_address+"/sanction_loan",
+                    "http://" + backend_site_address + "/sanction_loan",
                     uploadLoanType
                 );
                 setBc_sanc_loan_data(sanc_res.data);
@@ -452,15 +454,15 @@ export default function BillCopyForm(props) {
                     )}
                     {bc_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
                     {bc_table_col(
-                        bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        dateFormation(bc_sanc_loan_data[i]["DATE_OF_BIRTH"]),
                         "small_col"
                     )}
                     {bc_table_col(
-                        bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        dateFormation(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"]),
                         "small_col"
                     )}
                     {bc_table_col(
-                        nf.format(bc_sanc_loan_data[i]["NET_PAY"]),
+                        nf.format(bc_sanc_loan_data[i]["NET_SALARY"]),
                         "small_col"
                     )}
                     {bc_table_col(
@@ -525,11 +527,11 @@ export default function BillCopyForm(props) {
                     )}
                     {s_table_col(bc_sanc_loan_data[i]["OFFICE"], "small_col")}
                     {s_table_col(
-                        bc_sanc_loan_data[i]["DATE_OF_BIRTH"],
+                        dateFormation(bc_sanc_loan_data[i]["DATE_OF_BIRTH"]),
                         "large_col"
                     )}
                     {s_table_col(
-                        bc_sanc_loan_data[i]["DATE_FIRST_JOIN"],
+                        dateFormation(bc_sanc_loan_data[i]["DATE_FIRST_JOIN"]),
                         "large_col"
                     )}
                     {s_table_col(
