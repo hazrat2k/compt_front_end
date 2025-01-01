@@ -47,12 +47,21 @@ export default function ServiceInfo(props) {
     servData["DATE_FIRST_JOIN"] = service_data["DATE_FIRST_JOIN"];
     servData["SERV_PERIOD"] =
         yearDuration +
-        " YEARS, " +
+        " YEARS " +
         monthDuration +
-        " MONTHS, " +
+        " MONTHS " +
         dateDuration +
         " DAYS";
-    servData["DATE_OF_RETIREMENT"] = service_data["DATE_OF_RETIREMENT"];
+
+    let temp_date = new Date(service_data["DATE_OF_BIRTH"]);
+
+    let teacherOrNot = service_data["EMPLOYEE_ID"][0] == "T";
+
+    let retYear = teacherOrNot ? 65 : 60;
+
+    temp_date.setFullYear(temp_date.getFullYear() + retYear);
+
+    servData["DATE_OF_RETIREMENT"] = temp_date;
     servData["APPOINTMENT_TYPE"] =
         service_data["APPOINTMENT_TYPE"].toUpperCase();
 

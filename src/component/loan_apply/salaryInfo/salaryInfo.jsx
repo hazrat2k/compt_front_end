@@ -9,7 +9,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-
 const createData = (month, basicSal, totalSal, totalDeduct, netSal) => {
     return { month, basicSal, totalSal, totalDeduct, netSal };
 };
@@ -34,19 +33,9 @@ export default function SalaryInfo(props) {
         "Dec",
     ];
     var prevMonthName = [];
-    var currYear = mydate.getFullYear();
-    var currMonth = mydate.getMonth();
     var prevMonthSal = [];
-    const salText = [
-        "ক) মূল বেতন : ",
-        "খ) মোট বেতন : ",
-        "গ) মোট কর্তন : ",
-        "ঘ) নীট বেতন : ",
-    ];
 
-    const salData = [];
-
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     for (let i = 0; i < salary_file.length; i++) {
         prevMonthSal.push([
@@ -76,7 +65,6 @@ export default function SalaryInfo(props) {
 
     var prevSal = { PREV_MON_SAL: prevMonSal };
 
-
     const rows = [];
 
     for (let i = 0; i < prevMonSal.length; i++) {
@@ -98,36 +86,7 @@ export default function SalaryInfo(props) {
             <div className="salaryInfoLabel">
                 ৯. বেতন সংক্রান্ত তথ্যাবলী (বিগত তিন মাসের) :
             </div>
-            {/* <div className="fullTable">
-                <table>
-                    <thead>
-                        <tr className="tableHead">
-                            <th className="tableText">মাস</th>
 
-                            <th>
-                                <div className="tableDataInput">
-                                    {" "}
-                                    {prevMonthName[0]}{" "}
-                                </div>
-                            </th>
-                            <th>
-                                <div className="tableDataInput">
-                                    {" "}
-                                    {prevMonthName[1]}{" "}
-                                </div>
-                            </th>
-                            <th>
-                                <div className="tableDataInput">
-                                    {" "}
-                                    {prevMonthName[2]}{" "}
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-
-                    {salData}
-                </table>
-            </div> */}
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>
@@ -168,16 +127,16 @@ export default function SalaryInfo(props) {
                                     {row.month}
                                 </TableCell>
                                 <TableCell align="center" className="sal_reg">
-                                    {row.basicSal}
+                                    {nf.format(row.basicSal)}
                                 </TableCell>
                                 <TableCell align="center" className="sal_reg">
-                                    {row.totalSal}
+                                    {nf.format(row.totalSal)}
                                 </TableCell>
                                 <TableCell align="center" className="sal_reg">
-                                    {row.totalDeduct}
+                                    {nf.format(row.totalDeduct)}
                                 </TableCell>
                                 <TableCell align="center" className="sal_reg">
-                                    {row.netSal}
+                                    {nf.format(row.netSal)}
                                 </TableCell>
                             </TableRow>
                         ))}

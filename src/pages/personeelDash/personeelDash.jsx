@@ -48,7 +48,7 @@ const pendProcColumns = [
         label: "Loan Amount",
         minWidth: 50,
         align: "center",
-        format: (value) => value.toLocaleString("en-US"),
+        format: (value) => value.toLocaleString("en-IN"),
     },
     {
         id: "application_status",
@@ -71,7 +71,7 @@ const sancBillColumns = [
         label: "Total Amount",
         minWidth: 100,
         align: "center",
-        format: (value) => value.toLocaleString("en-US"),
+        format: (value) => value.toLocaleString("en-IN"),
     },
     {
         id: "date",

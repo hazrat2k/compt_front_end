@@ -391,16 +391,6 @@ export default function LoanDetails() {
         ld_personnel_data = ld_pers_data[0];
     }
 
-    // window.addEventListener('popstate', (event) => {
-
-    //     // stop the browser from changing the URL and requesting the new document
-    //     event.preventDefault();
-    //     // push an entry into the browser history stack and change the URL
-    //     window.history.pushState({}, undefined, "/contact");
-
-    //     //ld_navigate("/personnel_dashboard", {state : {data : ld_personnel_data, loan_type: ld_value["loan_type"]}});
-    // });
-
     const onForwardClick = async (e) => {
         e.preventDefault();
 
@@ -466,6 +456,34 @@ export default function LoanDetails() {
         }
     };
 
+    const onBackwardClick = async () => {
+        if (ld_remarks === "") {
+            setLd_remarks_error(true);
+            return;
+        } else {
+            setLd_remarks_error(false);
+        }
+
+
+
+        if (ld_data["sendFrom"] == "acct_fund") {
+
+
+            try {
+                await axios.put("http://" + backend_site_address + "/rejBack");
+
+                ld_navigate("/personnel_dashboard", {
+                    state: {
+                        data: ld_personnel_data,
+                        loan_type: ld_value["loan_type"],
+                    },
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+
     const off_or_copy = {
         loan_id: ld_value["loan_id"],
         name: ld_value["applicant_name"],
@@ -476,7 +494,7 @@ export default function LoanDetails() {
         tot_ins: ld_value["tot_no_ins"],
     };
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     return (
         <>
@@ -876,9 +894,23 @@ export default function LoanDetails() {
                     {ld_user &&
                     (temp_status < 6 ||
                         (temp_status > 11 && temp_status < 15)) ? (
-                        <div className="ld_forward" onClick={onForwardClick}>
-                            Forward
-                        </div>
+                        <>
+                            <div
+                                className="ld_forward"
+                                onClick={onForwardClick}
+                            >
+                                Forward
+                            </div>
+
+                            <div
+                                className="ld_forward"
+                                onClick={onBackwardClick}
+                            >
+                                {ld_data["sendFrom"] === "acct_fund"
+                                    ? "Reject"
+                                    : "Backward"}
+                            </div>
+                        </>
                     ) : (
                         ""
                     )}

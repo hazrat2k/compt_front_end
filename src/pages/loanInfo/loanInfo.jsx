@@ -63,14 +63,14 @@ export default function LoanInfo() {
             "Sonali Bank House Building Loan",
         ],
         ["০৬", "অন্যান্য", "Others"],
-        ["০৭", "সমষ্টি"],
+        [" ", "মোট"],
     ];
 
     var loan_table_value = Array.from(Array(7), () => new Array(5).fill(0));
 
     var jsx_table_data = [];
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     var data_loan = [];
 
@@ -246,7 +246,7 @@ export default function LoanInfo() {
                 <div className="loanInfo">
                     <div className="loanInfoLabel">
                         ১০. বিশ্ববিদ্যালয় ও সোনালী ব্যাংক হতে গৃহীত ঋণের
-                        তথ্যাবলী (কম্পট্রোলার অফিস কর্তৃক যাচাইকৃত) :
+                        তথ্যাবলী :
                     </div>
                     <div className="loanInfoTable">
                         <TableContainer component={Paper}>
@@ -321,37 +321,61 @@ export default function LoanInfo() {
                                             </TableCell>
                                             <TableCell
                                                 align="justified"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.loanName}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.loanAmnt}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.instAmnt}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.totInstAmnt}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.paidInstNo}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="sal_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "sal_bold"
+                                                        : "sal_reg"
+                                                }
                                             >
                                                 {row.unpaidInstAmnt}
                                             </TableCell>

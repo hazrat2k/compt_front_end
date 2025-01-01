@@ -328,7 +328,7 @@ export default function SanctionCopyForm(props) {
                 <Text style={style_sig.sig_lc_field}>{name}</Text>
                 <Text style={style_sig.sig_lc_field}>{designation}</Text>
                 <Text style={style_sig.sig_lc_field}>
-                    Consumer Loan Approval Committe
+                    Consumer Loan Approval Committee
                 </Text>
             </View>
         );
@@ -346,7 +346,7 @@ export default function SanctionCopyForm(props) {
         );
     };
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     var count = 0;
     var sanction_total = 0;
@@ -553,7 +553,7 @@ export default function SanctionCopyForm(props) {
                 </View>
 
                 <View style={style_sig.all_sig}>
-                    <Text style={style_sig.sig_label}>Loan Committe</Text>
+                    <Text style={style_sig.sig_label}>Loan Committee</Text>
                     <View style={style_sig.sig_area}>
                         {sc_lc_sig(
                             "Prof. Dr. Muhammad Masroor Ali",

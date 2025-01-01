@@ -423,7 +423,7 @@ export default function BillCopyForm(props) {
         );
     };
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     var count = 0;
     var sanction_total = 0;

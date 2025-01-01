@@ -19,6 +19,7 @@ import axios from "axios";
 import moment from "moment";
 
 import InWords from "../functions/inWords";
+import { loan_type_short } from "../../stores/const/loan_type_short";
 
 import logo_image from "../../assets/images/logo.png";
 import checkBox_image from "../../assets/images/checkbox_image.png";
@@ -471,7 +472,9 @@ export default function Application(props) {
 
     var app_data = props.applicationData;
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
+
+    
 
     useEffect(() => {
         app_data["LOAN_ID"] = new Date().valueOf();
@@ -1325,7 +1328,9 @@ export default function Application(props) {
                         style_table.border_column,
                     ]}
                 >
-                    <Text>{nf.format(pdfLoanInfo[2][i])}</Text>
+                    <Text style={style_field.preBold}>
+                        {nf.format(pdfLoanInfo[2][i])}
+                    </Text>
                 </View>
                 <View
                     style={[
@@ -1333,7 +1338,9 @@ export default function Application(props) {
                         style_table.border_column,
                     ]}
                 >
-                    <Text>{nf.format(pdfLoanInfo[3][i])}</Text>
+                    <Text style={style_field.preBold}>
+                        {nf.format(pdfLoanInfo[3][i])}
+                    </Text>
                 </View>
                 <View
                     style={[
@@ -1341,7 +1348,9 @@ export default function Application(props) {
                         style_table.border_column,
                     ]}
                 >
-                    <Text>{nf.format(pdfLoanInfo[4][i])}</Text>
+                    <Text style={style_field.preBold}>
+                        {nf.format(pdfLoanInfo[4][i])}
+                    </Text>
                 </View>
                 <View
                     style={[
@@ -1349,10 +1358,14 @@ export default function Application(props) {
                         style_table.border_column,
                     ]}
                 >
-                    <Text>{nf.format(pdfLoanInfo[5][i])}</Text>
+                    <Text style={style_field.preBold}>
+                        {nf.format(pdfLoanInfo[5][i])}
+                    </Text>
                 </View>
                 <View style={[style_table.loan_value_column]}>
-                    <Text>{nf.format(pdfLoanInfo[6][i])}</Text>
+                    <Text style={style_field.preBold}>
+                        {nf.format(pdfLoanInfo[6][i])}
+                    </Text>
                 </View>
             </View>
         );
@@ -1492,7 +1505,7 @@ export default function Application(props) {
                     <View style={style_field.preOtherField}>
                         <Text style={style_field.preOtherFieldLabel}>
                             11. Information about Loan Taken from University and
-                            Sonali Bank (Attested by Comptroller Office) :
+                            Sonali Bank :
                         </Text>
 
                         <View style={style_table.table}>{pdf_loan_table}</View>
@@ -1535,7 +1548,7 @@ export default function Application(props) {
                     <View style={style_field.preOtherField}>
                         <Text style={style_field.preOtherFieldLabel}>
                             11. Information about Loan Taken from University and
-                            Sonali Bank (Attested by Comptroller Office) :
+                            Sonali Bank :
                         </Text>
                         <View style={style_table.table}>
                             {pdf_loan_table_2}
@@ -1798,7 +1811,13 @@ export default function Application(props) {
             return;
         }
 
-        downloadURI(url, "application.pdf");
+        downloadURI(
+            url,
+            loan_type_short[app_data["LOAN_TYPE"]] +
+                "_app_form_" +
+                app_data["LOAN_ID"] +
+                ".pdf"
+        );
 
         app_data["SALARY_ID"] = app_data["EMPLOYEEID"];
 

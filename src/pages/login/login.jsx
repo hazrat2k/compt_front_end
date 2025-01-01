@@ -190,6 +190,8 @@ export default function Login() {
             );
 
             pay_data = pay_res.data;
+
+            console.log(pay_data);
         } catch (err) {
             console.log(err);
         }
@@ -286,8 +288,8 @@ export default function Login() {
                                     className="login_error_Text"
                                     style={{
                                         color: l_err_text_color
-                                            ? "red"
-                                            : "crimson",
+                                            ? "#1976d2"
+                                            : "#bf15af",
                                     }}
                                 >
                                     {l_error_text}

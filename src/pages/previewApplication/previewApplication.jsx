@@ -78,7 +78,7 @@ export default function PreviewApplication() {
     previewData["NOMINEES_NID"] = previewDataField["NOMINEES_NID"];
     previewData["CONTACT_NO"] = previewDataField["CONTACT_NO"];
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     const preAppPhoto = previewData["PROFILE_PIC"];
     const preAppApplicantName = previewData["EMPLOYEE_NAME"];
@@ -147,7 +147,7 @@ export default function PreviewApplication() {
     preAppSalInfo = [...preAppSalInfo, ...previewData["PREV_MON_SAL"]];
 
     var preAppLoanInfo = [
-        ["ক্রমিক নং", "০১", "০২", "০৩", "০৪", "০৫", "০৬", "০৭"],
+        ["ক্রমিক নং", "০১", "০২", "০৩", "০৪", "০৫", "০৬", " "],
         [
             "ঋণের নাম",
             //মোটরযান ক্রয়/গৃহ নির্মাণ/মেরামত/জমি ক্রয়
@@ -157,7 +157,7 @@ export default function PreviewApplication() {
             "সোনালী ব্যাংকের হোলসেল ঋণ",
             "সোনালী ব্যাংকের গৃহ নির্মাণ ঋণ",
             "অন্যান্য",
-            "সমষ্টি",
+            "মোট",
         ],
         ["ঋণের পরিমাণ"],
         ["কিস্তির পরিমাণ"],
@@ -601,7 +601,7 @@ export default function PreviewApplication() {
                     <div className="prePersInfo">
                         <div className="prePersInfoLabel">
                             ১১. বিশ্ববিদ্যালয় ও সোনালী ব্যাংক হতে গৃহীত ঋণের
-                            তথ্যাবলী (কম্পট্রোলার অফিস কর্তৃক যাচাইকৃত) :
+                            তথ্যাবলী:
                         </div>
                         <TableContainer component={Paper}>
                             <Table
@@ -675,37 +675,61 @@ export default function PreviewApplication() {
                                             </TableCell>
                                             <TableCell
                                                 align="justified"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.loanType}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.loanAmnt}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.instAmnt}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.totInstNo}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.paidInstNo}
                                             </TableCell>
                                             <TableCell
                                                 align="center"
-                                                className="pa_reg"
+                                                className={
+                                                    row.serialNo == " "
+                                                        ? "pa_bold"
+                                                        : "pa_reg"
+                                                }
                                             >
                                                 {row.unpaidLoanAmnt}
                                             </TableCell>

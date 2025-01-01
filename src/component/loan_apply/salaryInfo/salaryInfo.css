@@ -11,7 +11,7 @@
         font-weight: bold;
         color: black;
         margin-bottom: 2%;
-        text-align: center;
+        /* text-align: center; */
     }
 
     .sal_bold {
@@ -53,7 +53,7 @@
         font-size: 1.2rem;
         font-weight: bold;
         color: black;
-        text-align: center;
+        /* text-align: center; */
         margin-bottom: 2%;
     }
 

@@ -32,7 +32,7 @@ export default function SanctionCopy() {
 
     const [selectedLoan, setSelectedLoan] = useState(state["sanctionedLoan"]);
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     useEffect(() => {
         const fetch_sanction_loan_data = async () => {

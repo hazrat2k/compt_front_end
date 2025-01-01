@@ -34,7 +34,7 @@ import DataField from "../../component/loan_apply/dataField/dataField";
 import { Typography } from "@mui/material";
 import { backend_site_address } from "../../stores/const/siteAddress";
 
-let nf = new Intl.NumberFormat("en-US");
+let nf = new Intl.NumberFormat("en-IN");
 
 const createPlData = (loanId, loanType, loanAmnt, applyDate, loanStatus) => {
     return { loanId, loanType, loanAmnt, applyDate, loanStatus };

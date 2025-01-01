@@ -14,6 +14,7 @@ import {
 import logo_image from "../../assets/images/buetLogo.png";
 import PT_Serif_Bold from "../../assets/fonts/pt-serif-latin-700-normal.ttf";
 import { secondary } from "../../stores/const/colors";
+import { loan_type_short } from "../../stores/const/loan_type_short";
 
 Font.register({
     family: "English Bold",
@@ -113,7 +114,7 @@ const style_laf = StyleSheet.create({
     assessment_section: {
         display: "flex",
         flexDirection: "column",
-        padding: "5pt 10pt 5pt 10pt",
+        padding: "2.5pt 5pt 2.5pt 5pt",
         fontFamily: "English",
     },
 
@@ -314,7 +315,7 @@ export default function LoanAssesmentForm(props) {
         );
     };
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     const MyForm = (
         <Document>
@@ -706,7 +707,14 @@ export default function LoanAssesmentForm(props) {
         if (!lafUrl) {
             return;
         }
-        downloadURI(lafUrl, "loan_assesment_form.pdf");
+
+        downloadURI(
+            lafUrl,
+            loan_type_short[laf_loan_type] +
+                "_assesment_form_" +
+                laf_loan_id +
+                ".pdf"
+        );
     };
 
     return (

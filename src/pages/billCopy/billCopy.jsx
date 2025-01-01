@@ -39,7 +39,7 @@ export default function BillCopy() {
 
     const [selectedCategory, setSelectedCategory] = useState("null");
 
-    let nf = new Intl.NumberFormat("en-US");
+    let nf = new Intl.NumberFormat("en-IN");
 
     useEffect(() => {
         const fetch_bill_loan_data = async () => {
@@ -58,6 +58,7 @@ export default function BillCopy() {
                 console.log(err);
             }
         };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_bill_loan_data();
     }, []);
 
