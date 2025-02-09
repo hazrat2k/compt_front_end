@@ -17,12 +17,21 @@ import "./login.css";
 import Logo from "../../component/loan_apply/logo/logo";
 import ToTitleCase from "../../utils/functions/toTitleCase";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
 
 export default function Login() {
     var emp_data = [];
     var real_dob = "";
 
     var pay_data = [];
+
+    const setEmployeeData = useEmployeeDataStore(
+        (state) => state.setEmployeeData
+    );
+
+    const resetEmployeeData = useEmployeeDataStore(
+        (state) => state.resetEmployeeData
+    );
 
     const loginNavigate = useNavigate();
 
@@ -37,8 +46,9 @@ export default function Login() {
     ];
 
     useEffect(() => {
+        resetEmployeeData();
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    }, []);
+    }, [resetEmployeeData]);
 
     const [buetId, setBuetId] = useState("");
     const [buetIdHelperText, setBuetIdHelperText] = useState("");
@@ -190,8 +200,6 @@ export default function Login() {
             );
 
             pay_data = pay_res.data;
-
-            console.log(pay_data);
         } catch (err) {
             console.log(err);
         }
@@ -220,11 +228,8 @@ export default function Login() {
 
         // whether service period is more than 10 years or not.
         if (checkValidation(emp_data[0])) {
-            loginNavigate("/employeedash", {
-                state: {
-                    info: emp_data[0],
-                },
-            });
+            setEmployeeData(emp_data[0]);
+            loginNavigate("/employeedash");
         }
     };
 

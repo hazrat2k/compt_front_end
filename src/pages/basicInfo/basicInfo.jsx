@@ -12,16 +12,20 @@ import scrollToSection from "../../utils/functions/scrollToSection";
 import DataField from "../../component/loan_apply/dataField/dataField";
 import loanReasons from "../../stores/const/loanReasons";
 import useLoanInfoStore from "../../stores/loanInfoStore";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
 
 export default function BasicInfo() {
     const basicNavigate = useNavigate();
-    const { state } = useLocation();
-    var basic_data = state["info"];
+    var basic_data = useEmployeeDataStore((state) => state.employeeData);
 
-    const addBasicField = useLoanInfoStore((state) => state.addField);
-    const basicDataField = useLoanInfoStore((state) => state.info);
+    const addBasicField = useLoanInfoStore((state) => state.addLoanField);
+    const basicDataField = useLoanInfoStore((state) => state.loanInfo);
 
     useEffect(() => {
+        addBasicField("EMPLOYEE_NAME", basic_data["EMPLOYEE_NAME"]);
+        addBasicField("DESIGNATION", basic_data["DESIGNATION"]);
+        addBasicField("OFFICE", basic_data["OFFICE"]);
+        addBasicField("BANK_ACCOUNT_NO", basic_data["BANK_ACCOUNT_NO"]);
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }, []);
 
@@ -32,21 +36,16 @@ export default function BasicInfo() {
     const loanAmountRef = useRef(null);
     const reasonForLoanRef = useRef(null);
 
-    const applicantName = basic_data["EMPLOYEE_NAME"];
-
-    const designation = basic_data["DESIGNATION"];
-    const officeDepartment = basic_data["OFFICE"];
-    const accountNo = basic_data["BANK_ACCOUNT_NO"];
-
-    const loanType = basicDataField["LOAN_TYPE"];
+    // addBasicField("EMPLOYEE_NAME", basic_data["EMPLOYEE_NAME"]);
+    // addBasicField("DESIGNATION", basic_data["DESIGNATION"]);
+    // addBasicField("OFFICE", basic_data["OFFICE"]);
+    // addBasicField("BANK_ACCOUNT_NO", basic_data["BANK_ACCOUNT_NO"]);
 
     const [loanAmountError, setLoanAmountError] = useState("");
 
     const [reasonForLoanError, setReasonForLoanError] = useState("");
 
     const validBasicInfo = () => {
-        
-
         if (null_array.includes(basicDataField["LOAN_AMNT"])) {
             setLoanAmountError("আবেদনকৃত ঋণের পরিমাণ লিখুন***");
             scrollToSection(designationRef);
@@ -74,10 +73,7 @@ export default function BasicInfo() {
         e.preventDefault();
 
         if (validBasicInfo()) {
-            basic_data["LOAN_TYPE"] = basicDataField["LOAN_TYPE"];
-            basicNavigate("/application/2", {
-                state: { info: basic_data },
-            });
+            basicNavigate("/application/2");
         }
     };
 
@@ -86,35 +82,37 @@ export default function BasicInfo() {
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="basicFieldBody">
-                <div className="basic_label">{loanType} Application Form</div>
+                <div className="basic_label">
+                    {basicDataField["LOAN_TYPE"]} Application Form
+                </div>
 
                 <div className="basicField">
                     <DataField
                         refer={applicantNameRef}
                         type="data"
                         label="১. আবেদন-কারীর নাম "
-                        value={applicantName}
+                        value={basicDataField["EMPLOYEE_NAME"]}
                     />
 
                     <DataField
                         refer={designationRef}
                         type="data"
                         label="২. পদবী "
-                        value={designation}
+                        value={basicDataField["DESIGNATION"]}
                     />
 
                     <DataField
                         refer={officeDepartmentRef}
                         type="data"
                         label="৩. অফিস/বিভাগ "
-                        value={officeDepartment}
+                        value={basicDataField["OFFICE"]}
                     />
 
                     <DataField
                         refer={accountNoRef}
                         type="data"
                         label="৪. হিসাব নম্বর "
-                        value={accountNo}
+                        value={basicDataField["BANK_ACCOUNT_NO"]}
                     />
 
                     <DataField

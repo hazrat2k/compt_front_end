@@ -8,34 +8,40 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import useLoanInfoStore from "../../../stores/loanInfoStore";
 
 const createData = (month, basicSal, totalSal, totalDeduct, netSal) => {
     return { month, basicSal, totalSal, totalDeduct, netSal };
 };
 
+const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
+const nf = new Intl.NumberFormat("en-IN");
+
 export default function SalaryInfo(props) {
     const salary_data = props.salary_data;
     const salary_file = props.salary_file;
 
-    var mydate = new Date();
-    var month = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
+    const salAddLoanField = useLoanInfoStore((state) => state.addLoanField);
+
+    useEffect(() => {
+        salAddLoanField("PREV_MON_SAL", prevMonSal);
+    }, []);
+
     var prevMonthName = [];
     var prevMonthSal = [];
-
-    let nf = new Intl.NumberFormat("en-IN");
 
     for (let i = 0; i < salary_file.length; i++) {
         prevMonthSal.push([
@@ -63,8 +69,6 @@ export default function SalaryInfo(props) {
         }
     }
 
-    var prevSal = { PREV_MON_SAL: prevMonSal };
-
     const rows = [];
 
     for (let i = 0; i < prevMonSal.length; i++) {
@@ -78,8 +82,6 @@ export default function SalaryInfo(props) {
             )
         );
     }
-
-    props.setSalData(prevSal);
 
     return (
         <div className="salaryInfo">

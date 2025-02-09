@@ -1,20 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const loanTypeStore = (set) => ({
-    loanType: "",
-    setLoanType: (value) => {
-        set(() => ({
-            loanType: value,
-        }));
-    },
-    reset: () => {
-        set({
+const useLoanTypeStore = create(
+    persist(
+        (set) => ({
             loanType: "",
-        });
-    },
-});
-
-const useLoanTypeStore = create(persist(loanTypeStore));
+            setLoanType: (value) => {
+                set({
+                    loanType: value,
+                });
+            },
+            resetLoanType: () => {
+                set({
+                    loanType: "",
+                });
+            },
+        }),
+        {
+            name: "loan-type-store", // Name of the key in localStorage
+        }
+    )
+);
 
 export default useLoanTypeStore;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 import moment from "moment";
@@ -33,6 +33,7 @@ import Footer from "../../component/page_compo/footer/footer";
 import DataField from "../../component/loan_apply/dataField/dataField";
 import { Typography } from "@mui/material";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
 
 let nf = new Intl.NumberFormat("en-IN");
 
@@ -100,7 +101,7 @@ const LoanApply = (props) => {
     const { onLoanApplyClose, selectedValue, loanApplyOpen } = props;
     const edNavigate = useNavigate();
 
-    const addLoanApplyField = useLoanInfoStore((state) => state.addField);
+    const addLoanApplyField = useLoanInfoStore((state) => state.addLoanField);
 
     const [laDialogError, setLaDialogError] = useState("");
     const [laDEColor, setLaDEColor] = useState(false);
@@ -112,101 +113,195 @@ const LoanApply = (props) => {
         onLoanApplyClose();
     };
 
-    const checkValidation = (pro_loan, loan) => {
+    const checkValidation = (loanType, runningLoan) => {
         const duration = duration_calculation(employ_data["DATE_FIRST_JOIN"]);
 
-        // does have more selected loan processing or not
-
-        if (pro_loan.length != 0) {
-            setLaDEColor(!laDEColor);
-            setLaDialogError(
-                "You already have a " +
-                    pro_loan[0]["LOAN_TYPE"] +
-                    " processing."
-            );
-            return false;
-        } else {
-            setLaDialogError("");
-        }
-
-        // does have more selected loan running or not
-        if (loan.length != 0) {
-            setLaDEColor(!laDEColor);
-            setLaDialogError(
-                "You already have a " + loan[0]["LOAN_TYPE_NAME"] + " running."
-            );
-            return false;
-        } else {
-            setLaDialogError("");
-        }
-
-        // whether service period is more than 10 years or not.
-        if (duration["year"] < 10) {
-            setLaDEColor(!laDEColor);
-            setLaDialogError(
-                "Service period needs to be more than 10 years. Yours is " +
-                    duration["year"] +
-                    " years, " +
-                    duration["month"] +
-                    " months, " +
-                    duration["day"] +
-                    " days"
-            );
-            return false;
-        } else {
-            setLaDialogError("");
+        if (loanType == "House Building Loan") {
+            if (runningLoan.length != 0) {
+                setLaDEColor(!laDEColor);
+                if (runningLoan[0].REMAINING_AMOUNT > 0) {
+                    setLaDialogError(
+                        "You already have a " + loanType + " running."
+                    );
+                } else {
+                    setLaDialogError(
+                        "You already have taken a " +
+                            loanType +
+                            " on " +
+                            moment(runningLoan[0]["DATE_OF_LOAN"]).format(
+                                "DD MMM YYYY"
+                            ) +
+                            ". " +
+                            loanType +
+                            " can be taken once in a sevice period."
+                    );
+                }
+                return false;
+            }
+            // whether service period is more than 10 years or not.
+            else if (duration["year"] < 10) {
+                setLaDEColor(!laDEColor);
+                setLaDialogError(
+                    "Service period needs to be more than 10 years for " +
+                        loanType +
+                        ". Yours is " +
+                        duration["year"] +
+                        " years, " +
+                        duration["month"] +
+                        " months, " +
+                        duration["day"] +
+                        " days"
+                );
+                return false;
+            } else {
+                setLaDialogError("");
+            }
+        } else if (loanType == "Consumer Loan") {
+            if (runningLoan.length != 0) {
+                for (let i = 0; i < runningLoan.length; i++) {
+                    if (runningLoan[i].REMAINING_AMOUNT > 0) {
+                        setLaDEColor(!laDEColor);
+                        setLaDialogError(
+                            "You already have a " + loanType + " running."
+                        );
+                        return false;
+                    }
+                }
+                // runningLoan.map((loan) => {
+                //     if (loan.REMAINING_AMOUNT > 0) {
+                //         setLaDEColor(!laDEColor);
+                //         setLaDialogError(
+                //             "You already have a " + loanType + " running."
+                //         );
+                //         console.log("Returned False");
+                //         return false;
+                //     }
+                // });
+            } else if (duration["year"] < 5) {
+                setLaDEColor(!laDEColor);
+                setLaDialogError(
+                    "Service period needs to be more than 5 years for " +
+                        loanType +
+                        ". Yours is " +
+                        duration["year"] +
+                        " years, " +
+                        duration["month"] +
+                        " months, " +
+                        duration["day"] +
+                        " days"
+                );
+                return false;
+            } else {
+                setLaDialogError("");
+            }
+        } else if (loanType == "Laptop Loan") {
+            if (runningLoan.length != 0) {
+                let loanDate = 0;
+                runningLoan.map((loan) => {
+                    const loanDateValue = new Date(loan.DATE_OF_LOAN).valueOf();
+                    loanDate =
+                        loanDateValue > loanDate ? loanDateValue : loanDate;
+                    if (loan.REMAINING_AMOUNT > 0) {
+                        setLaDEColor(!laDEColor);
+                        setLaDialogError(
+                            "You already have a " + loanType + " running."
+                        );
+                        return false;
+                    }
+                });
+                const laptopLoanPeriod = duration_calculation(loanDate);
+                if (laptopLoanPeriod["year"] < 3) {
+                    setLaDEColor(!laDEColor);
+                    setLaDialogError(
+                        "You can reapply after 3 years of paying off the loan. Yours is " +
+                            duration["year"] +
+                            " years, " +
+                            duration["month"] +
+                            " months, " +
+                            duration["day"] +
+                            " days"
+                    );
+                    return false;
+                }
+            } else if (duration["year"] < 3) {
+                setLaDEColor(!laDEColor);
+                setLaDialogError(
+                    "Service period needs to be more than 3 years for " +
+                        loanType +
+                        ". Yours is " +
+                        duration["year"] +
+                        " years, " +
+                        duration["month"] +
+                        " months, " +
+                        duration["day"] +
+                        " days"
+                );
+                return false;
+            } else {
+                setLaDialogError("");
+            }
         }
 
         return true;
     };
 
     const handleListItemClick = async (value) => {
-        if (value != "House Building Loan") {
+        if (["SBL House Loan", "SBL Multipurpose Loan"].includes(value)) {
             setLaDEColor(!laDEColor);
-            setLaDialogError(
-                "Only House Building Loan is being processed currently."
-            );
+            setLaDialogError(value + " is not being processed currently.");
         } else {
             setLaDialogError("");
 
-            var loan_data = [];
+            let runningLoanData = [];
+            let processingLoanData = [];
 
-            var pro_loan_data = [];
+            const loanTypewithEmpID = {
+                EMPLOYEEID: employ_data["EMPLOYEEID"],
+                LOAN_TYPE: value,
+            };
+
+            const loanTypewithSalID = {
+                SALARY_ID: employ_data["EMPLOYEEID"],
+                LOAN_TYPE: value,
+            };
 
             try {
-                const uploadLoan = {
-                    EMPLOYEEID: employ_data["EMPLOYEEID"],
-                    LOAN_TYPE: value,
-                };
-                const loan_res = await axios.post(
-                    "http://" + backend_site_address + "/loan_with_type",
-                    uploadLoan
-                );
-                loan_data = loan_res.data;
-
-                const uploadIdType = {
-                    SALARY_ID: employ_data["EMPLOYEEID"],
-                    LOAN_TYPE: value,
-                };
-                const IdTypeRes = await axios.post(
+                const processing_loan_res = await axios.post(
                     "http://" +
                         backend_site_address +
                         "/processing_loan_info_with_emp_id",
-                    uploadIdType
+                    loanTypewithSalID
                 );
-                pro_loan_data = IdTypeRes.data;
+
+                processingLoanData = processing_loan_res.data;
             } catch (err) {
                 console.log(err);
             }
 
-            addLoanApplyField("LOAN_TYPE", value);
+            // does have more selected loan processing or not
+            if (processingLoanData.length != 0) {
+                setLaDEColor(!laDEColor);
+                setLaDialogError(
+                    "You already have a " + value + " processing."
+                );
+                return false;
+            } else {
+                setLaDialogError("");
+            }
 
-            if (checkValidation(pro_loan_data, loan_data)) {
-                edNavigate("/application/1", {
-                    state: {
-                        info: employ_data,
-                    },
-                });
+            try {
+                const running_loan_res = await axios.post(
+                    "http://" + backend_site_address + "/loan_with_type",
+                    loanTypewithEmpID
+                );
+                runningLoanData = running_loan_res.data;
+            } catch (err) {
+                console.log(err);
+            }
+
+            if (checkValidation(value, runningLoanData)) {
+                addLoanApplyField("LOAN_TYPE", value);
+                edNavigate("/application/1");
             }
         }
 
@@ -583,8 +678,8 @@ LoanStatus.propTypes = {
 };
 
 export default function EmployeeDash() {
-    const { state } = useLocation();
-    const ed_data = state["info"];
+    const ed_data = useEmployeeDataStore((state) => state.employeeData);
+
     const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
     const fSize = isMobile ? "14px" : "18px";
 
@@ -600,7 +695,7 @@ export default function EmployeeDash() {
     const [ed_pro_loan_data, setEd_pro_loan_data] = useState([]);
     const [ed_run_loan_data, setEd_run_loan_data] = useState([]);
 
-    const reset = useLoanInfoStore((state) => state.reset);
+    const resetLoanInfo = useLoanInfoStore((state) => state.resetLoanInfo);
 
     useEffect(() => {
         const diaFetchProLoan = async () => {
@@ -632,8 +727,8 @@ export default function EmployeeDash() {
         };
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         diaFetchProLoan();
-        reset();
-    }, [reset]);
+        resetLoanInfo();
+    }, [resetLoanInfo]);
 
     for (let i = 0; i < ed_pro_loan_data.length; i++) {
         plRows.push(

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import axios from "axios";
 
+import { DataGrid } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
+
 import "./sanctionCopy.css";
 
 import { dateFormation } from "../../utils/functions/dateFormation";
@@ -13,6 +16,67 @@ import { backend_site_address } from "../../stores/const/siteAddress";
 
 import SanctionCopyForm from "../../utils/pdfCopy/sanctionCopyForm";
 import useLoanTypeStore from "../../stores/loanTypeStore";
+
+const scColumns = [
+    { field: "LOAN_ID", headerName: "Loan ID", width: 130 },
+    { field: "EMPLOYEE_NAME", headerName: "Employee Name", width: 130 },
+    { field: "DESIGNATION", headerName: "Designation", width: 100 },
+    { field: "OFFICE", headerName: "Office", width: 100 },
+    { field: "CATEGORY", headerName: "Category", width: 100 },
+    { field: "DATE_OF_BIRTH", headerName: "Birth Date", width: 100 },
+    { field: "DATE_FIRST_JOIN", headerName: "Joining Date", width: 100 },
+    { field: "NET_SALARY", headerName: "Net Pay", width: 100, type: "number" },
+    {
+        field: "APPLY_AMOUNT",
+        headerName: "Apply Amount",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "ALLOW_AMOUNT",
+        headerName: "Allow Amount",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "SANCTION_AMOUNT",
+        headerName: "Sanction Amount",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "RECOVERY_AMOUNT",
+        headerName: "Recovery Amount",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "INSTALL_AMOUNT",
+        headerName: "Installment Amount",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "TOTAL_INTEREST",
+        headerName: "Total Interest",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "INSTALL_NO",
+        headerName: "Installment No",
+        width: 100,
+        type: "number",
+    },
+    {
+        field: "BANK_ACCOUNT_NO",
+        headerName: "Account No",
+        width: 100,
+        type: "number",
+    },
+];
+
+const paginationModel = { page: 0, pageSize: 5 };
 
 export default function SanctionCopy() {
     const scLoanType = useLoanTypeStore((state) => state.loanType);
@@ -298,6 +362,8 @@ export default function SanctionCopy() {
         );
     }
 
+    console.log(sc_sanc_loan_data);
+
     return (
         <>
             <NavBar hide={{ nav_mid: true }} />
@@ -306,6 +372,18 @@ export default function SanctionCopy() {
                 <div className="sc_page_title">
                     {sc_loan_type} Sanction Copy
                 </div>
+
+                {/* <Paper sx={{ height: 400, width: "100%" }}>
+                    <DataGrid
+                        rows={sc_sanc_loan_data}
+                        getRowId={(row) => row.LOAN_ID}
+                        columns={scColumns}
+                        initialState={{ pagination: { paginationModel } }}
+                        pageSizeOptions={[5, 10]}
+                        checkboxSelection
+                        sx={{ border: 0 }}
+                    />
+                </Paper> */}
 
                 <div className="sc_table">
                     <div className="sc_table_row sc_bold">

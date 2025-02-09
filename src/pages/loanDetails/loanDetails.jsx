@@ -18,6 +18,8 @@ import Footer from "../../component/page_compo/footer/footer";
 import LoanAssesmentForm from "../../utils/pdfCopy/loanAssesmentForm";
 import OfficeOrderCopy from "../../utils/pdfCopy/officeOrderCopy";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import LoanAmountCheck from "../../utils/functions/loanAmountCheck";
+import LoanInstallmentNoCheck from "../../utils/functions/loanInstallmentNoCheck";
 
 export default function LoanDetails() {
     const ld_navigate = useNavigate();
@@ -31,6 +33,8 @@ export default function LoanDetails() {
     const [ld_pl_prev_loan_1, setLd_pl_prev_loan_1] = useState([]);
     const [ld_pl_prev_loan_2, setLd_pl_prev_loan_2] = useState([]);
     const [ld_pl_remarks, setLd_pl_remarks] = useState([]);
+
+    const principal_installment_percentage = 66.66;
 
     const [ld_basic_salary, setLd_basic_salary] = useState(
         Number(ld_loan_data[0]["LAST_MON_BASIC_SAL"])
@@ -97,6 +101,9 @@ export default function LoanDetails() {
         0, 0, 0, 0, 0, 21, 24, 27, 30, 33, 36, 39, 43, 47, 51, 54, 57, 63, 65,
         69, 72, 75, 79, 83, 87, 90,
     ];
+
+    const interest_rate = 7.75;
+    const rounding_figure = 10000;
 
     var ld_value = {};
     ld_value["loan_id"] = ld_data["LOAN_ID"];
@@ -253,8 +260,6 @@ export default function LoanDetails() {
 
     var calc_mon = 0;
 
-    var rounding_figure = 10000;
-
     var available_ins_amount =
         ld_value["60_basic_sal"] - ld_value["tot_loan_ins_amnt"];
 
@@ -267,9 +272,11 @@ export default function LoanDetails() {
 
     temp_prop_amnt *= rounding_figure;
 
-    var temp_inst_amnt = ld_value["app_amnt"];
-
-    var interest_rate = 7.75;
+    var temp_inst_amnt = LoanAmountCheck(
+        ld_value["category"],
+        ld_value["loan_type"],
+        ld_value["app_amnt"]
+    );
 
     if (ld_value["rem_serv_m"] < 10) {
         temp_prop_amnt = 0;
@@ -283,48 +290,31 @@ export default function LoanDetails() {
             </div>
         );
     } else {
-        if (ld_value["rem_serv_m"] >= 10 && ld_value["rem_serv_m"] < 30) {
-            calc_mon = 10;
-        } else if (
-            ld_value["rem_serv_m"] >= 30 &&
-            ld_value["rem_serv_m"] < 50
-        ) {
-            calc_mon = 30;
-        } else if (
-            ld_value["rem_serv_m"] >= 50 &&
-            ld_value["rem_serv_m"] < 80
-        ) {
-            calc_mon = 50;
-        } else if (
-            ld_value["rem_serv_m"] >= 80 &&
-            ld_value["rem_serv_m"] < 100
-        ) {
-            calc_mon = 80;
-        } else if (
-            ld_value["rem_serv_m"] >= 100 &&
-            ld_value["rem_serv_m"] < 120
-        ) {
-            calc_mon = 100;
-        } else if (
-            ld_value["rem_serv_m"] >= 120 &&
-            ld_value["rem_serv_m"] < 150
-        ) {
-            calc_mon = 120;
-        } else if (
-            ld_value["rem_serv_m"] >= 150 &&
-            ld_value["rem_serv_m"] < 180
-        ) {
-            calc_mon = 150;
-        } else {
-            calc_mon = 180;
-        }
+        calc_mon = LoanInstallmentNoCheck(
+            ld_value["rem_serv_m"],
+            ld_value["loan_type"]
+        );
 
         // console.log("available_ins_amount : "+available_ins_amount);
 
         // console.log("temp_inst_amnt : "+temp_inst_amnt);
 
+        let principal_installment_no = Math.round(
+            calc_mon * (principal_installment_percentage / 100)
+        );
+        let interest_installment_no = calc_mon - principal_installment_no;
+
+        console.log("principal_installment_no : ", principal_installment_no);
+        console.log("interest_installment_no : ", interest_installment_no);
+
+        let principal_installment_amount = ld_value["app_amnt"] / principal_installment_no;
+
+        let interest_installment_amount =
+            ld_value["app_amnt"] / principal_installment_no; 
+        
+
         while (temp_inst_amnt > available_ins_amount) {
-            temp_inst_amnt = Math.ceil(
+              temp_inst_amnt = Math.ceil(
                 (2 * temp_prop_amnt * (1200 + calc_mon * interest_rate)) /
                     (calc_mon *
                         (2400 - interest_rate + calc_mon * interest_rate))
@@ -464,11 +454,7 @@ export default function LoanDetails() {
             setLd_remarks_error(false);
         }
 
-
-
         if (ld_data["sendFrom"] == "acct_fund") {
-
-
             try {
                 await axios.put("http://" + backend_site_address + "/rejBack");
 
@@ -594,72 +580,6 @@ export default function LoanDetails() {
                 <div className="assessment_section salary_information">
                     <div className="section_label">C) Salary Information :</div>
 
-                    {/* {ld_data["sendFrom"] == "acct_fund" ? (
-                        <div className="section_items">
-                            <div className="section_items_div">
-                                <SectionEditItem
-                                    index="1"
-                                    label="Basic Salary"
-                                    value={ld_basic_salary}
-                                    setValue={(data) => {
-                                        setLd_basic_salary(data);
-                                    }}
-                                />
-
-                                <SectionEditItem
-                                    index="3"
-                                    label="Deduction"
-                                    value={ld_total_deduct}
-                                    setValue={(data) => {
-                                        setLd_total_deduct(data);
-                                    }}
-                                />
-                            </div>
-                            <div className="section_items_div">
-                                <SectionEditItem
-                                    index="2"
-                                    label="Gross Salary"
-                                    value={ld_gross_salary}
-                                    setValue={(data) => {
-                                        setLd_gross_salary(data);
-                                    }}
-                                />
-                                {sectionItem(
-                                    "4",
-                                    "Net Salary",
-                                    nf.format(ld_value["net_salary"])
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="section_items">
-                            <div className="section_items_div">
-                                {sectionItem(
-                                    "1",
-                                    "Basic Salary",
-                                    nf.format(ld_basic_salary)
-                                )}
-
-                                {sectionItem(
-                                    "3",
-                                    "Deduction",
-                                    nf.format(ld_total_deduct)
-                                )}
-                            </div>
-                            <div className="section_items_div">
-                                {sectionItem(
-                                    "2",
-                                    "Gross Salary",
-                                    nf.format(ld_gross_salary)
-                                )}
-                                {sectionItem(
-                                    "4",
-                                    "Net Salary",
-                                    nf.format(ld_value["net_salary"])
-                                )}
-                            </div>
-                        </div>
-                    )} */}
                     <div className="section_items">
                         <div className="section_items_div">
                             {sectionItem(

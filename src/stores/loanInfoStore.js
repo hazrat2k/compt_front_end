@@ -1,20 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const loanInfoStore = (set) => ({
-    info: {},
-    addField: (key, value) => {
-        set((state) => ({
-            info: { ...state.info, [key]: value },
-        }));
-    },
-    reset: () => {
-        set({
-            info: {},
-        });
-    },
-});
-
-const useLoanInfoStore = create(persist(loanInfoStore));
+const useLoanInfoStore = create(
+    persist(
+        (set) => ({
+            loanInfo: {},
+            addLoanField: (key, value) => {
+                set((state) => ({
+                    loanInfo: { ...state.loanInfo, [key]: value }, // Fixed state key
+                }));
+            },
+            resetLoanInfo: () => {
+                set({
+                    loanInfo: {}, // Fixed state key
+                });
+            },
+        }),
+        {
+            name: "loan-info-store", // Name of the key in localStorage
+        }
+    )
+);
 
 export default useLoanInfoStore;

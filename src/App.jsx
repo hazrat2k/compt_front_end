@@ -25,6 +25,7 @@ import Sections from "./pages/sections/sections";
 import Downloads from "./pages/downloads/downloads";
 import Notices from "./pages/notices/notices";
 import Contact from "./pages/contact/contact";
+import useEmployeeDataStore from "./stores/employeeDataStore";
 
 export default function App() {
     return (

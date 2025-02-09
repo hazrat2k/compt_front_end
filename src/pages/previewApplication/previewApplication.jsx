@@ -22,6 +22,7 @@ import PreviewText from "../../component/loan_apply/previewText/previewText";
 import Application from "../../utils/pdfCopy/application";
 
 import useLoanInfoStore from "../../stores/loanInfoStore";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
 
 const createSalaryData = (
     serialNo,
@@ -60,14 +61,13 @@ const createLoanData = (
 };
 
 export default function PreviewApplication() {
-    const { state } = useLocation();
-
-    var previewData = state["info"];
+    var previewData = useEmployeeDataStore((state) => state.employeeData);
 
     const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
 
-    const previewDataField = useLoanInfoStore((state) => state.info);
+    const previewDataField = useLoanInfoStore((state) => state.loanInfo);
 
+    previewData["LOAN_TYPE"] = previewDataField["LOAN_TYPE"];
     previewData["LOAN_AMNT"] = previewDataField["LOAN_AMNT"];
     previewData["REASON_FOR_LOAN"] = previewDataField["REASON_FOR_LOAN"];
     previewData["MOTHERS_NAME"] = previewDataField["MOTHERS_NAME"];
@@ -77,10 +77,10 @@ export default function PreviewApplication() {
     previewData["PERMANENT_ADDRESS"] = previewDataField["PERMANENT_ADDRESS"];
     previewData["NOMINEES_NID"] = previewDataField["NOMINEES_NID"];
     previewData["CONTACT_NO"] = previewDataField["CONTACT_NO"];
+    previewData["SERV_PERIOD"] = previewDataField["SERV_PERIOD"];
 
     let nf = new Intl.NumberFormat("en-IN");
 
-    const preAppPhoto = previewData["PROFILE_PIC"];
     const preAppApplicantName = previewData["EMPLOYEE_NAME"];
     const preAppDesignation = previewData["DESIGNATION"];
     const preAppOfficeDept = previewData["OFFICE"];
@@ -144,7 +144,9 @@ export default function PreviewApplication() {
         ["মাস", "মূল বেতন", "মোট বেতন", "মোট কর্তন", "নীট বেতন"],
     ];
 
-    preAppSalInfo = [...preAppSalInfo, ...previewData["PREV_MON_SAL"]];
+    preAppSalInfo = [...preAppSalInfo, ...previewDataField["PREV_MON_SAL"]];
+
+    previewData["PREV_MON_SAL"] = previewDataField["PREV_MON_SAL"];
 
     var preAppLoanInfo = [
         ["ক্রমিক নং", "০১", "০২", "০৩", "০৪", "০৫", "০৬", " "],
@@ -166,10 +168,12 @@ export default function PreviewApplication() {
         ["অপরিশোধিত ঋণের পরিমাণ (সুদ সহ)"],
     ];
 
+    previewData["LOAN_DETAILS"] = previewDataField["LOAN_DETAILS"];
+
     for (let i = 0; i < 5; i++) {
         preAppLoanInfo[i + 2] = [
             ...preAppLoanInfo[i + 2],
-            ...previewData["LOAN_DETAILS"][i],
+            ...previewDataField["LOAN_DETAILS"][i],
         ];
     }
 
@@ -178,8 +182,6 @@ export default function PreviewApplication() {
         ["পেনশন বাবদ (এককালীন পেনশন)", " "],
         [" ", " "],
     ];
-
-    const preAppSign = previewData["SIGN_PIC"];
 
     const persoTable = [];
     const persoTable2 = [];

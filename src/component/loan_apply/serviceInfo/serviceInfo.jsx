@@ -1,71 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./serviceInfo.css";
 import moment from "moment";
 
-import PiDataField from "../piDataField/piDataField";
-
 import DataField from "../dataField/dataField";
+import useLoanInfoStore from "../../../stores/loanInfoStore";
+import { timeDuration } from "../../../utils/functions/timeDuration";
 
 export default function ServiceInfo(props) {
     var service_data = props.service_data;
 
+    const servAddLoanField = useLoanInfoStore((state) => state.addLoanField);
+    const servDataField = useLoanInfoStore((state) => state.loanInfo);
+
     const now = new Date();
     const first_join_date = new Date(service_data["DATE_FIRST_JOIN"]);
+    const servPeriod = timeDuration(now, first_join_date);
 
-    var currentYear = now.getFullYear();
-    var currentMonth = now.getMonth();
-    var currentDate = now.getDate();
+    useEffect(() => {
+        servAddLoanField("EMPLOYEE_ID", service_data["EMPLOYEE_ID"]);
+        servAddLoanField("DATE_FIRST_JOIN", service_data["DATE_FIRST_JOIN"]);
+        servAddLoanField(
+            "SERV_PERIOD",
+            servPeriod[0] +
+                " YEARS " +
+                servPeriod[1] +
+                " MONTHS " +
+                servPeriod[2] +
+                " DAYS"
+        );
 
-    var first_join_dateYear = first_join_date.getFullYear();
-    var first_join_dateMonth = first_join_date.getMonth();
-    var first_join_dateDate = first_join_date.getDate();
+        let temp_date = new Date(service_data["DATE_OF_BIRTH"]);
 
-    var yearDuration = currentYear - first_join_dateYear;
-    var monthDuration = 0;
-    var dateDuration = 0;
+        let teacherOrNot = service_data["EMPLOYEE_ID"][0] == "T";
 
-    if (currentMonth >= first_join_dateMonth)
-        monthDuration = currentMonth - first_join_dateMonth;
-    else {
-        yearDuration--;
-        monthDuration = 12 + currentMonth - first_join_dateMonth;
-    }
+        let retYear = teacherOrNot ? 65 : 60;
 
-    if (currentDate >= first_join_dateDate)
-        dateDuration = currentDate - first_join_dateDate;
-    else {
-        monthDuration--;
-        dateDuration = 31 + currentDate - first_join_dateDate;
-        if (monthDuration < 0) {
-            monthDuration = 11;
-            yearDuration--;
-        }
-    }
+        temp_date.setFullYear(temp_date.getFullYear() + retYear);
 
-    var servData = {};
-    servData["EMPLOYEE_ID"] = service_data["EMPLOYEE_ID"];
-    servData["DATE_FIRST_JOIN"] = service_data["DATE_FIRST_JOIN"];
-    servData["SERV_PERIOD"] =
-        yearDuration +
-        " YEARS " +
-        monthDuration +
-        " MONTHS " +
-        dateDuration +
-        " DAYS";
-
-    let temp_date = new Date(service_data["DATE_OF_BIRTH"]);
-
-    let teacherOrNot = service_data["EMPLOYEE_ID"][0] == "T";
-
-    let retYear = teacherOrNot ? 65 : 60;
-
-    temp_date.setFullYear(temp_date.getFullYear() + retYear);
-
-    servData["DATE_OF_RETIREMENT"] = temp_date;
-    servData["APPOINTMENT_TYPE"] =
-        service_data["APPOINTMENT_TYPE"].toUpperCase();
-
-    props.setServData(servData);
+        servAddLoanField("DATE_OF_RETIREMENT", temp_date);
+        servAddLoanField(
+            "APPOINTMENT_TYPE",
+            service_data["APPOINTMENT_TYPE"].toUpperCase()
+        );
+    }, []);
 
     return (
         <div className="serviceInfo">
@@ -77,34 +54,34 @@ export default function ServiceInfo(props) {
                 <DataField
                     type="data"
                     label="ক) বুয়েট আই.ডি. নং "
-                    value={servData["EMPLOYEE_ID"]}
+                    value={servDataField["EMPLOYEE_ID"]}
                 />
 
                 <DataField
                     type="data"
                     label="খ) চাকুরীর ধরণ "
-                    value={servData["APPOINTMENT_TYPE"]}
+                    value={servDataField["APPOINTMENT_TYPE"]}
                 />
 
                 <DataField
                     type="data"
                     label="গ) যোগদানের তারিখ "
-                    value={moment(new Date(servData["DATE_FIRST_JOIN"])).format(
-                        "DD MMM YYYY"
-                    )}
+                    value={moment(
+                        new Date(servDataField["DATE_FIRST_JOIN"])
+                    ).format("DD MMM YYYY")}
                 />
 
                 <DataField
                     type="data"
                     label="ঘ) মোট চাকুরীকাল "
-                    value={servData["SERV_PERIOD"]}
+                    value={servDataField["SERV_PERIOD"]}
                 />
 
                 <DataField
                     type="data"
                     label="ঙ) অবসরের তারিখ "
                     value={moment(
-                        new Date(servData["DATE_OF_RETIREMENT"])
+                        new Date(servDataField["DATE_OF_RETIREMENT"])
                     ).format("DD MMM YYYY")}
                 />
             </div>

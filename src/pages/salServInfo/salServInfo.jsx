@@ -12,13 +12,18 @@ import ServiceInfo from "../../component/loan_apply/serviceInfo/serviceInfo";
 import SalaryInfo from "../../component/loan_apply/salaryInfo/salaryInfo";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
+import useLoanInfoStore from "../../stores/loanInfoStore";
 
 export default function SalServInfo() {
     const salServNavigate = useNavigate();
-    const { state } = useLocation();
-    const salary_file = state["file"]["salary"];
 
-    var salServData = state["info"];
+    let salServData = useEmployeeDataStore((state) => state.employeeData);
+
+    const salServField = useLoanInfoStore((state) => state.loanInfo);
+    const salServAddLoanField = useLoanInfoStore((state) => state.addLoanField);
+
+    const salary_file = salServField["salaryFile"];
 
     const [loan_file, setLoan_file] = useState([]);
     const [loan_type_file, setLoan_type_file] = useState([]);
@@ -46,15 +51,8 @@ export default function SalServInfo() {
         fetch_loan_data();
     }, []);
 
-    const setSalServData = (data) => {
-        salServData = { ...salServData, ...data };
-    };
-
     const onSalServAuthenticate = (button) => {
-        if (button == "first")
-            salServNavigate("/application/2", {
-                state: { info: salServData },
-            });
+        if (button == "first") salServNavigate("/application/2");
 
         if (button == "second") {
             const file = {
@@ -62,11 +60,12 @@ export default function SalServInfo() {
                 loan: loan_file,
                 loan_type: loan_type_file,
             };
-            salServNavigate("/application/4", {
-                state: { info: salServData, file: file },
-            });
+            salServAddLoanField("file", file);
+            salServNavigate("/application/4");
         }
     };
+
+    
 
     return (
         <div>
@@ -74,22 +73,14 @@ export default function SalServInfo() {
 
             <div className="salServ_info">
                 <div className="basic_label">
-                    {salServData["LOAN_TYPE"]} Application Form
+                    {salServField["LOAN_TYPE"]} Application Form
                 </div>
 
-                <ServiceInfo
-                    service_data={state["info"]}
-                    setServData={(data) => {
-                        setSalServData(data);
-                    }}
-                />
+                <ServiceInfo service_data={salServData} />
 
                 <SalaryInfo
-                    salary_data={state["info"]}
+                    salary_data={salServData}
                     salary_file={salary_file}
-                    setSalData={(data) => {
-                        setSalServData(data);
-                    }}
                 />
 
                 <DoubleButton

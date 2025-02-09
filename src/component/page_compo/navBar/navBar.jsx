@@ -4,9 +4,16 @@ import { useNavigate } from "react-router";
 import { useMediaQuery } from "react-responsive";
 import "./navBar.css";
 import Logo from "../logo/logo";
+import useEmployeeDataStore from "../../../stores/employeeDataStore";
+import usePersonnelDataStore from "../../../stores/personnelDataStore";
 
 export default function NavBar(props) {
     const navNavigate = useNavigate();
+
+    const nbEmployeeData = useEmployeeDataStore((state) => state.employeeData);
+    const nbPersonnelData = usePersonnelDataStore(
+        (state) => state.personnelData
+    );
 
     var tl = gsap.timeline({ defaults: { duration: 0.5, ease: "expo.inOut" } });
     var isMobile = useMediaQuery({ query: "(max-width: 600px)" });
@@ -15,13 +22,19 @@ export default function NavBar(props) {
 
     var nav_mid_display = (
         <div className="navbar_middle_items">
-            <a href="/login" style={{ textDecoration: "none" }}>
-                <div className="nav_mid mem_login">Personnel Login</div>
-            </a>
-
-            <a href="/employeelogin" style={{ textDecoration: "none" }}>
-                <div className="nav_mid loan_apply">Employee Login</div>
-            </a>
+            {Object.keys(nbEmployeeData).length === 0 &&
+            Object.keys(nbPersonnelData).length === 0 ? (
+                <>
+                    <a href="/login" style={{ textDecoration: "none" }}>
+                        <div className="nav_mid mem_login">Personnel Login</div>
+                    </a>
+                    <a href="/employeelogin" style={{ textDecoration: "none" }}>
+                        <div className="nav_mid loan_apply">Employee Login</div>
+                    </a>
+                </>
+            ) : (
+                ""
+            )}
         </div>
     );
 
@@ -97,6 +110,31 @@ export default function NavBar(props) {
                         </div>
 
                         <div className="nav_items">
+                            {Object.keys(nbEmployeeData).length !== 0 ? (
+                                <a
+                                    href="/employeeDash"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className="navbar_item nav_about">
+                                        Employee Dashboard
+                                    </div>
+                                </a>
+                            ) : (
+                                ""
+                            )}
+                            {Object.keys(nbPersonnelData).length !== 0 ? (
+                                <a
+                                    href="/personnel_dashboard"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className="navbar_item nav_about">
+                                        Personnel Dashboard
+                                    </div>
+                                </a>
+                            ) : (
+                                ""
+                            )}
+
                             <a
                                 href="/aboutus"
                                 style={{ textDecoration: "none" }}

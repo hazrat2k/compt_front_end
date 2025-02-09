@@ -62,7 +62,9 @@ export default function Footer() {
                 </div>
 
                 <div className="footer_copyright">
-                    <div className="cr_text">© 2024, All Right Reserved by</div>
+                    <div className="cr_text">
+                        © {new Date().getFullYear()}, All Right Reserved by
+                    </div>
 
                     <a href="/" style={{ textDecoration: "none" }}>
                         <div className="cr_link">

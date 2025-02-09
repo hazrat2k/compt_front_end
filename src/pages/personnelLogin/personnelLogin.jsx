@@ -16,11 +16,20 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import usePersonnelDataStore from "../../stores/personnelDataStore";
 
 export default function PersonnelLogin() {
     const perLoginNavigate = useNavigate();
 
-    const resetLoanType = useLoanTypeStore((state) => state.reset);
+    const plSetPersonnelData = usePersonnelDataStore(
+        (state) => state.setPersonnelData
+    );
+
+    const plResetPersonnelData = usePersonnelDataStore(
+        (state) => state.resetPersonnelData
+    );
+
+    const resetLoanType = useLoanTypeStore((state) => state.resetLoanType);
 
     var personeelData = [];
 
@@ -31,11 +40,11 @@ export default function PersonnelLogin() {
     const [matchError, setMatchError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         resetLoanType();
-    }, []);
+        plResetPersonnelData();
+    }, [resetLoanType, plResetPersonnelData]);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -89,9 +98,8 @@ export default function PersonnelLogin() {
             return;
         } else {
             setMatchError("");
-            perLoginNavigate("/personnel_dashboard", {
-                state: { data: personeelData[0], loan_type: "null" },
-            });
+            plSetPersonnelData(personeelData[0]);
+            perLoginNavigate("/personnel_dashboard");
         }
     };
 

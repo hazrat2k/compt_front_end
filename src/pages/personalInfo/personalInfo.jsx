@@ -17,17 +17,17 @@ import nomineeRelations from "../../stores/const/nomineeRelations";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
 
 import { backend_site_address } from "../../stores/const/siteAddress";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
 
 export default function PersonalInfo() {
     const personalNavigate = useNavigate();
-    const { state } = useLocation();
 
     const [salary_file, setSalary_file] = useState([]);
 
-    var personal_data = state["info"];
+    var personal_data = useEmployeeDataStore((state) => state.employeeData);
 
-    const addPersonalField = useLoanInfoStore((state) => state.addField);
-    const personalDataField = useLoanInfoStore((state) => state.info);
+    const addPersonalField = useLoanInfoStore((state) => state.addLoanField);
+    const personalDataField = useLoanInfoStore((state) => state.loanInfo);
 
     useEffect(() => {
         const fetch_salServ_data = async () => {
@@ -45,9 +45,16 @@ export default function PersonalInfo() {
         };
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         fetch_salServ_data();
+        addPersonalField("FATHERS_NAME", personal_data["FATHERS_NAME"]);
         addPersonalField("PRESENT_ADDRESS", personal_data["ADDRESS"]);
         addPersonalField("PERMANENT_ADDRESS", personal_data["ADDRESS"]);
         addPersonalField("CONTACT_NO", personal_data["CONTACT_NO"]);
+        addPersonalField(
+            "DATE_OF_BIRTH",
+            moment(new Date(personal_data["DATE_OF_BIRTH"])).format(
+                "DD MMM YYYY"
+            )
+        );
     }, []);
 
     const piFatherNameRef = useRef(null);
@@ -66,8 +73,7 @@ export default function PersonalInfo() {
             behavior: "smooth",
         });
     };
-
-    const fatherName = personal_data["FATHERS_NAME"];
+    
 
     const [motherNameError, setMotherNameError] = useState("");
 
@@ -75,9 +81,7 @@ export default function PersonalInfo() {
 
     const [nomineeRelshipError, setNomineeRelshipError] = useState("");
 
-    const dob = moment(new Date(personal_data["DATE_OF_BIRTH"])).format(
-        "DD MMM YYYY"
-    );
+    
     // const [nID, setNID] = useState(personal_data["NID_NO"]);
 
     const [nomineeNIDError, setNomineeNIDError] = useState("");
@@ -167,24 +171,16 @@ export default function PersonalInfo() {
 
     const onPersonalAuthenticate = (button) => {
         if (button == "first") {
-            personalNavigate("/application/1", {
-                state: { info: personal_data },
-            });
+            personalNavigate("/application/1");
         }
 
         if (button == "second") {
             if (validPersonalInfo()) {
-                const file = { salary: salary_file };
-                personalNavigate("/application/3", {
-                    state: {
-                        info: personal_data,
-                        file: file,
-                    },
-                });
+                addPersonalField("salaryFile", salary_file);
+                personalNavigate("/application/3");
             }
         }
     };
-
 
     return (
         <div>
@@ -203,7 +199,7 @@ export default function PersonalInfo() {
                         refer={piFatherNameRef}
                         type="data"
                         label="ক) পিতা/স্বামীর নাম "
-                        value={fatherName}
+                        value={personalDataField["FATHERS_NAME"]}
                     />
 
                     <DataField
@@ -273,7 +269,7 @@ export default function PersonalInfo() {
                         refer={piDOBRef}
                         type="data"
                         label="ছ) জন্ম তারিখ "
-                        value={dob}
+                        value={personalDataField["DATE_OF_BIRTH"]}
                     />
 
                     {/* <DataField

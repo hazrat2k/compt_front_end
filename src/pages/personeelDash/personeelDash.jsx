@@ -22,6 +22,7 @@ import { dateFormation } from "../../utils/functions/dateFormation";
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
+import usePersonnelDataStore from "../../stores/personnelDataStore";
 
 const pendProcColumns = [
     { id: "loan_id", label: "Loan ID", minWidth: 150, align: "center" },
@@ -113,6 +114,10 @@ export default function PersoneelDash() {
     const pdLoanType = useLoanTypeStore((state) => state.loanType);
     const pdSetLoanType = useLoanTypeStore((state) => state.setLoanType);
 
+    const pd_data = usePersonnelDataStore(
+        (state) => state.personnelData
+    );
+
     const [pendPage, setPendPage] = useState(0);
     const [procPage, setProcPage] = useState(0);
 
@@ -169,22 +174,11 @@ export default function PersoneelDash() {
 
     const pd_navigate = useNavigate();
 
-    const { state } = useLocation();
-
-    // if (state === null) {
-    //     console.log(state);
-    //     return redirect("/login");
-    // }
-
-    const pd_data = state["data"];
-
     var sanction_loan_id = {};
 
     var bill_loan_id = {};
 
-    const pd_loan_type = state["loan_type"];
-
-    const [pd_select, setPd_select] = useState(pd_loan_type);
+    const pd_loan_type = pdLoanType;
 
     var pending_loan_status = false;
     var processing_loan_status = false;

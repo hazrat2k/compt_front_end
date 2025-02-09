@@ -19,6 +19,8 @@ import ToTitleCase from "../../utils/functions/toTitleCase";
 
 import Logo from "../../component/loan_apply/logo/logo";
 import DoubleButton from "../../component/loan_apply/doubleButton/doubleButton";
+import useEmployeeDataStore from "../../stores/employeeDataStore";
+import useLoanInfoStore from "../../stores/loanInfoStore";
 
 const createData = (
     serialNo,
@@ -42,10 +44,11 @@ const createData = (
 
 export default function LoanInfo() {
     const loanNavigate = useNavigate();
-    const { state } = useLocation();
-    var loan_data = state["info"];
-    const loan_file = state["file"]["loan"];
-    const loan_type_file = state["file"]["loan_type"];
+    let loan_data = useEmployeeDataStore((state) => state.employeeData);
+    const loanField = useLoanInfoStore((state) => state.loanInfo);
+    const loanAddLoanField = useLoanInfoStore((state) => state.addLoanField);
+    const loan_file = loanField["file"]["loan"];
+    const loan_type_file = loanField["file"]["loan_type"];
 
     const table_data = [
         [
@@ -211,27 +214,19 @@ export default function LoanInfo() {
         loan_table_value.map((row) => row[colIndex])
     );
 
-    loan_data["LOAN_DETAILS"] = loan_table_value;
-
     const onLoanAuthenticate = (button) => {
         if (button == "first") {
-            const file = state["file"];
-            loanNavigate("/application/3", {
-                state: { info: loan_data, file: file },
-            });
+            loanNavigate("/application/3");
         }
 
         if (button == "second") {
-            const file = state["file"];
-            loanNavigate("/application/preview", {
-                // state: { info: loan_data, file: file, used: state_used },
-                state: { info: loan_data },
-            });
+            loanNavigate("/application/preview");
         }
     };
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        loanAddLoanField("LOAN_DETAILS", loan_table_value);
     }, []);
 
     return (
@@ -240,7 +235,7 @@ export default function LoanInfo() {
 
             <div className="loan_info">
                 <div className="basic_label">
-                    {loan_data["LOAN_TYPE"]} Application Form
+                    {loanField["LOAN_TYPE"]} Application Form
                 </div>
 
                 <div className="loanInfo">
