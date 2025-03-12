@@ -1,0 +1,31 @@
+.cbp_section {
+    display: flex;
+    flex-direction: column;
+}
+
+.cbp_section_items_div {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.cbp_section_items {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+}
+
+.cbp_section_item {
+    display: flex;
+    flex-direction: row;
+    padding: 0rem 0.5rem 0.5rem 0.5rem;
+    align-items: center;
+    width: 20%;
+}
+
+.cbp_section_item_label {
+    font-size: large;
+    font-weight: 550;
+    width: 20%;
+}

@@ -15,6 +15,13 @@ const useEmployeeDataStore = create(
                     employeeData: {},
                 });
             },
+            // resetEmployeeData: (timeout) => {
+            //     setTimeout(() => {
+            //         set({
+            //             employeeData: {},
+            //         });
+            //     }, timeout);
+            // },
         }),
         {
             name: "employee-data-store", // Name of the key in localStorage

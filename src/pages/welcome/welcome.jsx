@@ -29,7 +29,7 @@ export default function Welcome() {
         alignItems: "center",
         justifyContent: "center",
         backgroundSize: "cover",
-        height: isMobile ? "30vh" : "100vh",
+        height: isMobile ? "30vh" : "80vh",
         //height: "100vh",
     };
 

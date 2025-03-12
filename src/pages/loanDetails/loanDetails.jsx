@@ -20,6 +20,7 @@ import OfficeOrderCopy from "../../utils/pdfCopy/officeOrderCopy";
 import { backend_site_address } from "../../stores/const/siteAddress";
 import LoanAmountCheck from "../../utils/functions/loanAmountCheck";
 import LoanInstallmentNoCheck from "../../utils/functions/loanInstallmentNoCheck";
+import CalculateInterest from "../../utils/functions/calculateInterest";
 
 export default function LoanDetails() {
     const ld_navigate = useNavigate();
@@ -46,54 +47,6 @@ export default function LoanDetails() {
         Number(ld_loan_data[0]["LAST_MON_TOTAL_DEDUCT"])
     );
 
-    useEffect(() => {
-        const fetch_data = async () => {
-            try {
-                var uploadData = {
-                    USERNAME: ld_data["sendFrom"],
-                };
-
-                const pers_data_res = await axios.post(
-                    "http://" + backend_site_address + "/personeel_login",
-                    uploadData
-                );
-                setLd_pers_data(pers_data_res.data);
-
-                uploadData = {
-                    LOAN_ID: ld_data["LOAN_ID"],
-                };
-
-                const prev_loan_1_res = await axios.post(
-                    "http://" +
-                        backend_site_address +
-                        "/processing_loan_prev_loan_1",
-                    uploadData
-                );
-                setLd_pl_prev_loan_1(prev_loan_1_res.data);
-
-                const prev_loan_2_res = await axios.post(
-                    "http://" +
-                        backend_site_address +
-                        "/processing_loan_prev_loan_2",
-                    uploadData
-                );
-                setLd_pl_prev_loan_2(prev_loan_2_res.data);
-
-                const remarks_res = await axios.post(
-                    "http://" +
-                        backend_site_address +
-                        "/processing_loan_remarks",
-                    uploadData
-                );
-                setLd_pl_remarks(remarks_res.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-        fetch_data();
-    }, []);
-
     const [ld_remarks, setLd_remarks] = useState("");
     const [ld_remarks_error, setLd_remarks_error] = useState(false);
 
@@ -104,241 +57,30 @@ export default function LoanDetails() {
 
     const interest_rate = 7.75;
     const rounding_figure = 10000;
-
     var ld_value = {};
-    ld_value["loan_id"] = ld_data["LOAN_ID"];
-    ld_value["loan_app_date"] = new Date(
-        ld_data["LOAN_APP_DATE"]
-    ).toLocaleDateString("en-US");
-    ld_value["salary_id"] = ld_data["SALARY_ID"];
-    ld_value["loan_type"] = ld_data["LOAN_TYPE"];
-    ld_value["buet_id"] = ld_data["EMPLOYEE_ID"];
-    ld_value["applicant_name"] = ld_data["EMPLOYEE_NAME"];
-    ld_value["designation"] = ld_data["DESIGNATION"];
-    ld_value["account_no"] = ld_data["ACCOUNT_NO"];
-    ld_value["category"] = ld_data["CATEGORY"];
-    ld_value["office_dept"] = ld_data["OFFICE"];
-    ld_value["account_no"] = ld_data["BANK_ACCOUNT_NO"];
-    ld_value["category"] = ld_data["CATEGORY"];
-
-    const ld_loan_type = ld_value["loan_type"].toLowerCase();
-
+    var ld_loan_type = "";
     var temp_status = Number(ld_data["APP_POS"]);
-
     const ld_user = ld_data["sendFrom"] === loanPersonnel[temp_status];
-
     var temp_status_t = AppStatus(temp_status);
-
     var ld_processing = true;
-
-    ld_value["dob"] = new Date(ld_data["DATE_OF_BIRTH"]).toLocaleDateString(
-        "en-US"
-    );
-
-    ld_value["joining_date"] = new Date(
-        ld_data["DATE_FIRST_JOIN"]
-    ).toLocaleDateString("en-US");
-
-    ld_value["mos"] = new Date(
-        ld_data["DATE_OF_RETIREMENT"]
-    ).toLocaleDateString("en-US");
-
-    ld_value["serv_len_y"] = Number(
-        ld_data["TOTAL_SERVICE_PERIOD"].split(" ")[0]
-    );
-
-    var ld_duration = timeDuration(ld_data["DATE_OF_RETIREMENT"], new Date());
-
-    ld_value["rem_serv_m"] = ld_duration[0] * 12 + ld_duration[1];
-
-    ld_value["basic_salary"] = ld_basic_salary;
-    ld_value["gross_salary"] = ld_gross_salary;
-    ld_value["deduct"] = ld_total_deduct;
-    ld_value["net_salary"] = 0;
-
-    ld_value["pens_gra"] = 0;
-    ld_value["leav_sal"] = 0;
-    // ld_value["25_mon_gran"] = 0;
-    ld_value["tot_rec"] = 0;
-
-    ld_value["hb_loan"] = 0;
-    ld_value["consu_loan"] = 0;
-    ld_value["lap_loan"] = 0;
-    ld_value["sblws_loan"] = 0;
-    ld_value["sblh_loan"] = 0;
-    ld_value["tot_pay"] = 0;
-    ld_value["net_rec"] = 0;
-
-    ld_value["hb_loan_ins_amnt"] = 0;
-    ld_value["consu_loan_ins_amnt"] = 0;
-    ld_value["lap_loan_ins_amnt"] = 0;
-    ld_value["sblws_loan_ins_amnt"] = 0;
-    ld_value["sblh_loan_ins_amnt"] = 0;
-    ld_value["tot_loan_ins_amnt"] = 0;
-
-    ld_value["75_pens"] = 0;
-    ld_value["app_amnt"] = Number(ld_data["LOAN_AMOUNT"]);
-    ld_value["prop_amnt"] = 0;
-    ld_value["inst_amnt"] = 0;
-    ld_value["tot_no_ins"] = 0;
-    ld_value["tot_ins_amnt"] = 0;
-    ld_value["60_basic_sal"] = 0;
-
+    var ld_duration = [];
     const ld_comment_display = [];
-
     const ld_remarks_display = [];
-
     var ld_gra_rate = 0;
-
-    if (ld_value["serv_len_y"] >= 5 && ld_value["serv_len_y"] < 10) {
-        ld_gra_rate = 265;
-    } else if (ld_value["serv_len_y"] >= 10 && ld_value["serv_len_y"] < 15) {
-        ld_gra_rate = 260;
-    } else if (ld_value["serv_len_y"] >= 15 && ld_value["serv_len_y"] < 20) {
-        ld_gra_rate = 245;
-    } else if (ld_value["serv_len_y"] >= 20) {
-        ld_gra_rate = 230;
-    }
-
-    var ld_pens_rate =
-        ld_value["serv_len_y"] > 25
-            ? pension_rate_table[25]
-            : pension_rate_table[ld_value["serv_len_y"]];
-
-    // for (let i = 0; i < ld_pl_sal.length; i++) {
-    //     ld_value["basic_salary"] = Number(ld_pl_sal[0]["LAST_MON_BASIC_SAL"]);
-    //     ld_value["gross_salary"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_SAL"]);
-    //     ld_value["deduct"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_DEDUCT"]);
-    // }
-
-    ld_value["net_salary"] = ld_gross_salary - ld_total_deduct;
-
-    ld_value["pens_gra"] = Math.round(
-        (ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100
-    );
-    //ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
-    ld_value["tot_rec"] = ld_value["pens_gra"] + ld_value["leav_sal"];
-
-    for (let i = 0; i < ld_pl_prev_loan_1.length; i++) {
-        ld_value["hb_loan"] = ld_pl_prev_loan_1[0]["HL_REM_INST_AMNT"];
-        ld_value["consu_loan"] = ld_pl_prev_loan_1[0]["CL_REM_INST_AMNT"];
-        ld_value["lap_loan"] = ld_pl_prev_loan_1[0]["LL_REM_INST_AMNT"];
-        ld_value["sblws_loan"] = ld_pl_prev_loan_1[0]["SBWSL_REM_INST_AMNT"];
-
-        ld_value["hb_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["HL_INST_AMNT"];
-        ld_value["consu_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["CL_INST_AMNT"];
-        ld_value["lap_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["LL_INST_AMNT"];
-        ld_value["sblws_loan_ins_amnt"] =
-            ld_pl_prev_loan_1[0]["SBWSL_INST_AMNT"];
-    }
-
-    for (let i = 0; i < ld_pl_prev_loan_2.length; i++) {
-        ld_value["sblh_loan"] = ld_pl_prev_loan_2[0]["SBHL_REM_INST_AMNT"];
-
-        ld_value["sblh_loan_ins_amnt"] = ld_pl_prev_loan_2[0]["SBHL_INST_AMNT"];
-    }
-
-    ld_value["tot_pay"] =
-        ld_value["hb_loan"] +
-        ld_value["consu_loan"] +
-        ld_value["lap_loan"] +
-        ld_value["sblws_loan"] +
-        ld_value["sblh_loan"];
-
-    ld_value["net_rec"] = ld_value["tot_rec"] - ld_value["tot_pay"];
-
-    ld_value["tot_loan_ins_amnt"] =
-        ld_value["hb_loan_ins_amnt"] +
-        ld_value["consu_loan_ins_amnt"] +
-        ld_value["lap_loan_ins_amnt"] +
-        ld_value["sblws_loan_ins_amnt"] +
-        ld_value["sblh_loan_ins_amnt"];
-
-    ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
-
-    ld_value["60_basic_sal"] = Math.round(ld_basic_salary * 0.6);
-
+    var ld_pens_rate = 0;
     var calc_mon = 0;
-
-    var available_ins_amount =
-        ld_value["60_basic_sal"] - ld_value["tot_loan_ins_amnt"];
-
-    var temp_prop_amnt =
-        ld_value["app_amnt"] > ld_value["75_pens"]
-            ? ld_value["75_pens"]
-            : ld_value["app_amnt"];
-
-    temp_prop_amnt = Math.floor(temp_prop_amnt / rounding_figure);
-
-    temp_prop_amnt *= rounding_figure;
-
-    var temp_inst_amnt = LoanAmountCheck(
-        ld_value["category"],
-        ld_value["loan_type"],
-        ld_value["app_amnt"]
-    );
-
-    if (ld_value["rem_serv_m"] < 10) {
-        temp_prop_amnt = 0;
-        temp_inst_amnt = 0;
-        ld_value["tot_no_ins"] = 0;
-        ld_processing = false;
-
-        ld_comment_display.push(
-            <div className="assessment_comment">
-                - Remaining Service Period is less than 10 months.
-            </div>
-        );
-    } else {
-        calc_mon = LoanInstallmentNoCheck(
-            ld_value["rem_serv_m"],
-            ld_value["loan_type"]
-        );
-
-        // console.log("available_ins_amount : "+available_ins_amount);
-
-        // console.log("temp_inst_amnt : "+temp_inst_amnt);
-
-        let principal_installment_no = Math.round(
-            calc_mon * (principal_installment_percentage / 100)
-        );
-        let interest_installment_no = calc_mon - principal_installment_no;
-
-        console.log("principal_installment_no : ", principal_installment_no);
-        console.log("interest_installment_no : ", interest_installment_no);
-
-        let principal_installment_amount = ld_value["app_amnt"] / principal_installment_no;
-
-        let interest_installment_amount =
-            ld_value["app_amnt"] / principal_installment_no; 
-        
-
-        while (temp_inst_amnt > available_ins_amount) {
-              temp_inst_amnt = Math.ceil(
-                (2 * temp_prop_amnt * (1200 + calc_mon * interest_rate)) /
-                    (calc_mon *
-                        (2400 - interest_rate + calc_mon * interest_rate))
-            );
-            temp_prop_amnt = temp_prop_amnt - rounding_figure;
-        }
-
-        // console.log("amount : "+(temp_prop_amnt+rounding_figure)+", installment : "+temp_inst_amnt);
-    }
-
-    if (temp_prop_amnt != 0) {
-        ld_value["prop_amnt"] = temp_prop_amnt + rounding_figure;
-    }
-
-    ld_value["tot_no_ins"] = calc_mon;
-
-    ld_value["inst_amnt"] = temp_inst_amnt;
-
-    ld_value["recov_amnt"] = calc_mon * temp_inst_amnt;
-
-    ld_value["tot_intest"] = ld_value["recov_amnt"] - ld_value["prop_amnt"];
-
-    ld_value["tot_ins_amnt"] =
-        ld_value["tot_loan_ins_amnt"] + ld_value["inst_amnt"];
+    var available_ins_amount = 0;
+    var temp_prop_amnt = 0;
+    var temp_inst_amnt = 0;
+    let principal_installment_no = 0;
+    let interest_installment_no = 0;
+    let principal_amount = 0;
+    let principal_installment_amount = 0;
+    let interest_amount = 0;
+    let interest_installment_amount = 0;
+    let check_installment_amount = 0;
+    var ld_personnel_data = [];
+    let nf = new Intl.NumberFormat("en-IN");
 
     const remarksItem = (label, value) => {
         return (
@@ -363,23 +105,6 @@ export default function LoanDetails() {
             </div>
         );
     };
-
-    for (let i = 0; i < ld_pl_remarks.length; i++) {
-        for (let j = 0; j < temp_status; j++) {
-            if (ld_pl_remarks[i][j + "_"] !== null) {
-                ld_remarks_display.push(
-                    remarksItem(j, ld_pl_remarks[i][j + "_"])
-                );
-            }
-        }
-
-        break;
-    }
-
-    var ld_personnel_data = [];
-    if (ld_pers_data.length != 0) {
-        ld_personnel_data = ld_pers_data[0];
-    }
 
     const onForwardClick = async (e) => {
         e.preventDefault();
@@ -470,6 +195,322 @@ export default function LoanDetails() {
         }
     };
 
+    useEffect(() => {
+        const fetch_data = async () => {
+            try {
+                var uploadData = {
+                    USERNAME: ld_data["sendFrom"],
+                };
+
+                const pers_data_res = await axios.post(
+                    "http://" + backend_site_address + "/personeel_login",
+                    uploadData
+                );
+                setLd_pers_data(pers_data_res.data);
+
+                uploadData = {
+                    LOAN_ID: ld_data["LOAN_ID"],
+                };
+
+                const prev_loan_1_res = await axios.post(
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_prev_loan_1",
+                    uploadData
+                );
+                setLd_pl_prev_loan_1(prev_loan_1_res.data);
+
+                const prev_loan_2_res = await axios.post(
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_prev_loan_2",
+                    uploadData
+                );
+                setLd_pl_prev_loan_2(prev_loan_2_res.data);
+
+                const remarks_res = await axios.post(
+                    "http://" +
+                        backend_site_address +
+                        "/processing_loan_remarks",
+                    uploadData
+                );
+                setLd_pl_remarks(remarks_res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        fetch_data();
+    }, []);
+
+    const ldInit = () => {};
+
+    ld_value["loan_id"] = ld_data["LOAN_ID"];
+    ld_value["loan_app_date"] = new Date(
+        ld_data["LOAN_APP_DATE"]
+    ).toLocaleDateString("en-US");
+    ld_value["salary_id"] = ld_data["SALARY_ID"];
+    ld_value["loan_type"] = ld_data["LOAN_TYPE"];
+    ld_value["buet_id"] = ld_data["EMPLOYEE_ID"];
+    ld_value["applicant_name"] = ld_data["EMPLOYEE_NAME"];
+    ld_value["designation"] = ld_data["DESIGNATION"];
+    ld_value["account_no"] = ld_data["ACCOUNT_NO"];
+    ld_value["category"] = ld_data["CATEGORY"];
+    ld_value["office_dept"] = ld_data["OFFICE"];
+    ld_value["account_no"] = ld_data["BANK_ACCOUNT_NO"];
+    ld_value["category"] = ld_data["CATEGORY"];
+
+    ld_loan_type = ld_value["loan_type"].toLowerCase();
+
+    ld_value["dob"] = new Date(ld_data["DATE_OF_BIRTH"]).toLocaleDateString(
+        "en-US"
+    );
+
+    ld_value["joining_date"] = new Date(
+        ld_data["DATE_FIRST_JOIN"]
+    ).toLocaleDateString("en-US");
+
+    ld_value["mos"] = new Date(
+        ld_data["DATE_OF_RETIREMENT"]
+    ).toLocaleDateString("en-US");
+
+    ld_value["serv_len_y"] = Number(
+        ld_data["TOTAL_SERVICE_PERIOD"].split(" ")[0]
+    );
+
+    ld_duration = timeDuration(ld_data["DATE_OF_RETIREMENT"], new Date());
+
+    ld_value["rem_serv_m"] = ld_duration[0] * 12 + ld_duration[1];
+
+    ld_value["basic_salary"] = ld_basic_salary;
+    ld_value["gross_salary"] = ld_gross_salary;
+    ld_value["deduct"] = ld_total_deduct;
+    ld_value["net_salary"] = 0;
+
+    ld_value["pens_gra"] = 0;
+    ld_value["leav_sal"] = 0;
+    // ld_value["25_mon_gran"] = 0;
+    ld_value["tot_rec"] = 0;
+
+    ld_value["hb_loan"] = 0;
+    ld_value["consu_loan"] = 0;
+    ld_value["lap_loan"] = 0;
+    ld_value["sblws_loan"] = 0;
+    ld_value["sblh_loan"] = 0;
+    ld_value["tot_pay"] = 0;
+    ld_value["net_rec"] = 0;
+
+    ld_value["hb_loan_ins_amnt"] = 0;
+    ld_value["consu_loan_ins_amnt"] = 0;
+    ld_value["lap_loan_ins_amnt"] = 0;
+    ld_value["sblws_loan_ins_amnt"] = 0;
+    ld_value["sblh_loan_ins_amnt"] = 0;
+    ld_value["tot_loan_ins_amnt"] = 0;
+
+    ld_value["75_pens"] = 0;
+    ld_value["app_amnt"] = Number(ld_data["LOAN_AMOUNT"]);
+    ld_value["prop_amnt"] = 0;
+    ld_value["inst_amnt"] = 0;
+    ld_value["tot_no_ins"] = 0;
+    ld_value["tot_ins_amnt"] = 0;
+    ld_value["60_basic_sal"] = 0;
+
+    if (ld_value["serv_len_y"] >= 5 && ld_value["serv_len_y"] < 10) {
+        ld_gra_rate = 265;
+    } else if (ld_value["serv_len_y"] >= 10 && ld_value["serv_len_y"] < 15) {
+        ld_gra_rate = 260;
+    } else if (ld_value["serv_len_y"] >= 15 && ld_value["serv_len_y"] < 20) {
+        ld_gra_rate = 245;
+    } else if (ld_value["serv_len_y"] >= 20) {
+        ld_gra_rate = 230;
+    }
+
+    ld_pens_rate =
+        ld_value["serv_len_y"] > 25
+            ? pension_rate_table[25]
+            : pension_rate_table[ld_value["serv_len_y"]];
+
+    // for (let i = 0; i < ld_pl_sal.length; i++) {
+    //     ld_value["basic_salary"] = Number(ld_pl_sal[0]["LAST_MON_BASIC_SAL"]);
+    //     ld_value["gross_salary"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_SAL"]);
+    //     ld_value["deduct"] = Number(ld_pl_sal[0]["LAST_MON_TOTAL_DEDUCT"]);
+    // }
+
+    ld_value["net_salary"] = ld_gross_salary - ld_total_deduct;
+
+    ld_value["pens_gra"] = Math.round(
+        (ld_basic_salary * 0.5 * ld_pens_rate * ld_gra_rate) / 100
+    );
+    //ld_value["25_mon_gran"] = ld_value["serv_len_y"] * ld_basic_salary;
+    ld_value["tot_rec"] = ld_value["pens_gra"] + ld_value["leav_sal"];
+
+    for (let i = 0; i < ld_pl_prev_loan_1.length; i++) {
+        ld_value["hb_loan"] = ld_pl_prev_loan_1[0]["HL_REM_INST_AMNT"];
+        ld_value["consu_loan"] = ld_pl_prev_loan_1[0]["CL_REM_INST_AMNT"];
+        ld_value["lap_loan"] = ld_pl_prev_loan_1[0]["LL_REM_INST_AMNT"];
+        ld_value["sblws_loan"] = ld_pl_prev_loan_1[0]["SBWSL_REM_INST_AMNT"];
+
+        ld_value["hb_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["HL_INST_AMNT"];
+        ld_value["consu_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["CL_INST_AMNT"];
+        ld_value["lap_loan_ins_amnt"] = ld_pl_prev_loan_1[0]["LL_INST_AMNT"];
+        ld_value["sblws_loan_ins_amnt"] =
+            ld_pl_prev_loan_1[0]["SBWSL_INST_AMNT"];
+    }
+
+    for (let i = 0; i < ld_pl_prev_loan_2.length; i++) {
+        ld_value["sblh_loan"] = ld_pl_prev_loan_2[0]["SBHL_REM_INST_AMNT"];
+
+        ld_value["sblh_loan_ins_amnt"] = ld_pl_prev_loan_2[0]["SBHL_INST_AMNT"];
+    }
+
+    ld_value["tot_pay"] =
+        ld_value["hb_loan"] +
+        ld_value["consu_loan"] +
+        ld_value["lap_loan"] +
+        ld_value["sblws_loan"] +
+        ld_value["sblh_loan"];
+
+    ld_value["net_rec"] = ld_value["tot_rec"] - ld_value["tot_pay"];
+
+    ld_value["tot_loan_ins_amnt"] =
+        ld_value["hb_loan_ins_amnt"] +
+        ld_value["consu_loan_ins_amnt"] +
+        ld_value["lap_loan_ins_amnt"] +
+        ld_value["sblws_loan_ins_amnt"] +
+        ld_value["sblh_loan_ins_amnt"];
+
+    ld_value["75_pens"] = Math.round(ld_value["pens_gra"] * 0.75);
+
+    ld_value["60_basic_sal"] = Math.round(ld_basic_salary * 0.6);
+
+    calc_mon = 0;
+
+    available_ins_amount =
+        ld_value["60_basic_sal"] - ld_value["tot_loan_ins_amnt"];
+
+    temp_prop_amnt =
+        ld_value["app_amnt"] > ld_value["75_pens"]
+            ? ld_value["75_pens"]
+            : ld_value["app_amnt"];
+
+    temp_prop_amnt = Math.floor(temp_prop_amnt / rounding_figure);
+
+    temp_prop_amnt *= rounding_figure;
+
+    temp_inst_amnt = LoanAmountCheck(
+        ld_value["category"],
+        ld_value["loan_type"],
+        ld_value["app_amnt"]
+    );
+
+
+    if (ld_value["rem_serv_m"] < 10) {
+        temp_prop_amnt = 0;
+        temp_inst_amnt = 0;
+        ld_value["tot_no_ins"] = 0;
+        ld_processing = false;
+
+        ld_comment_display.push(
+            <div className="assessment_comment">
+                - Remaining Service Period is less than 10 months.
+            </div>
+        );
+    } else {
+        calc_mon = LoanInstallmentNoCheck(
+            ld_value["rem_serv_m"],
+            ld_value["loan_type"]
+        );
+
+        // console.log("available_ins_amount : "+available_ins_amount);
+
+        // console.log("temp_inst_amnt : "+temp_inst_amnt);
+
+        principal_installment_no = Math.round(
+            calc_mon * (principal_installment_percentage / 100)
+        );
+
+        interest_installment_no = calc_mon - principal_installment_no;
+
+        principal_amount = ld_value["app_amnt"] + rounding_figure;
+
+        do {
+            principal_amount = principal_amount - rounding_figure;
+
+            principal_installment_amount = Math.round(
+                principal_amount / principal_installment_no
+            );
+
+            interest_amount = CalculateInterest(
+                principal_amount,
+                principal_installment_no
+            );
+
+            interest_installment_amount =
+                interest_amount / interest_installment_no;
+
+            check_installment_amount =
+                interest_installment_amount > principal_installment_amount
+                    ? interest_installment_amount
+                    : principal_installment_amount;
+        } while (check_installment_amount > available_ins_amount);
+
+        // while (temp_inst_amnt > available_ins_amount) {
+        //     temp_inst_amnt = Math.ceil(
+        //         (2 * temp_prop_amnt * (1200 + calc_mon * interest_rate)) /
+        //             (calc_mon *
+        //                 (2400 - interest_rate + calc_mon * interest_rate))
+        //     );
+        //     temp_prop_amnt = temp_prop_amnt - rounding_figure;
+        // }
+
+        // console.log("amount : "+(temp_prop_amnt+rounding_figure)+", installment : "+temp_inst_amnt);
+    }
+
+    ld_value["pri_amnt"] = principal_amount;
+    ld_value["pri_inst_no"] = principal_installment_no;
+    ld_value["pri_first_inst_amnt"] =
+        principal_amount -
+        principal_installment_amount * (principal_installment_no - 1);
+    ld_value["pri_inst_amnt"] = principal_installment_amount;
+
+    ld_value["inter_amnt"] = interest_amount;
+    ld_value["inter_inst_no"] = interest_installment_no;
+    ld_value["inter_first_inst_amnt"] =
+        interest_amount -
+        interest_installment_amount * (interest_installment_no - 1);
+    ld_value["inter_inst_amnt"] = interest_installment_amount;
+
+    if (temp_prop_amnt != 0) {
+        ld_value["prop_amnt"] = temp_prop_amnt + rounding_figure;
+    }
+
+    ld_value["tot_no_ins"] = calc_mon;
+
+    ld_value["inst_amnt"] = temp_inst_amnt;
+
+    ld_value["recov_amnt"] = calc_mon * temp_inst_amnt;
+
+    ld_value["tot_intest"] = ld_value["recov_amnt"] - ld_value["prop_amnt"];
+
+    ld_value["tot_ins_amnt"] =
+        ld_value["tot_loan_ins_amnt"] + ld_value["inst_amnt"];
+
+    for (let i = 0; i < ld_pl_remarks.length; i++) {
+        for (let j = 0; j < temp_status; j++) {
+            if (ld_pl_remarks[i][j + "_"] !== null) {
+                ld_remarks_display.push(
+                    remarksItem(j, ld_pl_remarks[i][j + "_"])
+                );
+            }
+        }
+
+        break;
+    }
+
+    if (ld_pers_data.length != 0) {
+        ld_personnel_data = ld_pers_data[0];
+    }
+
     const off_or_copy = {
         loan_id: ld_value["loan_id"],
         name: ld_value["applicant_name"],
@@ -480,7 +521,7 @@ export default function LoanDetails() {
         tot_ins: ld_value["tot_no_ins"],
     };
 
-    let nf = new Intl.NumberFormat("en-IN");
+    
 
     return (
         <>
@@ -732,7 +773,8 @@ export default function LoanDetails() {
                                 "75% of Pension",
                                 nf.format(ld_value["75_pens"])
                             )}
-                            {sectionItem(
+                            {/* {
+                            sectionItem(
                                 "3",
                                 "Proposed Amount",
                                 nf.format(ld_value["prop_amnt"])
@@ -746,6 +788,40 @@ export default function LoanDetails() {
                                 "7",
                                 "60% of Basic Salary",
                                 nf.format(ld_value["60_basic_sal"])
+                            )} */}
+                            {sectionItem(
+                                "3",
+                                "Proposed Principal Amount",
+                                nf.format(ld_value["pri_amnt"])
+                            )}
+                            {sectionItem(
+                                "5",
+                                "Proposed Principal Installment No",
+                                nf.format(ld_value["pri_inst_no"])
+                            )}
+                            {sectionItem(
+                                "7",
+                                "Proposed Principal First Installment Amount",
+                                nf.format(ld_value["pri_first_inst_amnt"])
+                            )}
+                            {sectionItem(
+                                "9",
+                                "Proposed Principal Installment Amount (PIA)",
+                                nf.format(ld_value["pri_inst_amnt"])
+                            )}
+
+                            {sectionItem(
+                                "11",
+                                "Total Installment Amount with PIA (D16.+E9.)",
+                                nf.format(
+                                    ld_value["pri_inst_amnt"] +
+                                        ld_value["tot_loan_ins_amnt"]
+                                )
+                            )}
+                            {sectionItem(
+                                "13",
+                                "60% of Basic Salary",
+                                nf.format(ld_value["60_basic_sal"])
                             )}
                         </div>
                         <div className="section_items_div">
@@ -754,7 +830,7 @@ export default function LoanDetails() {
                                 "Applied Amount",
                                 nf.format(ld_value["app_amnt"])
                             )}
-                            {sectionItem(
+                            {/* {sectionItem(
                                 "4",
                                 "Installment Amount",
                                 nf.format(ld_value["inst_amnt"])
@@ -763,6 +839,34 @@ export default function LoanDetails() {
                                 "6",
                                 "Total Installment Amount (D16.+E4.)",
                                 nf.format(ld_value["tot_ins_amnt"])
+                            )} */}
+                            {sectionItem(
+                                "4",
+                                "Proposed Interest Amount",
+                                nf.format(ld_value["inter_amnt"])
+                            )}
+                            {sectionItem(
+                                "6",
+                                "Proposed Interest Installment No",
+                                nf.format(ld_value["inter_inst_no"])
+                            )}
+                            {sectionItem(
+                                "8",
+                                "Proposed Interest First Installment Amount",
+                                nf.format(ld_value["inter_first_inst_amnt"])
+                            )}
+                            {sectionItem(
+                                "10",
+                                "Proposed Interest Installment Amount (IIA)",
+                                nf.format(ld_value["inter_inst_amnt"])
+                            )}
+                            {sectionItem(
+                                "12",
+                                "Total Installment Amount with IIA (D16.+E10.)",
+                                nf.format(
+                                    ld_value["inter_inst_amnt"] +
+                                        ld_value["tot_loan_ins_amnt"]
+                                )
                             )}
                         </div>
                     </div>

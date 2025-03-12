@@ -1,0 +1,38 @@
+.cash_book_dashboard {
+    display: flex;
+    flex-direction: column;
+    font-family: "PT Serif";
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
+
+.cb_page_label {
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 10pt;
+    color: var(--green);
+}
+
+.cb_section_label {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    font-size: x-large;
+    font-weight: 600;
+    margin-bottom: 0.5%;
+    color: crimson;
+}
+
+.cash_book {
+    align-items: center;
+    align-self: center;
+    width: 75%;
+}
+
+.cb_section_items {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+}

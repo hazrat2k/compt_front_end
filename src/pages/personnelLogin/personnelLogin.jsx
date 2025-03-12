@@ -76,7 +76,7 @@ export default function PersonnelLogin() {
         }
 
         const uploadData = {
-            USERNAME: user,
+            USER_ID: user,
             PASSWORD: password,
         };
 

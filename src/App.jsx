@@ -5,6 +5,8 @@ import Welcome from "./pages/welcome/welcome";
 
 import PersonnelLogin from "./pages/personnelLogin/personnelLogin";
 import PersonnelDash from "./pages/personeelDash/personeelDash";
+import CashBook from "./pages/cashBook/cashBook";
+import LoanPage from "./pages/loanPage/loanPage";
 import LoanDetails from "./pages/loanDetails/loanDetails";
 import SanctionCopy from "./pages/sanctionCopy/sanctionCopy";
 import BillCopy from "./pages/billCopy/billCopy";
@@ -26,6 +28,11 @@ import Downloads from "./pages/downloads/downloads";
 import Notices from "./pages/notices/notices";
 import Contact from "./pages/contact/contact";
 import useEmployeeDataStore from "./stores/employeeDataStore";
+import CashBookNewEntry from "./pages/cashBookNewEntry/cashBookNewEntry";
+import CashBookPreview from "./pages/cashBookPreview/cashBookPreview";
+import CashBookEdit from "./pages/cashBookEdit/cashBookEdit";
+import CashBookAddHeading from "./pages/cashBookAddHeading/cashBookAddHeading";
+import CashBookReceivePayment from "./pages/cashBookReceivePayment/cashBookReceivePayment";
 
 export default function App() {
     return (
@@ -41,20 +48,42 @@ export default function App() {
                     path="/personnel_dashboard"
                     element={<PersonnelDash />}
                 />
+                <Route path="/processing_loan" element={<LoanPage />} />
 
                 <Route
-                    path="/personnel_dashboard/pending_loan_details"
+                    path="/processing_loan/loan_details"
                     element={<LoanDetails />}
                 />
 
                 <Route
-                    path="/personnel_dashboard/sanction_copy"
+                    path="/processing_loan/sanction_copy"
                     element={<SanctionCopy />}
                 />
 
                 <Route
-                    path="/personnel_dashboard/bill_copy"
+                    path="/processing_loan/bill_copy"
                     element={<BillCopy />}
+                />
+
+                <Route path="/cashbook" element={<CashBook />} />
+
+                <Route
+                    path="/cashbook/newentry"
+                    element={<CashBookNewEntry />}
+                />
+
+                <Route path="/cashbook/preview" element={<CashBookPreview />} />
+
+                <Route path="/cashbook/editentry" element={<CashBookEdit />} />
+
+                <Route
+                    path="/cashbook/addheading"
+                    element={<CashBookAddHeading />}
+                />
+
+                <Route
+                    path="/cashbook/receivepayment"
+                    element={<CashBookReceivePayment />}
                 />
 
                 <Route path="/employeelogin" element={<Login />} />

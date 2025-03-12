@@ -52,13 +52,7 @@ const createRlData = (
     return { loanId, loanType, totalRefAmnt, instAmnt, remAmnt, loanDate };
 };
 
-const loanTypes = [
-    "House Building Loan",
-    "Consumer Loan",
-    "Laptop Loan",
-    "SBL House Loan",
-    "SBL Multipurpose Loan",
-];
+const loanTypes = ["House Building Loan", "Consumer Loan", "Laptop Loan"];
 
 const duration_calculation = (date) => {
     const now = new Date();

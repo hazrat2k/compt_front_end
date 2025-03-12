@@ -18,6 +18,7 @@ import Logo from "../../component/loan_apply/logo/logo";
 import ToTitleCase from "../../utils/functions/toTitleCase";
 import { backend_site_address } from "../../stores/const/siteAddress";
 import useEmployeeDataStore from "../../stores/employeeDataStore";
+import useLoanTypeStore from "../../stores/loanTypeStore";
 
 export default function Login() {
     var emp_data = [];
@@ -33,22 +34,15 @@ export default function Login() {
         (state) => state.resetEmployeeData
     );
 
+    const resetLoanType = useLoanTypeStore((state) => state.resetLoanType);
+
     const loginNavigate = useNavigate();
-
-    const [log_loan_type, setLog_loan_type] = useState("");
-
-    const loan_type_check = [
-        "",
-        "Consumer Loan",
-        "Laptop Loan",
-        "SBL House Loan",
-        "SBL Multipurpose Loan",
-    ];
 
     useEffect(() => {
         resetEmployeeData();
+        resetLoanType();
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    }, [resetEmployeeData]);
+    }, [resetEmployeeData, resetLoanType]);
 
     const [buetId, setBuetId] = useState("");
     const [buetIdHelperText, setBuetIdHelperText] = useState("");
@@ -149,9 +143,6 @@ export default function Login() {
             DATE_OF_BIRTH: new Date(dob.$d).toLocaleDateString("en-US"),
         };
 
-        var loan_data = [];
-
-        var temp_l_t = ToTitleCase(log_loan_type);
 
         try {
             const res = await axios.post(

@@ -237,7 +237,7 @@ export default function LoanAssesmentForm(props) {
     const laf_office_dept = laf_data["office_dept"];
     const laf_category = laf_data["category"];
 
-    const pdf_laf_loan_type = laf_loan_type.toLowerCase();
+    const pdf_laf_loan_type = laf_loan_type;
 
     var laf_dob = laf_data["dob"];
 

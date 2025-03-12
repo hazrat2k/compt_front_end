@@ -1,0 +1,19 @@
+.download_page {
+    max-width: 42rem; /* Equivalent to max-w-2xl */
+    padding: 1.5rem; /* Equivalent to p-6 */
+    background-color: white;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Improved shadow */
+    border-radius: 1rem; /* Equivalent to rounded-2xl */
+    font-family: "PT Serif", serif;
+    
+    text-align: center;
+    margin: 30px auto; /* Centering */
+}
+
+.download_page_heading {
+    font-size: xx-large;
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+    text-align: center;
+    line-height: 1.5; /* Improved readability */
+}

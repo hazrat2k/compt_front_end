@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.employee-information-page {
+    display: flex;
+    flex-direction: row;
+    height: 75vh; /* Ensure the entire container takes full viewport height */
+    overflow: hidden; /* Prevent unwanted scrolling on the main container */
+    padding: 20px;
+    font-family: "PT Serif";
+    margin-bottom: 20px;
+}
+
+.section-layout {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    height: 75vh; /* Keep this section fixed */
+    border-right: solid 2px black;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    row-gap: 20px;
+    position: sticky;
+    top: 0; /* Ensures it remains fixed when scrolling */
+    left: 0;
+}
+
+.layout-section-text {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    width: 75%;
+    border: solid 2px black;
+    cursor: pointer;
+}
+
+.section-information {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    padding: 10px;
+    overflow-y: auto; /* Enable scrolling */
+    height: 75vh; /* Take full viewport height */
+}
+
+.section-head {
+    text-align: left;
+    align-self: flex-start;
+    padding: 10px;
+    font-weight: bold;
+    font-size: x-large;
+    /* width: 75%; */
+}
+
+.page_heading {
+    font-size: xx-large;
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.employee-cards-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.employee-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.employee-image {
+    /* width: 200px;
+    height: 250px; */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
