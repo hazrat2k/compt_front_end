@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router";
+import { Navigate } from "react-router-dom";
 
 import Welcome from "./pages/welcome/welcome";
 
@@ -27,12 +28,39 @@ import Sections from "./pages/sections/sections";
 import Downloads from "./pages/downloads/downloads";
 import Notices from "./pages/notices/notices";
 import Contact from "./pages/contact/contact";
-import useEmployeeDataStore from "./stores/employeeDataStore";
+
 import CashBookNewEntry from "./pages/cashBookNewEntry/cashBookNewEntry";
 import CashBookPreview from "./pages/cashBookPreview/cashBookPreview";
 import CashBookEdit from "./pages/cashBookEdit/cashBookEdit";
 import CashBookAddHeading from "./pages/cashBookAddHeading/cashBookAddHeading";
 import CashBookReceivePayment from "./pages/cashBookReceivePayment/cashBookReceivePayment";
+
+import useEmployeeDataStore from "./stores/employeeDataStore";
+import usePersonnelDataStore from "./stores/personnelDataStore";
+
+const ProtectedPersonnelRoute = ({ children }) => {
+    const isAuthenticated = usePersonnelDataStore(
+        (state) => state.personnelData
+    );
+
+    console.log(isAuthenticated);
+
+    return Object.keys(isAuthenticated).length !== 0 ? (
+        children
+    ) : (
+        <Navigate to="/login" replace />
+    );
+};
+
+const ProtectedEmployeeRoute = ({ children }) => {
+    const isAuthenticated = useEmployeeDataStore((state) => state.employeeData);
+
+    return Object.keys(isAuthenticated).length !== 0 ? (
+        children
+    ) : (
+        <Navigate to="/employeelogin" replace />
+    );
+};
 
 export default function App() {
     return (
@@ -44,66 +72,7 @@ export default function App() {
 
                 <Route path="/login" element={<PersonnelLogin />} />
 
-                <Route
-                    path="/personnel_dashboard"
-                    element={<PersonnelDash />}
-                />
-                <Route path="/processing_loan" element={<LoanPage />} />
-
-                <Route
-                    path="/processing_loan/loan_details"
-                    element={<LoanDetails />}
-                />
-
-                <Route
-                    path="/processing_loan/sanction_copy"
-                    element={<SanctionCopy />}
-                />
-
-                <Route
-                    path="/processing_loan/bill_copy"
-                    element={<BillCopy />}
-                />
-
-                <Route path="/cashbook" element={<CashBook />} />
-
-                <Route
-                    path="/cashbook/newentry"
-                    element={<CashBookNewEntry />}
-                />
-
-                <Route path="/cashbook/preview" element={<CashBookPreview />} />
-
-                <Route path="/cashbook/editentry" element={<CashBookEdit />} />
-
-                <Route
-                    path="/cashbook/addheading"
-                    element={<CashBookAddHeading />}
-                />
-
-                <Route
-                    path="/cashbook/receivepayment"
-                    element={<CashBookReceivePayment />}
-                />
-
                 <Route path="/employeelogin" element={<Login />} />
-
-                <Route path="/employeeDash" element={<EmployeeDash />} />
-
-                <Route path="/application/1" element={<BasicInfo />} />
-
-                <Route path="/application/2" element={<PersonalInfo />} />
-
-                <Route path="/application/3" element={<SalServInfo />} />
-
-                <Route path="/application/4" element={<LoanInfo />} />
-
-                <Route path="/application/5" element={<LastPageInfo />} />
-
-                <Route
-                    path="/application/preview"
-                    element={<PreviewApplication />}
-                />
 
                 <Route path="/aboutus" element={<AboutUs />} />
 
@@ -118,6 +87,167 @@ export default function App() {
                 <Route path="/notices" element={<Notices />} />
 
                 <Route path="/contact" element={<Contact />} />
+
+                <Route
+                    path="/personnel_dashboard"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <PersonnelDash />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+                <Route
+                    path="/processing_loan"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <LoanPage />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/processing_loan/loan_details"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <LoanDetails />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/processing_loan/sanction_copy"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <SanctionCopy />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/processing_loan/bill_copy"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <BillCopy />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBook />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook/newentry"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBookNewEntry />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook/preview"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBookPreview />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook/editentry"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBookEdit />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook/addheading"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBookAddHeading />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/cashbook/receivepayment"
+                    element={
+                        <ProtectedPersonnelRoute>
+                            <CashBookReceivePayment />
+                        </ProtectedPersonnelRoute>
+                    }
+                />
+
+                <Route
+                    path="/employeeDash"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <EmployeeDash />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/1"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <BasicInfo />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/2"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <PersonalInfo />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/3"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <SalServInfo />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/4"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <LoanInfo />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/5"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <LastPageInfo />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
+
+                <Route
+                    path="/application/preview"
+                    element={
+                        <ProtectedEmployeeRoute>
+                            <PreviewApplication />
+                        </ProtectedEmployeeRoute>
+                    }
+                />
             </Routes>
         </>
     );
