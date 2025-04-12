@@ -143,7 +143,6 @@ export default function Login() {
             DATE_OF_BIRTH: new Date(dob.$d).toLocaleDateString("en-US"),
         };
 
-
         try {
             const res = await axios.post(
                 "http://" + backend_site_address + "/application_login",

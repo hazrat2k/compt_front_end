@@ -197,6 +197,14 @@ export default function NavBar(props) {
                                     Contact
                                 </div>
                             </a>
+                            <a
+                                href="/reactFirst"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <div className="navbar_item nav_reactFirst">
+                                    React First
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>

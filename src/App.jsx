@@ -28,6 +28,7 @@ import Sections from "./pages/sections/sections";
 import Downloads from "./pages/downloads/downloads";
 import Notices from "./pages/notices/notices";
 import Contact from "./pages/contact/contact";
+import ReactFirst from "./pages/reactFirst/reactFirst";
 
 import CashBookNewEntry from "./pages/cashBookNewEntry/cashBookNewEntry";
 import CashBookPreview from "./pages/cashBookPreview/cashBookPreview";
@@ -87,6 +88,8 @@ export default function App() {
                 <Route path="/notices" element={<Notices />} />
 
                 <Route path="/contact" element={<Contact />} />
+
+                <Route path="/reactFirst" element={<ReactFirst />} />
 
                 <Route
                     path="/personnel_dashboard"
