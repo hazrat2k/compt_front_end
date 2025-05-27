@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import React, { useState, useEffect, useRef } from "react";
 import "./cashBookNewEntry.css";
-import useLoanTypeStore from "../../stores/loanTypeStore";
 import axios from "axios";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import usePersonnelDataStore from "../../stores/personnelDataStore";
 
-import Autocomplete from "@mui/material/Autocomplete";
-import IconButton from "@mui/material/IconButton";
+import { Autocomplete, TextField, Snackbar, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Snackbar from "@mui/material/Snackbar";
 import Textarea from "@mui/joy/Textarea";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import GetFinancialYear from "../../utils/functions/getFinancialYear";
 import { backend_site_address } from "../../stores/const/siteAddress";
 
@@ -31,6 +24,18 @@ export default function CashBookNewEntry() {
     const [cb_sub_code_object, setcb_sub_code_object] = useState(null);
 
     const [open, setOpen] = useState(false);
+    const mainHeadRef = useRef(null);
+    const subHeadRef = useRef(null);
+
+    const voucherNoRef = useRef(null);
+    const voucherDateRef = useRef(null);
+    const checkNoRef = useRef(null);
+    const checkDateRef = useRef(null);
+    const incomeRef = useRef(null);
+    const expenseRef = useRef(null);
+
+    const descriptionRef = useRef(null);
+    const saveButtonRef = useRef(null);
 
     const cb_userName = cb_data["USER_NAME"];
     const [cbAccountNo, setcbAccountNo] = useState("");
@@ -40,6 +45,7 @@ export default function CashBookNewEntry() {
     const [cbSubCodeNo, setcbSubCodeNo] = useState("");
     const [cbSubCodeName, setcbSubCodeName] = useState("");
     const [cbVoucherDescription, setcbVoucherDescription] = useState("");
+
     const [cbVoucherScrollNo, setcbVoucherScrollNo] = useState("");
     const [cbVoucherDate, setcbVoucherDate] = useState("");
     const [cbChequeNo, setcbChequeNo] = useState("");
@@ -61,8 +67,11 @@ export default function CashBookNewEntry() {
     const [cbChequeDateErrorText, setcbChequeDateErrorText] = useState("");
     const [cbIncomeErrorText, setcbIncomeErrorText] = useState("");
     const [cbExpenseErrorText, setcbExpenseErrorText] = useState("");
-    const [cbBalanceAmountErrorText, setcbBalanceAmountErrorText] =
-        useState("");
+
+    //const [cbChequeNo, setcbChequeNo] = useState("");
+    const [chequeSuggestions, setChequeSuggestions] = useState([]);
+
+    useState("");
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -86,21 +95,33 @@ export default function CashBookNewEntry() {
 
         setOpen(false);
     };
+    const handleKeyDown = (event, nextRef) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            nextRef?.current?.focus();
+        }
+    };
 
-    const cbFieldItem = (label, value, setValue, type, errorText) => {
+    const cbFieldItem = (label, value, setValue, type, errorText, inpuRef) => {
         return (
             <div className="pd_section_item">
                 <div className="pd_section_item_label">{label}</div>
                 <div className="pd_section_item_colon">:</div>
                 <TextField
-                    style={{ width: "50%" }}
+                    style={{ width: "25%" }}
                     error={errorText != ""}
                     helperText={errorText}
                     id="standard-basic"
                     variant="standard"
                     type={type}
                     value={value}
+                    inputRef={inpuRef}
                     onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={
+                        label === "Voucher_Scroll No"
+                            ? (e) => handleKeyDown(e, inpuRef)
+                            : undefined
+                    }
                 />
             </div>
         );
@@ -184,15 +205,29 @@ export default function CashBookNewEntry() {
                 <Autocomplete
                     disablePortal
                     value={cb_account_object}
-                    onChange={(e, v) => accountNameNoSet(v)}
+                    //onChange={(e, v) => accountNameNoSet(v)}
+                    onChange={(e, v) => {
+                        accountNameNoSet(v);
+                        setTimeout(() => {
+                            mainHeadRef.current?.focus();
+                        });
+                    }}
                     options={cb_account_list}
                     getOptionLabel={(option) => option.TAHBIL_NAME}
-                    sx={{ width: "60%" }}
+                    sx={{ width: "50%" }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             error={cbAccountNameError !== ""}
                             helperText={cbAccountNameError}
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 40, // Total height of the input box
+                                },
+                                "& .MuiInputBase-input": {
+                                    padding: "10px 14px", // Controls the internal text padding
+                                },
+                            }}
                         />
                     )}
                 />
@@ -208,15 +243,30 @@ export default function CashBookNewEntry() {
                 <Autocomplete
                     disablePortal
                     value={cb_main_code_object}
-                    onChange={(e, v) => mainCodeNoSet(v)}
+                    //onChange={(e, v) => mainCodeNoSet(v)}
+                    onChange={(e, v) => {
+                        mainCodeNoSet(v);
+                        setTimeout(() => {
+                            subHeadRef.current?.focus();
+                        });
+                    }}
                     options={cb_main_code_description}
                     getOptionLabel={(option) => option.MAIN_CODE_DESCRIPTION}
-                    sx={{ width: "60%" }}
+                    sx={{ width: "50%" }}
                     renderInput={(params) => (
                         <TextField
+                            inputRef={mainHeadRef}
                             {...params}
                             error={cbMainCodeNameError !== ""}
                             helperText={cbMainCodeNameError}
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 40, // Total height of the input box
+                                },
+                                "& .MuiInputBase-input": {
+                                    padding: "10px 14px", // Controls the internal text padding
+                                },
+                            }}
                         />
                     )}
                 />
@@ -232,7 +282,14 @@ export default function CashBookNewEntry() {
                 <Autocomplete
                     disablePortal
                     value={cb_sub_code_object}
-                    onChange={(e, v) => subCodeNoSet(v)}
+                    //onChange={(e, v) => subCodeNoSet(v)}
+                    onChange={(e, v) => {
+                        subCodeNoSet(v);
+                        resetAllHeadChange();
+                        setTimeout(() => {
+                            voucherNoRef.current?.focus();
+                        });
+                    }}
                     options={cb_sub_code_description}
                     getOptionLabel={(option) =>
                         option.SUB_CODE_DESCRIPTION +
@@ -240,12 +297,21 @@ export default function CashBookNewEntry() {
                         option.INC_EXP +
                         ") "
                     }
-                    sx={{ width: "60%" }}
+                    sx={{ width: "50%" }}
                     renderInput={(params) => (
                         <TextField
+                            inputRef={subHeadRef}
                             {...params}
                             error={cbSubCodeNameError !== ""}
                             helperText={cbSubCodeNameError}
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 40, // Total height of the input box
+                                },
+                                "& .MuiInputBase-input": {
+                                    padding: "10px 14px", // Controls the internal text padding
+                                },
+                            }}
                         />
                     )}
                 />
@@ -293,7 +359,6 @@ export default function CashBookNewEntry() {
         } else {
             setcbVoucherDescriptionErrorText("");
         }
-
         return true;
     };
 
@@ -305,10 +370,25 @@ export default function CashBookNewEntry() {
         // setcbSubCodeNo("");
         // setcbSubCodeName("");
         setcbVoucherDescription("");
-        // setcbVoucherScrollNo("");
-        // setcbVoucherDate("");
-        // setcbChequeNo("");
-        // setcbChequeDate("");
+        //setcbVoucherScrollNo("");
+        //setcbVoucherDate("");
+        //setcbChequeNo("");
+        //setcbChequeDate("");
+        setcbIncome("");
+        setcbExpense("");
+    };
+    const resetAllHeadChange = () => {
+        // setcbAccountNo("");
+        // setcbAccountName("");
+        // setcbMainCodeNo("");
+        // setcbMainCodeName("");
+        // setcbSubCodeNo("");
+        // setcbSubCodeName("");
+        setcbVoucherDescription("");
+        setcbVoucherScrollNo("");
+        setcbVoucherDate("");
+        setcbChequeNo("");
+        setcbChequeDate("");
         setcbIncome("");
         setcbExpense("");
     };
@@ -369,15 +449,41 @@ export default function CashBookNewEntry() {
         }
     };
 
+    // New for autoComplete
+
+    useEffect(() => {
+        const saved = JSON.parse(localStorage.getItem("chequeNoList")) || [];
+        setChequeSuggestions(saved);
+    }, []);
+
+    const handleChequeChange = (e) => {
+        setcbChequeNo(e.target.value);
+    };
+
+    const handleChequeEnter = (e) => {
+        if (e.key === "Enter") {
+            const saved =
+                JSON.parse(localStorage.getItem("chequeNoList")) || [];
+            if (!saved.includes(cbChequeNo) && cbChequeNo.trim() !== "") {
+                const updated = [cbChequeNo, ...saved].slice(0, 10); // max 10 items
+                localStorage.setItem("chequeNoList", JSON.stringify(updated));
+                setChequeSuggestions(updated);
+            }
+            checkDateRef.current?.focus();
+        }
+    };
+
+    //
+
     return (
         <>
             <NavBar hide={{ nav_mid: true }} />
 
             <div className="cash_book_dashboard">
-                <div className="cb_page_label">New Entry</div>
+                <div className="cb_page_label">New Entry (Cash Book)</div>
 
                 <div className="pd_section">
-                    <form className="cash_book">
+                    <form className="cash_book" autoComplete="on">
                         <div className="cb_section_items">
                             <div className="pd_section_items_div">
                                 {cbAccountNameSelectItem()}
@@ -398,114 +504,220 @@ export default function CashBookNewEntry() {
                             </div>
                         </div>
 
-                        <div className="cb_section_items">
-                            <div className="pd_section_items_div">
-                                {cbFieldItem(
-                                    "Voucher/Scroll No",
-                                    cbVoucherScrollNo,
-                                    setcbVoucherScrollNo,
-                                    "number",
-                                    cbVoucherScrollNoErrorText
-                                )}
-                            </div>
-                            <div className="section_items_div">
-                                {cbFieldItem(
-                                    "Cheque/FDR No",
-                                    cbChequeNo,
-                                    setcbChequeNo,
-                                    "number",
-                                    cbChequeNoErrorText
-                                )}
-                            </div>
+                        <div className="pd_section_item">
+                            <span className="cb_section_item_label">
+                                Entry/Vou/Scrl No :
+                            </span>
+                            <TextField
+                                inputRef={voucherNoRef}
+                                variant="outlined"
+                                size="small"
+                                style={{ width: "150px" }}
+                                value={cbVoucherScrollNo}
+                                name="voucher-scroll-no"
+                                autoComplete="on"
+                                onChange={(e) =>
+                                    setcbVoucherScrollNo(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        /* console.log("Enter was pressed!"); */
+                                        voucherDateRef.current?.focus();
+                                    }
+                                }}
+                            />
+                            <span className="cb_section_left_margin_label">
+                                Entry/Vouc/Scrl Date:
+                            </span>
+                            <TextField
+                                inputRef={voucherDateRef}
+                                type="date"
+                                variant="outlined"
+                                size="small"
+                                style={{ width: "180px" }}
+                                value={cbVoucherDate}
+                                onChange={(e) =>
+                                    setcbVoucherDate(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        /* console.log("Enter was pressed!"); */
+                                        checkNoRef.current?.focus();
+                                    }
+                                }}
+                            />
                         </div>
+                        <div className="pd_section_item">
+                            <span className="cb_section_item_label">
+                                Check No.
+                            </span>
 
-                        <div className="cb_section_items">
-                            <div className="pd_section_items_div">
-                                {cbFieldItem(
-                                    "Voucher Date",
-                                    cbVoucherDate,
-                                    setcbVoucherDate,
-                                    "date",
-                                    cbVoucherDateErrorText
-                                )}
-                            </div>
-                            <div className="section_items_div">
-                                {cbFieldItem(
-                                    "Cheque/FDR Date",
-                                    cbChequeDate,
-                                    setcbChequeDate,
-                                    "date",
-                                    cbChequeDateErrorText
-                                )}
-                            </div>
-                        </div>
-
-                        <div
-                            className="pd_section_item"
-                            style={{ width: "60%", color: "crimson" }}
-                        >
-                            {cbIncomeTrue ? (
-                                <>
-                                    <div className="pd_section_item_label">
-                                        Income Amount
-                                    </div>
-                                    <div className="pd_section_item_colon">
-                                        :
-                                    </div>
+                            <Autocomplete
+                                freeSolo
+                                options={chequeSuggestions}
+                                inputValue={cbChequeNo}
+                                onInputChange={(event, newInputValue) => {
+                                    setcbChequeNo(newInputValue);
+                                }}
+                                onKeyDown={handleChequeEnter}
+                                renderInput={(params) => (
                                     <TextField
-                                        style={{ width: "50%" }}
-                                        error={cbIncomeErrorText != ""}
-                                        helperText={cbIncomeErrorText}
-                                        id="standard-basic"
-                                        variant="standard"
-                                        value={cbIncome}
-                                        onChange={(e) =>
-                                            setcbIncome(e.target.value)
-                                        }
+                                        {...params}
+                                        inputRef={checkNoRef}
+                                        //label="Cheque No"
+                                        size="small"
+                                        variant="outlined"
+                                        style={{ width: "150px" }}
                                     />
-                                </>
-                            ) : (
-                                <>
-                                    <div className="pd_section_item_label">
-                                        Expense Amount
-                                    </div>
-                                    <div className="pd_section_item_colon">
-                                        :
-                                    </div>
-                                    <TextField
-                                        style={{ width: "50%" }}
-                                        error={cbExpenseErrorText != ""}
-                                        helperText={cbExpenseErrorText}
-                                        id="standard-basic"
-                                        variant="standard"
-                                        value={cbExpense}
-                                        onChange={(e) =>
-                                            setcbExpense(e.target.value)
-                                        }
-                                    />
-                                </>
-                            )}
+                                )}
+                            />
+                            {/* <TextField
+                                inputRef={checkNoRef}
+                                variant="outlined"
+                                size="small"
+                                //name="cheque-number"
+                                style={{ width: "150px" }}
+                                value={cbChequeNo}
+                                //autoComplete="on"
+                                onChange={(e) => setcbChequeNo(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        checkDateRef.current?.focus();
+                                    }
+                                }}
+                            /> */}
+                            {/* <input
+                                ref={checkNoRef}
+                                type="text"
+                                name="cheque-number"
+                                autoComplete="on"
+                                value={cbChequeNo}
+                                onChange={(e) => setcbChequeNo(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        checkDateRef.current?.focus();
+                                    }
+                                }}
+                                style={{
+                                    width: "150px",
+                                    height: "40px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    paddingLeft: "8px",
+                                    fontSize: "14px",
+                                }}
+                            /> */}
+                            <span className="cb_section_left_margin_label">
+                                Check Date:
+                            </span>
+                            <TextField
+                                inputRef={checkDateRef}
+                                type="date"
+                                variant="outlined"
+                                size="small"
+                                style={{ width: "180px" }}
+                                value={cbChequeDate}
+                                onChange={(e) =>
+                                    setcbChequeDate(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        descriptionRef.current?.focus();
+                                    }
+                                }}
+                                /* onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        cbIncomeTrue
+                                            ? incomeRef.current?.focus()
+                                            : expenseRef.current?.focus();
+                                    }
+                                }} */
+                            />
                         </div>
-
-                        <div
-                            className="pd_section_item"
-                            style={{ color: "crimson" }}
-                        >
-                            <div className="pd_section_item_label">
-                                Details Description
+                        <div className="pd_section_item">
+                            <div className="cb_section_item_label">
+                                Description Details
                             </div>
                             <div className="pd_section_item_colon">:</div>
                             <TextField
-                                style={{ width: "100%" }}
+                                inputRef={descriptionRef}
+                                style={{ width: "50%" }}
                                 minRows={2}
-                                variant="standard"
+                                variant="outlined"
+                                size="small"
                                 error={cbVoucherDescriptionErrorText != ""}
                                 helperText={cbVoucherDescriptionErrorText}
                                 value={cbVoucherDescription}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        cbIncomeTrue
+                                            ? incomeRef.current?.focus()
+                                            : expenseRef.current?.focus();
+                                    }
+                                }}
+                                /* onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        saveButtonRef.current?.focus();
+                                    }
+                                }} */
                                 onChange={(e) =>
                                     setcbVoucherDescription(e.target.value)
                                 }
                             />
+                        </div>
+                        <div className="pd_section_item">
+                            {cbIncomeTrue ? (
+                                <>
+                                    <span className="cb_section_item_label">
+                                        Income Amount:
+                                    </span>
+                                    <TextField
+                                        inputRef={incomeRef}
+                                        style={{ width: "20%" }}
+                                        error={cbIncomeErrorText != ""}
+                                        helperText={cbIncomeErrorText}
+                                        id="standard-basic"
+                                        variant="outlined"
+                                        size="small"
+                                        value={cbIncome}
+                                        onChange={(e) =>
+                                            setcbIncome(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                saveButtonRef.current?.focus();
+                                            }
+                                        }}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <span className="cb_section_item_label">
+                                        Expense Amount:
+                                    </span>
+                                    <TextField
+                                        inputRef={expenseRef}
+                                        style={{ width: "50%" }}
+                                        error={cbExpenseErrorText != ""}
+                                        helperText={cbExpenseErrorText}
+                                        id="standard-basic"
+                                        variant="outlined"
+                                        size="small"
+                                        value={cbExpense}
+                                        onChange={(e) =>
+                                            setcbExpense(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                /* console.log(
+                                                    "Enter was pressed!"
+                                                ); */
+                                                saveButtonRef.current?.focus();
+                                            }
+                                        }}
+                                    />
+                                </>
+                            )}
                         </div>
 
                         <Snackbar
@@ -527,6 +739,14 @@ export default function CashBookNewEntry() {
                             <div
                                 className="ld_forward"
                                 onClick={cashDataInsert}
+                                //onSubmit={cashDataInsert}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        cashDataInsert();
+                                    }
+                                }}
+                                ref={saveButtonRef}
+                                tabIndex={-1}
                             >
                                 Save
                             </div>
