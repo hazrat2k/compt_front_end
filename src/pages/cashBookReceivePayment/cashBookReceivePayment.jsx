@@ -2,24 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import "./cashBookReceivePayment.css";
 import axios from "axios";
-import moment from "moment";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
 import { backend_site_address } from "../../stores/const/siteAddress";
-import editIcon from "../../assets/images/edit.png";
-import ReceiveMoney from "../../utils/pdfCopy/receiveMoney";
 
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/material/styles";
-import Checkbox from "@mui/material/Checkbox";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -35,7 +32,14 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import useCashBookEntryStore from "../../stores/cashBookEntryStore";
 import usePersonnelDataStore from "../../stores/personnelDataStore";
-import { blue } from "@mui/material/colors";
+
+import * as XLSX from "xlsx";
+
+/* import jsPDF from "jspdf";
+import "jspdf-autotable"; */
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const TablePaginationActions = (props) => {
     const theme = useTheme();
@@ -120,9 +124,8 @@ const tableStyle = {
         fontWeight: "bold",
         fontSize: "16pt",
         color: "green",
-        padding: 0,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 5,
+        paddingRight: 5,
         paddingTop: 5,
         paddingBottom: 5,
     },
@@ -130,18 +133,18 @@ const tableStyle = {
     head: {
         fontFamily: "PT Serif",
         fontWeight: "bold",
-        fontSize: "13pt",
+        fontSize: "12pt",
         padding: 0,
         paddingLeft: 10,
         paddingRight: 10,
-        paddingTop: 5,
-        paddingBottom: 5,
+        paddingTop: 4,
+        paddingBottom: 4,
         // backgroundColor: "#FF7F7F",
         // width: "80pt",
         // height: "35pt",
     },
 
-    body: {
+    /*  body: {
         fontFamily: "PT Serif",
         padding: 0,
         paddingLeft: 10,
@@ -173,7 +176,7 @@ const tableStyle = {
         // color: "blue",
         textDecoration: "underline",
         alignItems: "center",
-    },
+    }, */
 };
 
 export default function CashBookReceivePayment() {
@@ -189,9 +192,8 @@ export default function CashBookReceivePayment() {
     const [cbpAccountName, setCbpAccountName] = useState({});
     const [cbpAccountNo, setCbpAccountNo] = useState("");
 
-    const [incomeExpenseAccountList, setIncomeExpenseAccountList] = useState(
-        []
-    );
+    const [incomeExpenseList, setIncomeExpenseList] = useState([]);
+    const [receivePaymentAmt, setReceivePaymentAmt] = useState([]);
     const [tempIncomeExpenseAccountList, setTempIncomeExpenseAccountList] =
         useState([]);
     // const [incomeAccountList, setIncomeAccountList] = useState([]);
@@ -250,14 +252,14 @@ export default function CashBookReceivePayment() {
                 "http://" + backend_site_address + "/account_list"
             );
             setCbpAccountList(resAcc.data);
-
-            const res = await axios.get(
+            const resPay = await axios.get(
                 "http://" + backend_site_address + "/get_total_income_expense"
             );
             // setPreviewData(res.data);
             // setTempPreviewData(res.data);
-            setIncomeExpenseAccountList(res.data);
-            setTempIncomeExpenseAccountList(res.data);
+            setReceivePaymentAmt(resPay.data);
+            console.log(setReceivePaymentAmt);
+            setTempIncomeExpenseAccountList(resPay.data);
         } catch (err) {
             console.log(err);
         }
@@ -271,8 +273,59 @@ export default function CashBookReceivePayment() {
     }, [resetEntryData]);
 
     const handleFilter = async () => {
-        
         // console.log(cbpAccountName);
+    };
+
+    const downloadExcel = async () => {
+        const worksheet = XLSX.utils.json_to_sheet(receivePaymentAmt);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        XLSX.writeFile(workbook, "Transaction_Data.xlsx");
+    };
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text("Bangladesh University of Engineering and Technology", 14, 10); // Title at the top
+
+        doc.setFontSize(12);
+        doc.text("Oncome and Expense Report", 14, 20); // Subtitle
+
+        const tableColumn = [
+            "TransId",
+            "MainCodeId",
+            "MainCodeDescription",
+            "Income Amount",
+            "TransId",
+            "MainCodeId",
+            "MainCodeDescription",
+            "Expense Amount",
+        ];
+        const tableRows = [];
+
+        receivePaymentAmt.forEach((row) => {
+            const rowData = [
+                row.IN_TRANS_ID,
+                row.IN_CODE,
+                row.IN_DESC,
+                row.IN_AMOUNT,
+                row.EX_TRANS_ID,
+                row.EX_CODE,
+                row.EX_DESC,
+                row.EX_AMOUNT,
+            ];
+            tableRows.push(rowData);
+        });
+
+        autoTable(doc, {
+            head: [tableColumn],
+            body: tableRows,
+            startY: 30,
+        });
+
+        const blob = doc.output("blob");
+        const url = URL.createObjectURL(blob);
+        window.open(url);
     };
 
     return (
@@ -344,180 +397,37 @@ export default function CashBookReceivePayment() {
                     sx={{
                         display: "flex", // Flexbox layout
                         alignSelf: "center",
-                        width: "800px",
+                        width: "1200px",
                         flexDirection: "row",
                     }}
                 >
                     <TableContainer
                         component={Paper}
-                        sx={{
+                        /*                         sx={{
                             justifyContent: "center",
                             alignItems: "center",
-                        }}
+                        }} */
                     >
                         <Table
                             sx={{
-                                maxWidth: 800,
-                                alignSelf: "center",
-                                alignItems: "center",
+                                maxWidth: 1200,
+                                /*                                 alignSelf: "center",
+                                alignItems: "center", */
                             }}
-                            aria-label="custom pagination table"
+                            /* aria-label="custom pagination table" */
                         >
                             <TableHead>
                                 <TableRow>
-                                    {/* <TableCell
-                                        align="center"
-                                        colSpan={2}
-                                        style={tableStyle.upperHead}
-                                    >
-                                        Income
-                                    </TableCell> */}
                                     <TableCell
                                         align="center"
-                                        colSpan={2}
+                                        colSpan={4}
                                         style={tableStyle.upperHead}
                                     >
                                         Income
                                     </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell style={tableStyle.head}>
-                                        Main Head
-                                    </TableCell>
-                                    <TableCell
-                                        style={tableStyle.head}
-                                        sx={{ textAlign: "right" }}
-                                    >
-                                        Taka
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {
-                                    // (rowsPerPage > 0
-                                    //     ? expenseAccountList.slice(
-                                    //           page * rowsPerPage,
-                                    //           page * rowsPerPage + rowsPerPage
-                                    //       )
-                                    //     : previewData
-                                    // )
-                                    incomeExpenseAccountList
-                                        .filter((item) => item.TOTAL_INCOME > 0)
-                                        .map((row) => (
-                                            <TableRow
-                                                key={row.MAIN_CODE_DESCRIPTION}
-                                                // sx={{
-                                                //     backgroundColor:
-                                                //         row.TRANSACTION_ID % 2 == 0
-                                                //             ? "lightgreen"
-                                                //             : "lightblue",
-                                                // }}
-                                            >
-                                                <TableCell
-                                                    style={
-                                                        tableStyle.description
-                                                    }
-                                                >
-                                                    {row.MAIN_CODE_DESCRIPTION}
-                                                </TableCell>
-                                                <TableCell
-                                                    style={tableStyle.body}
-                                                >
-                                                    {row.TOTAL_INCOME}
-                                                </TableCell>
-
-                                                {/* {cbp_userName == row.ENTRY_USER ? (
-                                            <TableCell
-                                                style={{
-                                                    fontFamily: "PT Serif",
-                                                    padding: 0,
-                                                    paddingLeft: 10,
-                                                    paddingRight: 10,
-                                                    cursor: "pointer",
-                                                    color: "blue",
-                                                    textDecoration: "underline",
-                                                }}
-                                                onClick={handleEditEntry}
-                                            >
-                                                {"Edit"}
-                                            </TableCell>
-                                        ) : (
-                                            <TableCell style={tableStyle.body}>
-                                                {"Edit"}
-                                            </TableCell>
-                                        )} */}
-                                            </TableRow>
-                                        ))
-                                }
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{ height: 53 * emptyRows }}
-                                    >
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                            {/* <TableFooter>
-                                <TableRow>
-                                    <TablePagination
-                                        rowsPerPageOptions={[
-                                            5,
-                                            10,
-                                            25,
-                                            { label: "All", value: -1 },
-                                        ]}
-                                        colSpan={17}
-                                        count={previewData.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        slotProps={{
-                                            select: {
-                                                inputProps: {
-                                                    "aria-label":
-                                                        "rows per page",
-                                                },
-                                                native: true,
-                                            },
-                                        }}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={
-                                            handleChangeRowsPerPage
-                                        }
-                                        ActionsComponent={
-                                            TablePaginationActions
-                                        }
-                                    />
-                                </TableRow>
-                            </TableFooter> */}
-                        </Table>
-                    </TableContainer>
-                    <TableContainer
-                        component={Paper}
-                        sx={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Table
-                            sx={{
-                                maxWidth: 800,
-                                alignSelf: "center",
-                                alignItems: "center",
-                            }}
-                            aria-label="custom pagination table"
-                        >
-                            <TableHead>
-                                <TableRow>
-                                    {/* <TableCell
-                                        align="center"
-                                        colSpan={2}
-                                        style={tableStyle.upperHead}
-                                    >
-                                        Income
-                                    </TableCell> */}
                                     <TableCell
                                         align="center"
-                                        colSpan={2}
+                                        colSpan={4}
                                         style={tableStyle.upperHead}
                                     >
                                         Expense
@@ -525,125 +435,75 @@ export default function CashBookReceivePayment() {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell style={tableStyle.head}>
-                                        Main Head
+                                        TransId
                                     </TableCell>
-                                    <TableCell
-                                        style={tableStyle.head}
-                                        sx={{ textAlign: "right" }}
-                                    >
-                                        Taka
+                                    <TableCell style={tableStyle.head}>
+                                        MainCodeId
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        MainCodeDescription
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        Income Amount
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        TransId
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        MainCodeId
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        MainCodeDescription
+                                    </TableCell>
+                                    <TableCell style={tableStyle.head}>
+                                        Expense Amount
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {
-                                    // (rowsPerPage > 0
-                                    //     ? expenseAccountList.slice(
-                                    //           page * rowsPerPage,
-                                    //           page * rowsPerPage + rowsPerPage
-                                    //       )
-                                    //     : previewData
-                                    // )
-                                    incomeExpenseAccountList
-                                        .filter(
-                                            (item) => item.TOTAL_EXPENSE > 0
-                                        )
-                                        .map((row) => (
-                                            <TableRow
-                                                key={row.TRANSACTION_ID}
-                                                // sx={{
-                                                //     backgroundColor:
-                                                //         row.TRANSACTION_ID % 2 == 0
-                                                //             ? "lightgreen"
-                                                //             : "lightblue",
-                                                // }}
-                                            >
-                                                <TableCell
-                                                    style={
-                                                        tableStyle.description
-                                                    }
-                                                >
-                                                    {row.MAIN_CODE_DESCRIPTION}
-                                                </TableCell>
-                                                <TableCell
-                                                    style={tableStyle.body}
-                                                >
-                                                    {row.TOTAL_EXPENSE}
-                                                </TableCell>
-
-                                                {/* {cbp_userName == row.ENTRY_USER ? (
-                                            <TableCell
-                                                style={{
-                                                    fontFamily: "PT Serif",
-                                                    padding: 0,
-                                                    paddingLeft: 10,
-                                                    paddingRight: 10,
-                                                    cursor: "pointer",
-                                                    color: "blue",
-                                                    textDecoration: "underline",
-                                                }}
-                                                onClick={handleEditEntry}
-                                            >
-                                                {"Edit"}
+                                {receivePaymentAmt.map((row, index) => (
+                                    <TableRow key={index}>
+                                        {
+                                            <TableCell sx={{ py: 0.4 }}>
+                                                {row.IN_TRANS_ID}
                                             </TableCell>
-                                        ) : (
-                                            <TableCell style={tableStyle.body}>
-                                                {"Edit"}
-                                            </TableCell>
-                                        )} */}
-                                            </TableRow>
-                                        ))
-                                }
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{ height: 53 * emptyRows }}
-                                    >
-                                        <TableCell colSpan={6} />
+                                        }
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.IN_CODE}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.IN_DESC}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.IN_AMOUNT}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.EX_TRANS_ID}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.EX_CODE}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.EX_DESC}
+                                        </TableCell>
+                                        <TableCell sx={{ py: 0.4 }}>
+                                            {row.EX_AMOUNT}
+                                        </TableCell>
                                     </TableRow>
-                                )}
+                                ))}
                             </TableBody>
-                            {/* <TableFooter>
-                                <TableRow>
-                                    <TablePagination
-                                        rowsPerPageOptions={[
-                                            5,
-                                            10,
-                                            25,
-                                            { label: "All", value: -1 },
-                                        ]}
-                                        colSpan={17}
-                                        count={previewData.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        slotProps={{
-                                            select: {
-                                                inputProps: {
-                                                    "aria-label":
-                                                        "rows per page",
-                                                },
-                                                native: true,
-                                            },
-                                        }}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={
-                                            handleChangeRowsPerPage
-                                        }
-                                        ActionsComponent={
-                                            TablePaginationActions
-                                        }
-                                    />
-                                </TableRow>
-                            </TableFooter> */}
                         </Table>
                     </TableContainer>
                 </Box>
                 <div className="ld_button">
-                    <div className="ld_forward">PDF File</div>
-                    <div className="ld_forward">Excel File</div>
+                    <div className="ld_forward" onClick={downloadPDF}>
+                        PDF File
+                    </div>
+                    <div className="ld_forward" onClick={downloadExcel}>
+                        Excel File
+                    </div>
                 </div>
             </div>
-
-            {/* <ReceiveMoney /> */}
 
             <Footer />
         </>

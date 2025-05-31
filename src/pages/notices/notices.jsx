@@ -56,6 +56,8 @@ export default function Notices() {
                     <TableHead>
                         <TableRow>
                             <TableCell>Notice No</TableCell>
+                            <TableCell>Date</TableCell>
+                            <TableCell>Description</TableCell>
                             {/* <TableCell>Description</TableCell> */}
                             <TableCell>Link</TableCell>
                         </TableRow>
@@ -64,23 +66,8 @@ export default function Notices() {
                         {noticeList.map((notice) => (
                             <TableRow key={notice.NOTICE_NO}>
                                 <TableCell>{notice.NOTICE_NO}</TableCell>
-                                {/* <TableCell>{file.size}</TableCell> */}
-                                {/* <TableCell>
-                                    <a
-                                        href={getDirectDownloadLink(
-                                            notice.LINK_ADDRESS
-                                        )}
-                                        download
-                                        style={{ textDecoration: "none" }}
-                                    >
-                                        <Button
-                                            variant="outlined"
-                                            startIcon={<Download size={16} />}
-                                        >
-                                            Download
-                                        </Button>
-                                    </a>
-                                </TableCell> */}
+                                <TableCell>{notice.NOTICE_DATE}</TableCell>
+                                <TableCell>{notice.NOTICE_TITLE}</TableCell>
                                 <TableCell>
                                     <Button
                                         variant="outlined"

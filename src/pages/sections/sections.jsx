@@ -9,39 +9,6 @@ import demo_img from "../../assets/employee_img/system_analyst.jpg";
 import compt from "../../assets/images/prankanai.jpg";
 import ToTitleCase from "../../utils/functions/toTitleCase";
 
-// const employees = [
-//     {
-//         id: 1,
-//         name: "John Doe",
-//         designation: "Software Engineer",
-//         section: "IT Department",
-//         email: "john.doe@example.com",
-//         mobile: "+1234567890",
-//         pabx: "1234",
-//         image: "path/to/john_doe.jpg", // Replace with actual image path
-//     },
-//     {
-//         id: 2,
-//         name: "Jane Smith",
-//         designation: "Project Manager",
-//         section: "Operations",
-//         email: "jane.smith@example.com",
-//         mobile: "+0987654321",
-//         pabx: "5678",
-//         image: "path/to/jane_smith.jpg", // Replace with actual image path
-//     },
-//     {
-//         id: 3,
-//         name: "Mark Johnson",
-//         designation: "HR Specialist",
-//         section: "Human Resources",
-//         email: "mark.johnson@example.com",
-//         mobile: "+1122334455",
-//         pabx: "9101",
-//         image: "path/to/mark_johnson.jpg", // Replace with actual image path
-//     },
-// ];
-
 const EmployeeCard = ({ employee }) => {
     return (
         <div className="employee-card">
@@ -73,12 +40,15 @@ const EmployeeCard = ({ employee }) => {
                     textAlign: "left",
                     fontSize: "large",
                     fontWeight: "bold",
+                    fontFamily: "Arial",
+                    color: "navy",
                 }}
             >
-                {employee.EMPLOYEE_NAME}
+                {ToTitleCase(employee.EMPLOYEE_NAME)}
             </div>
             <p style={{ textAlign: "left" }}>
-                <strong>Designation:</strong> {employee.DESIGNATION}
+                <strong>Designation:</strong>{" "}
+                {ToTitleCase(employee.DESIGNATION)}
             </p>
             {/* <p style={{ textAlign: "left" }}>
                 <strong>Section:</strong> {employee.SECTION_NAME}

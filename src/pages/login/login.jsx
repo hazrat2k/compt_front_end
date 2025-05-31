@@ -219,7 +219,8 @@ export default function Login() {
         // whether service period is more than 10 years or not.
         if (checkValidation(emp_data[0])) {
             setEmployeeData(emp_data[0]);
-            loginNavigate("/employeedash");
+            //loginNavigate("/employeedash");
+            loginNavigate("/cashbook");
         }
     };
 

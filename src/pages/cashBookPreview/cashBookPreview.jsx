@@ -181,9 +181,12 @@ export default function CashBookPreview() {
     const [previewData, setPreviewData] = useState([]);
     const [tempPreviewData, setTempPreviewData] = useState([]);
 
+    const [transactionId, setTransactionId] = useState("");
+    const [testData, setTestData] = useState([]);
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
+    let flag = false; // Flag to indicate if transactionId search is active
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0
@@ -245,38 +248,58 @@ export default function CashBookPreview() {
         loadPreviewData();
     }, [resetEntryData]);
 
+    // New From Hazrat Ali
+
+    /*     const transIdSrch = async (transactionId) => {
+        try {
+            const res = await axios.post(
+                "http://" + backend_site_address + "/trans_id_search",
+                { EntryId: transactionId }
+            );
+            setTestData(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }; */
+    // End From Hazrat Ali
+
     const handleFilter = () => {
         let filteredPreviewData = tempPreviewData;
 
-        if (cbpAccountName !== "") {
+        if (flag === true && transactionId !== "") {
             filteredPreviewData = filteredPreviewData.filter((record) => {
-                return record.ACCOUNT_NAME === cbpAccountName;
+                return record.TRANSACTION_ID == transactionId;
             });
-        }
+        } else {
+            if (cbpAccountName !== "") {
+                filteredPreviewData = filteredPreviewData.filter((record) => {
+                    return record.ACCOUNT_NAME === cbpAccountName;
+                });
+            }
 
-        if (transType !== "") {
-            filteredPreviewData = filteredPreviewData.filter((record) => {
-                if (transType === "Income") {
-                    return record.INCOME > 0;
-                }
-                if (transType === "Expense") {
-                    return record.EXPENSE > 0;
-                }
-            });
-        }
+            if (transType !== "") {
+                filteredPreviewData = filteredPreviewData.filter((record) => {
+                    if (transType === "Income") {
+                        return record.INCOME > 0;
+                    }
+                    if (transType === "Expense") {
+                        return record.EXPENSE > 0;
+                    }
+                });
+            }
 
-        if (filterDate_1 !== "" && filterDate_2 !== "") {
-            filteredPreviewData = filteredPreviewData.filter((record) => {
-                const from = new Date(filterDate_1);
-                from.setHours(0, 0, 0, 0); // Start of the day (00:00:00)
-                const to = new Date(filterDate_2);
-                to.setHours(23, 59, 59, 999); // End of the day (23:59:59)
-                const recordDate = new Date(record.ENTRY_DATE);
-                recordDate.setHours(0, 0, 0, 0); // Normalize entry date
-                return recordDate >= from && recordDate <= to;
-            });
+            if (filterDate_1 !== "" && filterDate_2 !== "") {
+                filteredPreviewData = filteredPreviewData.filter((record) => {
+                    const from = new Date(filterDate_1);
+                    from.setHours(0, 0, 0, 0); // Start of the day (00:00:00)
+                    const to = new Date(filterDate_2);
+                    to.setHours(23, 59, 59, 999); // End of the day (23:59:59)
+                    const recordDate = new Date(record.ENTRY_DATE);
+                    recordDate.setHours(0, 0, 0, 0); // Normalize entry date
+                    return recordDate >= from && recordDate <= to;
+                });
+            }
         }
-
         setPreviewData(filteredPreviewData);
         setPage(0);
     };
@@ -314,7 +337,6 @@ export default function CashBookPreview() {
                 console.error("Error updating:", err);
             }
         }
-
     };
 
     const handleCheckboxChange = (transId, username) => {
@@ -334,9 +356,24 @@ export default function CashBookPreview() {
             <div className="cash_book_dashboard">
                 <div className="cb_page_label">Cash Book Preview</div>
                 <div className="cbp_section_items">
-                    <div className="section_label" style={{ color: "crimson" }}>
-                        Filter :
-                    </div>
+                    <span>TransId:</span>
+                    <TextField
+                        sx={{
+                            width: "10%",
+                            "& .MuiInputBase-root": { height: 40 },
+                        }}
+                        id="standard-basic"
+                        variant="outlined"
+                        value={transactionId}
+                        onChange={(e) => setTransactionId(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                //transIdSrch(transactionId);
+                                flag = true;
+                                handleFilter(transactionId);
+                            }
+                        }}
+                    />
 
                     <Select
                         labelId="demo-simple-select-label"
@@ -461,9 +498,9 @@ export default function CashBookPreview() {
                                     <TableCell style={tableStyle.head}>
                                         Edit
                                     </TableCell>
-                                    <TableCell style={tableStyle.head}>
+                                    {/*                                     <TableCell style={tableStyle.head}>
                                         Approved
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -501,9 +538,7 @@ export default function CashBookPreview() {
                                         >
                                             {row.ACCOUNT_NAME}
                                         </TableCell>
-                                        {/* <TableCell style={tableStyle.body}>
-                                            {row.MAIN_CODE_NO}
-                                        </TableCell> */}
+
                                         <TableCell style={tableStyle.body}>
                                             {row.VOUCHER_SCROLL_NO}
                                         </TableCell>
@@ -512,9 +547,7 @@ export default function CashBookPreview() {
                                         >
                                             {row.MAIN_CODE_DESCRIPTION}
                                         </TableCell>
-                                        {/* <TableCell style={tableStyle.body}>
-                                            {row.SUB_CODE_NO}
-                                        </TableCell> */}
+
                                         <TableCell style={tableStyle.body}>
                                             {moment(row.VOUCHER_DATE).format(
                                                 "DD-MM-YYYY"
@@ -541,10 +574,16 @@ export default function CashBookPreview() {
                                         >
                                             {row.VOUCHER_DESCRIPTION}
                                         </TableCell>
-                                        <TableCell style={tableStyle.body}>
+                                        <TableCell
+                                            align="right"
+                                            style={tableStyle.body}
+                                        >
                                             {row.INCOME}
                                         </TableCell>
-                                        <TableCell style={tableStyle.body}>
+                                        <TableCell
+                                            align="right"
+                                            style={tableStyle.body}
+                                        >
                                             {row.EXPENSE}
                                         </TableCell>
 
@@ -573,7 +612,7 @@ export default function CashBookPreview() {
                                             />
                                         </TableCell>
 
-                                        <TableCell style={tableStyle.body}>
+                                        {/* <TableCell style={tableStyle.body}>
                                             <Checkbox
                                                 checked={
                                                     approvedList[
@@ -590,28 +629,7 @@ export default function CashBookPreview() {
                                                     "aria-label": "controlled",
                                                 }}
                                             />
-                                        </TableCell>
-
-                                        {/* {cbp_userName == row.ENTRY_USER ? (
-                                            <TableCell
-                                                style={{
-                                                    fontFamily: "PT Serif",
-                                                    padding: 0,
-                                                    paddingLeft: 10,
-                                                    paddingRight: 10,
-                                                    cursor: "pointer",
-                                                    color: "blue",
-                                                    textDecoration: "underline",
-                                                }}
-                                                onClick={handleEditEntry}
-                                            >
-                                                {"Edit"}
-                                            </TableCell>
-                                        ) : (
-                                            <TableCell style={tableStyle.body}>
-                                                {"Edit"}
-                                            </TableCell>
-                                        )} */}
+                                        </TableCell> */}
                                     </TableRow>
                                 ))}
                                 {emptyRows > 0 && (
@@ -657,11 +675,11 @@ export default function CashBookPreview() {
                         </Table>
                     </TableContainer>
                 </div>
-                <div className="ld_button">
+                {/*                 <div className="ld_button">
                     <div className="ld_forward" onClick={handleApprove}>
                         Approve
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <Footer />

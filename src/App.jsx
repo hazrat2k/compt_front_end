@@ -1,6 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router";
-import { Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+//import { Navigate } from "react-router-dom";
 
 import Welcome from "./pages/welcome/welcome";
 

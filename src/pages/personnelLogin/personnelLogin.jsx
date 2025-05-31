@@ -99,7 +99,8 @@ export default function PersonnelLogin() {
         } else {
             setMatchError("");
             plSetPersonnelData(personeelData[0]);
-            perLoginNavigate("/personnel_dashboard");
+            //perLoginNavigate("/personnel_dashboard");
+            perLoginNavigate("/cashbook");
         }
     };
 

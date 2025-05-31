@@ -23,7 +23,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px;
-    row-gap: 20px;
+    row-gap: 15px;
     position: sticky;
     top: 0; /* Ensures it remains fixed when scrolling */
     left: 0;
@@ -32,10 +32,14 @@ body {
 .layout-section-text {
     text-align: center;
     font-weight: bold;
-    padding: 10px;
+    padding: 8px;
     width: 75%;
-    border: solid 2px black;
+    /*  border: solid 1px black; */
+    background-color: rgb(233, 222, 174);
     cursor: pointer;
+}
+.layout-section-text:hover {
+    background-color: rgb(71, 101, 231); /* new color on hover */
 }
 
 .section-information {
@@ -53,7 +57,7 @@ body {
     padding: 10px;
     font-weight: bold;
     font-size: x-large;
-    /* width: 75%; */
+    color: rgb(30, 84, 247);
 }
 
 .page_heading {
@@ -61,6 +65,7 @@ body {
     font-weight: bolder;
     text-align: center;
     margin-bottom: 20px;
+    color: rgb(165, 42, 138);
 }
 
 .employee-cards-container {
@@ -68,11 +73,11 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: 10px;
+    gap: 5px;
 }
 
 .employee-card {
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
     border-radius: 8px;
     padding: 15px;
     margin: 10px;

@@ -28,11 +28,8 @@ export default function Footer() {
                             <div className="imp_link">Registrar Office</div>
                         </a>
 
-                        <a
-                            href="https://ictcell.buet.ac.bd/"
-                            style={{ textDecoration: "none" }}
-                        >
-                            <div className="imp_link">ICT Cell</div>
+                        <a href="/login" style={{ textDecoration: "none" }}>
+                            <div className="imp_link">COMS</div>
                         </a>
 
                         <a

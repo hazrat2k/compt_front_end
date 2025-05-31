@@ -1,0 +1,31 @@
+.table-bordered {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 250px;
+}
+div.table-bordered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+div.table-bordered th {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    background-color: #f2f2f2;
+}
+.input-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 120px, 0, 150px, 130px;
+}
+.input-form-label {
+    margin-bottom: 150px;
+    padding-left: 50px;
+    font-weight: normal;
+}
