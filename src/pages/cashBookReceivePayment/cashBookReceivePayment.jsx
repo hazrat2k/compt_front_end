@@ -191,6 +191,7 @@ export default function CashBookReceivePayment() {
     const [cbpAccountList, setCbpAccountList] = useState([]);
     const [cbpAccountName, setCbpAccountName] = useState({});
     const [cbpAccountNo, setCbpAccountNo] = useState("");
+    const [openCloseAmt, setOpenCloseAmt] = useState([]);
 
     const [incomeExpenseList, setIncomeExpenseList] = useState([]);
     const [receivePaymentAmt, setReceivePaymentAmt] = useState([]);
@@ -252,13 +253,20 @@ export default function CashBookReceivePayment() {
                 "http://" + backend_site_address + "/account_list"
             );
             setCbpAccountList(resAcc.data);
+
+            //Openning and Closing the account list
+            const openCloseBalance = await axios.get(
+                "http://" + backend_site_address + "/openningClosing_balance"
+            );
+            setOpenCloseAmt(openCloseBalance.data);
+            //console.log(openCloseBalance.data);
+            //Openning and Closing the account list
+
             const resPay = await axios.get(
                 "http://" + backend_site_address + "/get_total_income_expense"
             );
-            // setPreviewData(res.data);
-            // setTempPreviewData(res.data);
             setReceivePaymentAmt(resPay.data);
-            console.log(setReceivePaymentAmt);
+            //console.log(setReceivePaymentAmt);
             setTempIncomeExpenseAccountList(resPay.data);
         } catch (err) {
             console.log(err);
@@ -276,12 +284,56 @@ export default function CashBookReceivePayment() {
         // console.log(cbpAccountName);
     };
 
-    const downloadExcel = async () => {
-        const worksheet = XLSX.utils.json_to_sheet(receivePaymentAmt);
+    const downloadExcel = () => {
+        // Step 1: Opening balance row
+        const openingRow = {
+            IN_TRANS_ID: "Opening Balance",
+            IN_CODE: "",
+            IN_DESC: "",
+            IN_AMOUNT: openCloseAmt[0]?.CLOSING_BALANCE || 0,
+            EX_TRANS_ID: "",
+            EX_CODE: "",
+            EX_DESC: "",
+            EX_AMOUNT: "",
+        };
+
+        // Step 2: Combine opening + main data
+        const allRows = [openingRow, ...receivePaymentAmt];
+
+        // Step 3: Compute totals
+        const totalIN = receivePaymentAmt.reduce(
+            (sum, row) => sum + Number(row.IN_AMOUNT || 0),
+            0
+        );
+        const totalEX = receivePaymentAmt.reduce(
+            (sum, row) => sum + Number(row.EX_AMOUNT || 0),
+            0
+        );
+        const opening = Number(openCloseAmt[0]?.CLOSING_BALANCE || 0);
+        const finalIncome = Number(totalIN + opening);
+
+        // Step 4: Summary row
+        const summaryRow = {
+            IN_TRANS_ID: "Total Income",
+            IN_CODE: "",
+            IN_DESC: "",
+            IN_AMOUNT: finalIncome,
+            EX_TRANS_ID: "Total Expense",
+            EX_CODE: "",
+            EX_DESC: "",
+            EX_AMOUNT: totalEX,
+        };
+
+        // Step 5: Add summary at the bottom
+        allRows.push(summaryRow);
+
+        // Step 6: Export to Excel
+        const worksheet = XLSX.utils.json_to_sheet(allRows);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-        XLSX.writeFile(workbook, "Transaction_Data.xlsx");
+        XLSX.writeFile(workbook, "receivePayment.xlsx");
     };
+
     const downloadPDF = () => {
         const doc = new jsPDF();
 
@@ -328,6 +380,16 @@ export default function CashBookReceivePayment() {
         window.open(url);
     };
 
+    // Calculate total income and expense amounts start
+    const totalIN = receivePaymentAmt.reduce(
+        (sum, row) => sum + Number(row.IN_AMOUNT || 0),
+        0
+    );
+    const totalEX = receivePaymentAmt.reduce(
+        (sum, row) => sum + Number(row.EX_AMOUNT || 0),
+        0
+    );
+    // Calculate total income and expense amounts end
     return (
         <>
             <NavBar hide={{ nav_mid: true }} />
@@ -401,20 +463,11 @@ export default function CashBookReceivePayment() {
                         flexDirection: "row",
                     }}
                 >
-                    <TableContainer
-                        component={Paper}
-                        /*                         sx={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }} */
-                    >
+                    <TableContainer component={Paper}>
                         <Table
                             sx={{
                                 maxWidth: 1200,
-                                /*                                 alignSelf: "center",
-                                alignItems: "center", */
                             }}
-                            /* aria-label="custom pagination table" */
                         >
                             <TableHead>
                                 <TableRow>
@@ -461,6 +514,36 @@ export default function CashBookReceivePayment() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                {openCloseAmt.length > 0 && (
+                                    <TableRow>
+                                        {/* <TableCell colSpan={3} sx={{ py: 0.4 }}>
+                                            Opening Balance
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                textAlign: "right",
+                                                py: 0.4,
+                                                
+                                            }}
+                                        >
+                                            {openCloseAmt[0].CLOSING_BALANCE}
+                                        </TableCell> */}
+                                        {/* <TableCell
+                                            colSpan={3}
+                                            sx={{ fontWeight: "bold" }}
+                                        >
+                                            Closing Balance
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                textAlign: "right",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            {openCloseAmt[0].CLOSING_BALANCE}
+                                        </TableCell> */}
+                                    </TableRow>
+                                )}
                                 {receivePaymentAmt.map((row, index) => (
                                     <TableRow key={index}>
                                         {
@@ -474,7 +557,13 @@ export default function CashBookReceivePayment() {
                                         <TableCell sx={{ py: 0.4 }}>
                                             {row.IN_DESC}
                                         </TableCell>
-                                        <TableCell sx={{ py: 0.4 }}>
+                                        <TableCell
+                                            sx={{
+                                                py: 0.4,
+                                                textAlign: "right",
+                                                width: "10%",
+                                            }}
+                                        >
                                             {row.IN_AMOUNT}
                                         </TableCell>
                                         <TableCell sx={{ py: 0.4 }}>
@@ -486,11 +575,165 @@ export default function CashBookReceivePayment() {
                                         <TableCell sx={{ py: 0.4 }}>
                                             {row.EX_DESC}
                                         </TableCell>
-                                        <TableCell sx={{ py: 0.4 }}>
+                                        <TableCell
+                                            sx={{
+                                                py: 0.4,
+                                                textAlign: "right",
+                                            }}
+                                        >
                                             {row.EX_AMOUNT}
                                         </TableCell>
                                     </TableRow>
                                 ))}
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Total Income
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {/* {(
+                                            totalIN +
+                                            Number(
+                                                openCloseAmt[0]
+                                                    ?.CLOSING_BALANCE || 0
+                                            )
+                                        ).toFixed(0)} */}
+                                        {totalIN.toFixed(0)}
+                                    </TableCell>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Total Expense
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {totalEX.toFixed(0)}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Opening Balance
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {Number(
+                                            openCloseAmt[0]?.CLOSING_BALANCE ||
+                                                0
+                                        ).toFixed(0)}
+                                    </TableCell>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Closing Balance
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {(
+                                            totalIN +
+                                            Number(
+                                                openCloseAmt[0]
+                                                    ?.CLOSING_BALANCE || 0
+                                            ) -
+                                            totalEX
+                                        ).toFixed(0)}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Grand Total
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {(
+                                            totalIN +
+                                            Number(
+                                                openCloseAmt[0]
+                                                    ?.CLOSING_BALANCE || 0
+                                            )
+                                        ).toFixed(0)}
+                                    </TableCell>
+                                    <TableCell
+                                        colSpan={3}
+                                        sx={{
+                                            py: 0.4,
+                                            fontWeight: "bold",
+                                            textAlign: "right",
+                                        }}
+                                    >
+                                        Grand Total
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            py: 0.4,
+                                            textAlign: "right",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {(
+                                            totalIN +
+                                            Number(
+                                                openCloseAmt[0]
+                                                    ?.CLOSING_BALANCE || 0
+                                            )
+                                        ).toFixed(0)}
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>

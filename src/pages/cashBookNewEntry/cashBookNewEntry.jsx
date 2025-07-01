@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./cashBookNewEntry.css";
 import axios from "axios";
+import Checkbox from "@mui/material/Checkbox";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
@@ -67,9 +68,11 @@ export default function CashBookNewEntry() {
     const [cbChequeDateErrorText, setcbChequeDateErrorText] = useState("");
     const [cbIncomeErrorText, setcbIncomeErrorText] = useState("");
     const [cbExpenseErrorText, setcbExpenseErrorText] = useState("");
-
+    //const [checked, setChecked] = useState(false);
+    //const [fdrChecked, setFdrChecked] = useState(false);
     //const [cbChequeNo, setcbChequeNo] = useState("");
     const [chequeSuggestions, setChequeSuggestions] = useState([]);
+    const [descriptionSuggestions, setDescriptionSuggestions] = useState([]);
 
     useState("");
 
@@ -246,6 +249,7 @@ export default function CashBookNewEntry() {
                     //onChange={(e, v) => mainCodeNoSet(v)}
                     onChange={(e, v) => {
                         mainCodeNoSet(v);
+                        resetAllHeadChange();
                         setTimeout(() => {
                             subHeadRef.current?.focus();
                         });
@@ -285,7 +289,7 @@ export default function CashBookNewEntry() {
                     //onChange={(e, v) => subCodeNoSet(v)}
                     onChange={(e, v) => {
                         subCodeNoSet(v);
-                        resetAllHeadChange();
+                        //resetAllHeadChange();
                         setTimeout(() => {
                             voucherNoRef.current?.focus();
                         });
@@ -420,17 +424,25 @@ export default function CashBookNewEntry() {
                 MAIN_CODE_NO: cbMainCodeNo,
                 SUB_CODE_NO: cbSubCodeNo,
                 VOUCHER_DESCRIPTION: cbVoucherDescription,
-                VOUCHER_SCROLL_NO: cbVoucherScrollNo,
-                VOUCHER_DATE: new Date(cbVoucherDate).toLocaleDateString(
+                VOUCHER_SCROLL_NO:
+                    cbVoucherScrollNo === "" ? null : cbVoucherScrollNo,
+                /*                 VOUCHER_DATE: new Date(cbVoucherDate).toLocaleDateString(
                     "en-US"
-                ),
+                ), */
+                VOUCHER_DATE:
+                    cbVoucherDate === "" || cbVoucherDate === null
+                        ? null
+                        : new Date(cbVoucherDate).toLocaleDateString("en-US"),
                 INCOME: cbIncome == "" ? 0 : cbIncome,
                 EXPENSE: cbExpense == "" ? 0 : cbExpense,
                 ENTRY_DATE: new Date().toLocaleDateString("en-US"),
                 FIN_YEAR: GetFinancialYear(),
                 USER_NAME: cb_userName,
-                CHEQUE_NO: cbChequeNo,
-                CHEQUE_DATE: new Date(cbChequeDate).toLocaleDateString("en-US"),
+                CHEQUE_NO: cbChequeNo === "" ? null : cbChequeNo,
+                CHEQUE_DATE:
+                    cbChequeDate === "" || cbChequeDate === null
+                        ? null
+                        : new Date(cbChequeDate).toLocaleDateString("en-US"),
             };
 
             try {
@@ -456,9 +468,9 @@ export default function CashBookNewEntry() {
         setChequeSuggestions(saved);
     }, []);
 
-    const handleChequeChange = (e) => {
+    /*     const handleChequeChange = (e) => {
         setcbChequeNo(e.target.value);
-    };
+    }; */
 
     const handleChequeEnter = (e) => {
         if (e.key === "Enter") {
@@ -470,6 +482,33 @@ export default function CashBookNewEntry() {
                 setChequeSuggestions(updated);
             }
             checkDateRef.current?.focus();
+        }
+    };
+
+    useEffect(() => {
+        const saved = JSON.parse(localStorage.getItem("descriptionList")) || [];
+        setDescriptionSuggestions(saved);
+    }, []);
+
+    const handlerDescription = (e) => {
+        if (e.key === "Enter") {
+            const saved =
+                JSON.parse(localStorage.getItem("descriptionList")) || [];
+            if (
+                !saved.includes(cbVoucherDescription) &&
+                cbVoucherDescription.trim() !== ""
+            ) {
+                const updated = [cbVoucherDescription, ...saved].slice(0, 10); // max 10 items
+                localStorage.setItem(
+                    "descriptionList",
+                    JSON.stringify(updated)
+                );
+                setDescriptionSuggestions(updated);
+            }
+            cbIncomeTrue
+                ? incomeRef.current?.focus()
+                : expenseRef.current?.focus();
+            /* checkDateRef.current?.focus(); */
         }
     };
 
@@ -496,12 +535,34 @@ export default function CashBookNewEntry() {
                             <div className="pd_section_items_div">
                                 {cbMainCodeSelectItem()}
                             </div>
+                            {/* <div>
+                                <span className="cb_section_item_label">
+                                    No Scrl:
+                                </span>
+                                <Checkbox
+                                    checked={checked}
+                                    onChange={(e) =>
+                                        setChecked(e.target.checked)
+                                    }
+                                />
+                            </div> */}
                         </div>
 
                         <div className="cb_section_items">
                             <div className="section_items_div">
                                 {cbSubCodeSelectItem()}
                             </div>
+                            {/*  <div>
+                                <span className="cb_section_item_label">
+                                    No Chk:
+                                </span>
+                                <Checkbox
+                                    checked={fdrChecked}
+                                    onChange={(e) =>
+                                        setFdrChecked(e.target.checked)
+                                    }
+                                />
+                            </div> */}
                         </div>
 
                         <div className="pd_section_item">
@@ -549,7 +610,7 @@ export default function CashBookNewEntry() {
                         </div>
                         <div className="pd_section_item">
                             <span className="cb_section_item_label">
-                                Check No.
+                                Check/FDR No.
                             </span>
 
                             <Autocomplete
@@ -608,7 +669,7 @@ export default function CashBookNewEntry() {
                                 }}
                             /> */}
                             <span className="cb_section_left_margin_label">
-                                Check Date:
+                                Check/FDR Date:
                             </span>
                             <TextField
                                 inputRef={checkDateRef}
@@ -639,30 +700,33 @@ export default function CashBookNewEntry() {
                                 Description Details
                             </div>
                             <div className="pd_section_item_colon">:</div>
-                            <TextField
-                                inputRef={descriptionRef}
-                                style={{ width: "50%" }}
-                                minRows={2}
-                                variant="outlined"
-                                size="small"
-                                error={cbVoucherDescriptionErrorText != ""}
-                                helperText={cbVoucherDescriptionErrorText}
-                                value={cbVoucherDescription}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        cbIncomeTrue
-                                            ? incomeRef.current?.focus()
-                                            : expenseRef.current?.focus();
-                                    }
+                            <Autocomplete
+                                freeSolo
+                                options={descriptionSuggestions}
+                                inputValue={cbVoucherDescription}
+                                onInputChange={(event, newInputValue) => {
+                                    setcbVoucherDescription(newInputValue);
                                 }}
-                                /* onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        saveButtonRef.current?.focus();
-                                    }
-                                }} */
-                                onChange={(e) =>
-                                    setcbVoucherDescription(e.target.value)
-                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        inputRef={descriptionRef}
+                                        variant="outlined"
+                                        size="small"
+                                        style={{ width: "300px" }}
+                                        //minRows={2}
+                                        type="text"
+                                        multiline
+                                        rows={2}
+                                        error={
+                                            cbVoucherDescriptionErrorText !== ""
+                                        }
+                                        helperText={
+                                            cbVoucherDescriptionErrorText
+                                        }
+                                        onKeyDown={handlerDescription}
+                                    />
+                                )}
                             />
                         </div>
                         <div className="pd_section_item">
@@ -673,7 +737,7 @@ export default function CashBookNewEntry() {
                                     </span>
                                     <TextField
                                         inputRef={incomeRef}
-                                        style={{ width: "20%" }}
+                                        style={{ width: "15%" }}
                                         error={cbIncomeErrorText != ""}
                                         helperText={cbIncomeErrorText}
                                         id="standard-basic"
@@ -697,7 +761,7 @@ export default function CashBookNewEntry() {
                                     </span>
                                     <TextField
                                         inputRef={expenseRef}
-                                        style={{ width: "50%" }}
+                                        style={{ width: "15%" }}
                                         error={cbExpenseErrorText != ""}
                                         helperText={cbExpenseErrorText}
                                         id="standard-basic"
