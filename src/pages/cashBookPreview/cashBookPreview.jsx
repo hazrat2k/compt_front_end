@@ -35,6 +35,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import useCashBookEntryStore from "../../stores/cashBookEntryStore";
 import usePersonnelDataStore from "../../stores/personnelDataStore";
 import { blue } from "@mui/material/colors";
+import currentFiscalYear from "../../utils/functions/getFinancialYear";
 
 const TablePaginationActions = (props) => {
     const theme = useTheme();
@@ -182,7 +183,8 @@ export default function CashBookPreview() {
     const [tempPreviewData, setTempPreviewData] = useState([]);
 
     const [transactionId, setTransactionId] = useState("");
-    const [testData, setTestData] = useState([]);
+    const [byAmount, setByAmount] = useState("");
+    const [selectedFY, setSelectedFY] = useState(currentFiscalYear);
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -263,7 +265,7 @@ export default function CashBookPreview() {
     }; */
     // End From Hazrat Ali
 
-    const handleFilter = () => {
+    /* const handleFilter = () => {
         let filteredPreviewData = tempPreviewData;
 
         if (flag === true && transactionId !== "") {
@@ -276,6 +278,10 @@ export default function CashBookPreview() {
                     return record.ACCOUNT_NAME === cbpAccountName;
                 });
             }
+            else if (byAmount !== "") {
+                filteredPreviewData = filteredPreviewData.filter((record) => {
+                    return record.INCOME == byAmount;
+                });
 
             if (transType !== "") {
                 filteredPreviewData = filteredPreviewData.filter((record) => {
@@ -300,6 +306,60 @@ export default function CashBookPreview() {
                 });
             }
         }
+        setPreviewData(filteredPreviewData);
+        setPage(0);
+    }; */
+    const handleFilter = () => {
+        let filteredPreviewData = tempPreviewData;
+
+        if (byAmount !== "") {
+            filteredPreviewData = filteredPreviewData.filter((record) => {
+                return record.INCOME == byAmount;
+            });
+        } else if (flag === true && transactionId !== "") {
+            filteredPreviewData = filteredPreviewData.filter((record) => {
+                return record.TRANSACTION_ID == transactionId;
+            });
+        }
+
+        setPreviewData(filteredPreviewData);
+        setPage(0);
+    };
+    const filterButtonHandler = () => {
+        let filteredPreviewData = tempPreviewData;
+
+        if (cbpAccountName !== "") {
+            filteredPreviewData = filteredPreviewData.filter((record) => {
+                return record.ACCOUNT_NAME === cbpAccountName;
+            });
+        }
+
+        if (transType !== "") {
+            filteredPreviewData = filteredPreviewData.filter((record) => {
+                if (transType === "Income") {
+                    return record.INCOME > 0;
+                }
+                if (transType === "Expense") {
+                    return record.EXPENSE > 0;
+                }
+                return true; // fallback
+            });
+        }
+
+        if (filterDate_1 !== "" && filterDate_2 !== "") {
+            filteredPreviewData = filteredPreviewData.filter((record) => {
+                const from = new Date(filterDate_1);
+                from.setHours(0, 0, 0, 0); // Start of day
+                const to = new Date(filterDate_2);
+                to.setHours(23, 59, 59, 999); // End of day
+
+                const recordDate = new Date(record.ENTRY_DATE);
+                recordDate.setHours(0, 0, 0, 0);
+
+                return recordDate >= from && recordDate <= to;
+            });
+        }
+
         setPreviewData(filteredPreviewData);
         setPage(0);
     };
@@ -356,31 +416,102 @@ export default function CashBookPreview() {
             <div className="cash_book_dashboard">
                 <div className="cb_page_label">Cash Book Preview</div>
                 <div className="cbp_section_items">
-                    <span>TransId:</span>
-                    <TextField
-                        sx={{
-                            width: "10%",
-                            "& .MuiInputBase-root": { height: 40 },
-                        }}
-                        id="standard-basic"
-                        variant="outlined"
+                    <span>FilterBy:</span>
+                    <input
+                        className="cash_book_simple_input_field"
+                        type="text"
+                        placeholder="TransId"
+                        title="Filter By TransId. Input Value and press Enter"
                         value={transactionId}
                         onChange={(e) => setTransactionId(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                //transIdSrch(transactionId);
                                 flag = true;
                                 handleFilter(transactionId);
                             }
                         }}
                     />
+                    <input
+                        className="cash_book_simple_input_field"
+                        type="text"
+                        placeholder="By Amt"
+                        title="Filter By Amount. Input Value and press Enter"
+                        value={byAmount}
+                        onChange={(e) => setByAmount(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleFilter();
+                            }
+                        }}
+                    />
+                    {/* <TextField
+                        sx={{
+                            "& .MuiInputBase-root": {
+                                padding: "6px 8px",
+                                border: "1px solid #ccc",
+                                borderRadius: "4px",
+                                fontSize: "14px",
+                            },
+                            width: "100px",
+                        }}
+                        id="standard-basic"
+                        variant="outlined"
+                        placeholder="By TransId"
+                        value={transactionId}
+                        onChange={(e) => setTransactionId(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                flag = true;
+                                handleFilter(transactionId);
+                            }
+                        }}
+                    /> */}
+
+                    <div className="pd_section_item">
+                        <TextField
+                            select
+                            value={selectedFY}
+                            onChange={(e) => setSelectedFY(e.target.value)}
+                            style={{ width: "130px" }}
+                            InputProps={{
+                                style: {
+                                    height: 32, // sets the overall input height
+                                    fontSize: "14px", // font size inside input
+                                },
+                            }}
+                            InputLabelProps={{
+                                style: {
+                                    fontSize: "14px", // font size for the label
+                                },
+                            }}
+                        >
+                            <MenuItem
+                                value={currentFiscalYear}
+                                style={{ fontSize: "14px", height: 30 }}
+                            >
+                                {currentFiscalYear}
+                            </MenuItem>
+                            <MenuItem
+                                value="2024-2025"
+                                style={{ fontSize: "14px", height: 30 }}
+                            >
+                                2024-2025
+                            </MenuItem>
+                            <MenuItem
+                                value="2023-2024"
+                                style={{ fontSize: "14px", height: 30 }}
+                            >
+                                2023-2024
+                            </MenuItem>
+                        </TextField>
+                    </div>
 
                     <Select
                         labelId="demo-simple-select-label"
                         style={{
                             width: "150pt",
-                            marginRight: "10pt",
-                            marginLeft: "20pt",
+                            marginRight: "5pt",
+                            marginLeft: "5pt",
                             height: "30pt",
                         }}
                         id="demo-simple-select"
@@ -432,7 +563,7 @@ export default function CashBookPreview() {
                         )}
                     </>
 
-                    <Button variant="contained" onClick={handleFilter}>
+                    <Button variant="contained" onClick={filterButtonHandler}>
                         Filter
                     </Button>
                 </div>
@@ -446,31 +577,29 @@ export default function CashBookPreview() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell style={tableStyle.head}>
-                                        Trans ID
+                                        TransID
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
-                                        FIN Year
+                                        FinYear
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
-                                        Account No
+                                        AccountNo
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
-                                        Account Name
+                                        AccountName
                                     </TableCell>
                                     {/* <TableCell style={tableStyle.head}>
                                         Main Code No
                                     </TableCell> */}
                                     <TableCell style={tableStyle.head}>
-                                        Vou/Scr No
+                                        Vou/ScrNo
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
                                         Main Head
                                     </TableCell>
-                                    {/* <TableCell style={tableStyle.head}>
-                                        Sub Code No
-                                    </TableCell> */}
+
                                     <TableCell style={tableStyle.head}>
-                                        Voucher_Date
+                                        VouchDate
                                     </TableCell>
 
                                     <TableCell style={tableStyle.head}>
@@ -478,10 +607,10 @@ export default function CashBookPreview() {
                                     </TableCell>
 
                                     <TableCell style={tableStyle.head}>
-                                        Cheq No
+                                        Cheq/FdrNo
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
-                                        Cheque_Date
+                                        Chk/FdrDate
                                     </TableCell>
                                     <TableCell style={tableStyle.head}>
                                         Vou Desc
@@ -549,9 +678,11 @@ export default function CashBookPreview() {
                                         </TableCell>
 
                                         <TableCell style={tableStyle.body}>
-                                            {moment(row.VOUCHER_DATE).format(
-                                                "DD-MM-YYYY"
-                                            )}
+                                            {row.VOUCHER_DATE
+                                                ? moment(
+                                                      row.VOUCHER_DATE
+                                                  ).format("DD-MM-YYYY")
+                                                : ""}
                                         </TableCell>
 
                                         <TableCell
@@ -578,13 +709,17 @@ export default function CashBookPreview() {
                                             align="right"
                                             style={tableStyle.body}
                                         >
-                                            {row.INCOME}
+                                            {Number(row.INCOME).toLocaleString(
+                                                "en-IN"
+                                            )}
                                         </TableCell>
                                         <TableCell
                                             align="right"
                                             style={tableStyle.body}
                                         >
-                                            {row.EXPENSE}
+                                            {Number(row.EXPENSE).toLocaleString(
+                                                "en-IN"
+                                            )}
                                         </TableCell>
 
                                         <TableCell style={tableStyle.body}>
@@ -611,25 +746,6 @@ export default function CashBookPreview() {
                                                 alt="logo"
                                             />
                                         </TableCell>
-
-                                        {/* <TableCell style={tableStyle.body}>
-                                            <Checkbox
-                                                checked={
-                                                    approvedList[
-                                                        row.TRANSACTION_ID
-                                                    ]?.approved || false
-                                                }
-                                                onChange={() =>
-                                                    handleCheckboxChange(
-                                                        row.TRANSACTION_ID,
-                                                        cbp_userName
-                                                    )
-                                                }
-                                                inputProps={{
-                                                    "aria-label": "controlled",
-                                                }}
-                                            />
-                                        </TableCell> */}
                                     </TableRow>
                                 ))}
                                 {emptyRows > 0 && (

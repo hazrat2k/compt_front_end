@@ -10,4 +10,7 @@ const GetFinancialYear = () => {
     return finYear;
 };
 
-export default GetFinancialYear;
+//export default GetFinancialYear;
+//export const currentFiscalYear = GetFinancialYear();
+const currentFiscalYear = GetFinancialYear();
+export default currentFiscalYear;

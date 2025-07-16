@@ -69,7 +69,7 @@ export default function NavBar(props) {
     };
 
     const [padVal, setpadVal] = useState(isMobile ? "0.5rem" : "2rem");
-    const [height, setheight] = useState("6rem");
+    const [height, setheight] = useState("4rem");
     // const listenScrollEvent = () => {
     //     window.scrollY > 20 ? setpadVal("1rem") : setpadVal("5rem");
     //     window.scrollY > 20 ? setheight("6rem") : setheight("9rem");

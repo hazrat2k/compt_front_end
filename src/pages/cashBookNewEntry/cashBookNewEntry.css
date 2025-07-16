@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: column;
     font-family: "PT Serif";
-    margin-top: 1%;
-    margin-bottom: 2%;
 }
 
 .cb_page_label {
@@ -36,11 +34,24 @@
     align-items: center;
     flex-direction: row;
 }
+.cb_section_items_dropdown {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+    height: 60px;
+}
 .cb_section_item_label {
     font-size: medium;
     font-weight: 550;
     width: 16%;
 }
+.cb_entry_right_section_lebel {
+    font-size: medium;
+    font-weight: 550;
+    width: 50%;
+}
+
 .cb_section_item {
     display: flex;
     flex-direction: row;

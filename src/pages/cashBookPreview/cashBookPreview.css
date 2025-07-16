@@ -16,6 +16,19 @@
     flex-direction: row;
     padding: 0 0 0.4em 1em;
 }
+.cash_book_simple_input_field {
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    width: 80px;
+    margin-left: 2px;
+}
+.cash_book_simple_input_field:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 2px #1976d2;
+}
 
 .cbp_section_item {
     display: flex;

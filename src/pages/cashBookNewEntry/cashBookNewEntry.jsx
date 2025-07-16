@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./cashBookNewEntry.css";
 import axios from "axios";
-import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
@@ -10,7 +10,8 @@ import usePersonnelDataStore from "../../stores/personnelDataStore";
 import { Autocomplete, TextField, Snackbar, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Textarea from "@mui/joy/Textarea";
-import GetFinancialYear from "../../utils/functions/getFinancialYear";
+//import GetFinancialYear from "../../utils/functions/getFinancialYear";
+import currentFiscalYear from "../../utils/functions/getFinancialYear";
 import { backend_site_address } from "../../stores/const/siteAddress";
 
 export default function CashBookNewEntry() {
@@ -68,7 +69,8 @@ export default function CashBookNewEntry() {
     const [cbChequeDateErrorText, setcbChequeDateErrorText] = useState("");
     const [cbIncomeErrorText, setcbIncomeErrorText] = useState("");
     const [cbExpenseErrorText, setcbExpenseErrorText] = useState("");
-    //const [checked, setChecked] = useState(false);
+    //const currentFiscalYear = GetFinancialYear();
+    const [selectedFY, setSelectedFY] = useState(currentFiscalYear);
     //const [fdrChecked, setFdrChecked] = useState(false);
     //const [cbChequeNo, setcbChequeNo] = useState("");
     const [chequeSuggestions, setChequeSuggestions] = useState([]);
@@ -246,10 +248,9 @@ export default function CashBookNewEntry() {
                 <Autocomplete
                     disablePortal
                     value={cb_main_code_object}
-                    //onChange={(e, v) => mainCodeNoSet(v)}
                     onChange={(e, v) => {
                         mainCodeNoSet(v);
-                        resetAllHeadChange();
+                        resetAllField();
                         setTimeout(() => {
                             subHeadRef.current?.focus();
                         });
@@ -374,14 +375,14 @@ export default function CashBookNewEntry() {
         // setcbSubCodeNo("");
         // setcbSubCodeName("");
         setcbVoucherDescription("");
-        //setcbVoucherScrollNo("");
+        setcbVoucherScrollNo("");
         //setcbVoucherDate("");
-        //setcbChequeNo("");
+        setcbChequeNo("");
         //setcbChequeDate("");
         setcbIncome("");
         setcbExpense("");
     };
-    const resetAllHeadChange = () => {
+    /* const resetAllHeadChange = () => {
         // setcbAccountNo("");
         // setcbAccountName("");
         // setcbMainCodeNo("");
@@ -390,12 +391,12 @@ export default function CashBookNewEntry() {
         // setcbSubCodeName("");
         setcbVoucherDescription("");
         setcbVoucherScrollNo("");
-        setcbVoucherDate("");
+        //setcbVoucherDate("");
         setcbChequeNo("");
-        setcbChequeDate("");
+        //setcbChequeDate("");
         setcbIncome("");
         setcbExpense("");
-    };
+    }; */
 
     const action = (
         <React.Fragment>
@@ -436,7 +437,7 @@ export default function CashBookNewEntry() {
                 INCOME: cbIncome == "" ? 0 : cbIncome,
                 EXPENSE: cbExpense == "" ? 0 : cbExpense,
                 ENTRY_DATE: new Date().toLocaleDateString("en-US"),
-                FIN_YEAR: GetFinancialYear(),
+                FIN_YEAR: selectedFY, //GetFinancialYear(),
                 USER_NAME: cb_userName,
                 CHEQUE_NO: cbChequeNo === "" ? null : cbChequeNo,
                 CHEQUE_DATE:
@@ -535,34 +536,55 @@ export default function CashBookNewEntry() {
                             <div className="pd_section_items_div">
                                 {cbMainCodeSelectItem()}
                             </div>
-                            {/* <div>
-                                <span className="cb_section_item_label">
-                                    No Scrl:
+                            <div className="pd_section_item">
+                                <span className="cb_entry_right_section_lebel ">
+                                    Fin Year:
                                 </span>
-                                <Checkbox
-                                    checked={checked}
+                                <TextField
+                                    select
+                                    value={selectedFY}
                                     onChange={(e) =>
-                                        setChecked(e.target.checked)
+                                        setSelectedFY(e.target.value)
                                     }
-                                />
-                            </div> */}
+                                    style={{ width: "150px" }}
+                                    InputProps={{
+                                        style: {
+                                            height: 35, // sets the overall input height
+                                            fontSize: "14px", // font size inside input
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: {
+                                            fontSize: "14px", // font size for the label
+                                        },
+                                    }}
+                                >
+                                    <MenuItem
+                                        value={currentFiscalYear}
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        {currentFiscalYear}
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="2024-2025"
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        2024-2025
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="2023-2024"
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        2023-2024
+                                    </MenuItem>
+                                </TextField>
+                            </div>
                         </div>
 
                         <div className="cb_section_items">
                             <div className="section_items_div">
                                 {cbSubCodeSelectItem()}
                             </div>
-                            {/*  <div>
-                                <span className="cb_section_item_label">
-                                    No Chk:
-                                </span>
-                                <Checkbox
-                                    checked={fdrChecked}
-                                    onChange={(e) =>
-                                        setFdrChecked(e.target.checked)
-                                    }
-                                />
-                            </div> */}
                         </div>
 
                         <div className="pd_section_item">
@@ -632,42 +654,7 @@ export default function CashBookNewEntry() {
                                     />
                                 )}
                             />
-                            {/* <TextField
-                                inputRef={checkNoRef}
-                                variant="outlined"
-                                size="small"
-                                //name="cheque-number"
-                                style={{ width: "150px" }}
-                                value={cbChequeNo}
-                                //autoComplete="on"
-                                onChange={(e) => setcbChequeNo(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        checkDateRef.current?.focus();
-                                    }
-                                }}
-                            /> */}
-                            {/* <input
-                                ref={checkNoRef}
-                                type="text"
-                                name="cheque-number"
-                                autoComplete="on"
-                                value={cbChequeNo}
-                                onChange={(e) => setcbChequeNo(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        checkDateRef.current?.focus();
-                                    }
-                                }}
-                                style={{
-                                    width: "150px",
-                                    height: "40px",
-                                    border: "1px solid #ccc",
-                                    borderRadius: "4px",
-                                    paddingLeft: "8px",
-                                    fontSize: "14px",
-                                }}
-                            /> */}
+
                             <span className="cb_section_left_margin_label">
                                 Check/FDR Date:
                             </span>
@@ -686,13 +673,6 @@ export default function CashBookNewEntry() {
                                         descriptionRef.current?.focus();
                                     }
                                 }}
-                                /* onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        cbIncomeTrue
-                                            ? incomeRef.current?.focus()
-                                            : expenseRef.current?.focus();
-                                    }
-                                }} */
                             />
                         </div>
                         <div className="pd_section_item">
@@ -786,7 +766,7 @@ export default function CashBookNewEntry() {
 
                         <Snackbar
                             open={open}
-                            autoHideDuration={6000}
+                            autoHideDuration={1000}
                             onClose={handleClose}
                             message="Successfully Submitted"
                             action={action}

@@ -4,6 +4,8 @@ import "./cashBookEdit.css";
 import useLoanTypeStore from "../../stores/loanTypeStore";
 import axios from "axios";
 import moment from "moment";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 
 import NavBar from "../../component/page_compo/navBar/navBar";
 import Footer from "../../component/page_compo/footer/footer";
@@ -15,7 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Snackbar from "@mui/material/Snackbar";
 import Textarea from "@mui/joy/Textarea";
 import TextField from "@mui/material/TextField";
-import GetFinancialYear from "../../utils/functions/getFinancialYear";
+import currentFiscalYear from "../../utils/functions/getFinancialYear";
 import { backend_site_address } from "../../stores/const/siteAddress";
 import useCashBookEntryStore from "../../stores/cashBookEntryStore";
 
@@ -80,6 +82,7 @@ export default function CashBookEdit() {
     const [cbExpenseErrorText, setcbExpenseErrorText] = useState("");
     const [cbBalanceAmountErrorText, setcbBalanceAmountErrorText] =
         useState("");
+    const [selectedFY, setSelectedFY] = useState(currentFiscalYear);
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -383,16 +386,20 @@ export default function CashBookEdit() {
                 SUB_CODE_NO: cbSubCodeNo,
                 VOUCHER_DESCRIPTION: cbVoucherDescription,
                 VOUCHER_SCROLL_NO: cbVoucherScrollNo,
-                VOUCHER_DATE: new Date(cbVoucherDate).toLocaleDateString(
-                    "en-US"
-                ),
+                VOUCHER_DATE:
+                    cbVoucherDate === "" || cbVoucherDate === null
+                        ? null
+                        : new Date(cbVoucherDate).toLocaleDateString("en-US"),
                 INCOME: cbIncome == "" ? 0 : cbIncome,
                 EXPENSE: cbExpense == "" ? 0 : cbExpense,
-                ENTRY_DATE: new Date().toLocaleDateString("en-US"),
-                FIN_YEAR: GetFinancialYear(),
+                //ENTRY_DATE: new Date().toLocaleDateString("en-US"),
+                FIN_YEAR: selectedFY,
                 USER_NAME: cb_userName,
                 CHEQUE_NO: cbChequeNo,
-                CHEQUE_DATE: new Date(cbChequeDate).toLocaleDateString("en-US"),
+                CHEQUE_DATE:
+                    cbChequeDate === "" || cbChequeDate === null
+                        ? null
+                        : new Date(cbChequeDate).toLocaleDateString("en-US"),
             };
 
             try {
@@ -425,7 +432,7 @@ export default function CashBookEdit() {
                                 {cbTextItem("Transaction ID.", cbTransactionId)}
                             </div>
                         </div>
-                        <div className="cb_section_items">
+                        <div className="cb_section_items_dropdown">
                             <div className="pd_section_items_div">
                                 {cbAccountNameSelectItem()}
                             </div>
@@ -436,6 +443,49 @@ export default function CashBookEdit() {
                         <div className="cb_section_items">
                             <div className="pd_section_items_div">
                                 {cbMainCodeSelectItem()}
+                            </div>
+                            <div className="pd_section_item">
+                                <span className="cb_entry_right_section_lebel ">
+                                    Fin Year:
+                                </span>
+                                <TextField
+                                    select
+                                    value={selectedFY}
+                                    onChange={(e) =>
+                                        setSelectedFY(e.target.value)
+                                    }
+                                    style={{ width: "150px" }}
+                                    InputProps={{
+                                        style: {
+                                            height: 35, // sets the overall input height
+                                            fontSize: "14px", // font size inside input
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: {
+                                            fontSize: "14px", // font size for the label
+                                        },
+                                    }}
+                                >
+                                    <MenuItem
+                                        value={currentFiscalYear}
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        {currentFiscalYear}
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="2024-2025"
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        2024-2025
+                                    </MenuItem>
+                                    <MenuItem
+                                        value="2023-2024"
+                                        style={{ fontSize: "14px", height: 30 }}
+                                    >
+                                        2023-2024
+                                    </MenuItem>
+                                </TextField>
                             </div>
                         </div>
 
@@ -448,7 +498,7 @@ export default function CashBookEdit() {
                         <div className="cb_section_items">
                             <div className="pd_section_items_div">
                                 {cbFieldItem(
-                                    "Voucher/Scroll No",
+                                    "Entry/Vou/Scrl No",
                                     cbVoucherScrollNo,
                                     setcbVoucherScrollNo,
                                     "number",
@@ -469,7 +519,7 @@ export default function CashBookEdit() {
                         <div className="cb_section_items">
                             <div className="pd_section_items_div">
                                 {cbFieldItem(
-                                    "Voucher Date",
+                                    "Entry/Vouc/Scrl Date",
                                     cbVoucherDate,
                                     setcbVoucherDate,
                                     "date",
@@ -486,7 +536,26 @@ export default function CashBookEdit() {
                                 )}
                             </div>
                         </div>
-
+                        <div
+                            className="pd_section_item"
+                            style={{ color: "crimson" }}
+                        >
+                            <div style={{ fontSize: 18, fontWeight: 550 }}>
+                                Description Details
+                            </div>
+                            <div className="pd_section_item_colon"> :</div>
+                            <TextField
+                                style={{ width: "50%" }}
+                                minRows={2}
+                                variant="standard"
+                                error={cbVoucherDescriptionErrorText != ""}
+                                helperText={cbVoucherDescriptionErrorText}
+                                value={cbVoucherDescription}
+                                onChange={(e) =>
+                                    setcbVoucherDescription(e.target.value)
+                                }
+                            />
+                        </div>
                         <div
                             className="pd_section_item"
                             style={{ width: "60%", color: "crimson" }}
@@ -500,15 +569,16 @@ export default function CashBookEdit() {
                                         :
                                     </div>
                                     <TextField
-                                        style={{ width: "50%" }}
+                                        style={{ width: "30%" }}
                                         error={cbIncomeErrorText != ""}
                                         helperText={cbIncomeErrorText}
                                         id="standard-basic"
                                         variant="standard"
                                         value={cbIncome}
-                                        onChange={(e) =>
-                                            setcbIncome(e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            setcbIncome(e.target.value);
+                                            setcbExpense(0);
+                                        }}
                                     />
                                 </>
                             ) : (
@@ -520,50 +590,43 @@ export default function CashBookEdit() {
                                         :
                                     </div>
                                     <TextField
-                                        style={{ width: "50%" }}
+                                        style={{ width: "30%" }}
                                         error={cbExpenseErrorText != ""}
                                         helperText={cbExpenseErrorText}
                                         id="standard-basic"
                                         variant="standard"
                                         value={cbExpense}
-                                        onChange={(e) =>
-                                            setcbExpense(e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            setcbExpense(e.target.value);
+                                            setcbIncome(0);
+                                        }}
                                     />
                                 </>
                             )}
                         </div>
 
-                        <div
-                            className="pd_section_item"
-                            style={{ color: "crimson" }}
-                        >
-                            <div className="pd_section_item_label">
-                                Details Description
-                            </div>
-                            <div className="pd_section_item_colon">:</div>
-                            <TextField
-                                style={{ width: "100%" }}
-                                minRows={2}
-                                variant="standard"
-                                error={cbVoucherDescriptionErrorText != ""}
-                                helperText={cbVoucherDescriptionErrorText}
-                                value={cbVoucherDescription}
-                                onChange={(e) =>
-                                    setcbVoucherDescription(e.target.value)
-                                }
-                            />
-                        </div>
-
                         <Snackbar
                             open={open}
-                            autoHideDuration={500}
+                            autoHideDuration={1000}
                             onClose={handleClose}
                             message="Successfully Updated"
                             action={action}
                         />
 
                         <div className="ld_button">
+                            <div>
+                                <Button
+                                    href="/cashbook/newentry"
+                                    variant="outlined"
+                                    style={{
+                                        fontWeight: "bold",
+                                        fontFamily: "PT Serif",
+                                        fontSize: "12pt",
+                                    }}
+                                >
+                                    New Entry
+                                </Button>
+                            </div>
                             <div
                                 className="ld_forward"
                                 onClick={cashDataUpdate}
